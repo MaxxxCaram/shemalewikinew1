@@ -1,0 +1,16 @@
+{
+  "name": "shemalewiki-root",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "cd frontend && npm install --omit=dev && npx vite build"
+  },
+  "devDependencies": {
+    "vite": "^8.0.12",
+    "@vitejs/plugin-react": "^6.0.1"
+  },
+  "engines": {
+    "node": "24.x"
+  }
+}
