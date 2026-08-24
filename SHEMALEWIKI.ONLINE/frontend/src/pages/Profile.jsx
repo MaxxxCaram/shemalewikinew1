@@ -1,12 +1,34 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Phone, Mail, MessageCircle, MapPin, Globe, Share2, Flag, ChevronLeft, ArrowLeft } from 'lucide-react';
+import { Phone, Mail, MessageCircle, MapPin, Globe, Share2, Flag, ChevronLeft, ArrowLeft, Cake, Languages, Ruler, Weight, Sparkles, User, Camera } from 'lucide-react';
 import SEO from '../components/SEO';
 import Lightbox from '../components/Lightbox';
 import LazyImage from '../components/LazyImage';
 import { isLoadablePhoto } from '../utils/photoFilter';
 import { supabase } from '../supabase';
-import { getProxiedImageUrl } from '../utils';
+import { t, getLang } from '../i18n';
+
+// Per-page labels — language-aware (nl / fr / es / en)
+const L = {
+  notFound: () => getLang() === 'nl' ? 'Profiel niet gevonden' : getLang() === 'fr' ? 'Profil introuvable' : (t.isBT() ? 'Perfil no encontrado' : 'Profile Not Found'),
+  aboutMe: () => getLang() === 'nl' ? 'Over mij' : getLang() === 'fr' ? 'À propos de moi' : (t.isBT() ? 'Sobre mí' : 'About Me'),
+  personalFacts: () => getLang() === 'nl' ? 'Persoonlijke gegevens' : getLang() === 'fr' ? 'Informations personnelles' : (t.isBT() ? 'Datos personales' : 'Personal Facts'),
+  gallery: () => getLang() === 'nl' ? 'Galerij' : getLang() === 'fr' ? 'Galerie' : (t.isBT() ? 'Galería' : 'Gallery'),
+  viewGallery: (n) => getLang() === 'nl'
+    ? `🔍 Bekijk galerij · ${n} ${n === 1 ? 'foto' : 'foto\u2019s'}`
+    : getLang() === 'fr'
+    ? `🔍 Voir la galerie · ${n} ${n === 1 ? 'photo' : 'photos'}`
+    : (t.isBT() ? `🔍 Ver Galería · ${n} fotos` : `🔍 View Gallery · ${n} photos`),
+  showContact: () => getLang() === 'nl' ? 'Toon contactgegevens' : getLang() === 'fr' ? 'Afficher les coordonnées' : (t.isBT() ? 'Mostrar Contacto' : 'Show Contact Info'),
+  facts: {
+    nationality: () => getLang() === 'nl' ? 'Nationaliteit' : getLang() === 'fr' ? 'Nationalité' : (t.isBT() ? 'Nacionalidad' : 'Nationality'),
+    languages: () => getLang() === 'nl' ? 'Talen' : getLang() === 'fr' ? 'Langues' : (t.isBT() ? 'Idiomas' : 'Languages'),
+    age: () => getLang() === 'nl' ? 'Leeftijd' : getLang() === 'fr' ? 'Âge' : (t.isBT() ? 'Edad' : 'Age'),
+    height: () => getLang() === 'nl' ? 'Lengte' : getLang() === 'fr' ? 'Taille' : (t.isBT() ? 'Altura' : 'Height'),
+    weight: () => getLang() === 'nl' ? 'Gewicht' : getLang() === 'fr' ? 'Poids' : (t.isBT() ? 'Peso' : 'Weight'),
+    endowment: () => getLang() === 'nl' ? 'Afmeting' : getLang() === 'fr' ? 'Taille' : (t.isBT() ? 'Dotación' : 'Endowment'),
+  },
+};
 
 const serviceIcons = {
   'incall': '🏠', 'outcall': '🚗', 'gfe': '💕', 'pse': '⭐',
@@ -20,6 +42,8 @@ function cityToSlug(city) {
 
 export default function Profile() {
   const { id } = useParams();
+  const lang = getLang();
+  const langPrefix = lang === 'en' ? '' : `/${lang}`;
   const [profile, setProfile] = useState(null);
   const [similarProfiles, setSimilarProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +51,7 @@ export default function Profile() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [toast, setToast] = useState('');
+  const nl = getLang() === 'nl';
 
   useEffect(() => {
     fetchProfile();
@@ -101,11 +126,11 @@ export default function Profile() {
   if (!profile || profile.error) return (
     <div className="container" style={{ textAlign: 'center', marginTop: '4rem', paddingBottom: '4rem' }}>
       <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>😕</h2>
-      <h3>Profile Not Found</h3>
+      <h3>{L.notFound()}</h3>
       <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-        This profile may have been removed or the link is incorrect.
+        {lang === 'fr' ? 'Ce profil a peut-être été supprimé ou le lien est incorrect.' : t.isBT() ? 'Este perfil pudo haber sido eliminado o el enlace es incorrecto.' : 'This profile may have been removed or the link is incorrect.'}
       </p>
-      <Link to="/" className="btn btn-primary">Back to Home</Link>
+      <Link to={langPrefix + '/'} className="btn btn-primary">{lang === 'fr' ? 'Retour à l\'accueil' : t.isBT() ? 'Volver al inicio' : 'Back to Home'}</Link>
     </div>
   );
 
@@ -118,14 +143,18 @@ export default function Profile() {
   const countrySlug = country.toLowerCase().replace(/\s+/g, '-');
   const citySlug = cityToSlug(city);
 
-  const seoTitle = `${profile.name} — Trans Companion in ${city || country}`;
+  const seoTitle = `${profile.name} — ${lang === 'fr' ? 'Accompagnante trans à' : lang === 'es' ? 'Acompañante trans en' : 'Trans Companion in'} ${city || country}`;
   const seoDesc = profile.bio 
     ? profile.bio.substring(0, 150).replace(/<[^>]*>/g, '').replace(/"/g, "'").trim() + '...'
-    : `${profile.name} — independent trans companion in ${city}, ${country}. ${profile.age ? `Age ${profile.age}. ` : ''}View photos, services, and verified contact info.`;
+    : nl
+    ? `${profile.name} — onafhankelijke trans metgezel in ${city}, ${country}. ${profile.age ? `Leeftijd ${profile.age}. ` : ''}Bekijk foto\u2019s, services en geverifieerde contactgegevens.`
+    : lang === 'fr'
+      ? `${profile.name} — accompagnante trans indépendante à ${city}, ${country}. ${profile.age ? `Âge ${profile.age}. ` : ''}Consultez les photos, les services et les coordonnées vérifiées.`
+      : `${profile.name} — independent trans companion in ${city}, ${country}. ${profile.age ? `Age ${profile.age}. ` : ''}View photos, services, and verified contact info.`;
 
   const seoKeywords = [
     profile.name, `trans companion ${city}`, `ts ${city}`, `shemale ${city}`,
-    country ? `trans ${country}` : '', profile.age ? `${profile.age} years` : ''
+    country ? `trans ${country}` : '', profile.age ? `${profile.age} ${lang === 'fr' ? 'ans' : 'years'}` : ''
   ].filter(Boolean).join(', ');
 
   const galleryPhotos = profile.photos || [];
@@ -148,14 +177,14 @@ export default function Profile() {
         title={seoTitle}
         description={seoDesc}
         keywords={seoKeywords}
-        canonicalPath={`/profile/${id}`}
+        canonicalPath={`${langPrefix}/profile/${id}`}
         jsonLd={jsonLd}
       />
       <div className="container" style={{ padding: '1.5rem 0 4rem' }}>
         
         {/* Breadcrumb */}
         <nav className="city-breadcrumb" style={{ marginBottom: '1.5rem' }}>
-          <Link to="/" className="breadcrumb-link">Home</Link>
+          <Link to={langPrefix + '/'} className="breadcrumb-link">{lang === 'fr' ? 'Accueil' : 'Home'}</Link>
           <span className="breadcrumb-sep">›</span>
           {continent && country && (
             <>
@@ -169,16 +198,15 @@ export default function Profile() {
             </>
           )}
           {!continent && (
-            <Link to="/" className="breadcrumb-link">Directory</Link>
+            <Link to={langPrefix + '/'} className="breadcrumb-link">{lang === 'fr' ? 'Annuaire' : nl ? 'Adressengids' : 'Directory'}</Link>
           )}
           <span className="breadcrumb-sep">›</span>
           <span className="breadcrumb-current">{profile.name}</span>
         </nav>
 
-        {/* Profile Header */}
+        {/* Profile Header — agency-style (vnymodels-inspired) */}
         <div className="profile-header">
-          <div
-            className="profile-hero-wrapper"
+          <div className="profile-hero-wrapper"
             onClick={() => heroPhoto && openLightbox(0)}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); heroPhoto && openLightbox(0); } }}
             role={heroPhoto ? 'button' : undefined}
@@ -193,78 +221,102 @@ export default function Profile() {
             />
             {heroPhoto && (
               <div className="hero-img-overlay">
-                <span>🔍 View Gallery · {galleryPhotos.length} photos</span>
+                <span>{L.viewGallery(galleryPhotos.length)}</span>
               </div>
             )}
             {!heroPhoto && (
               <div className="hero-img-overlay" style={{ opacity: 1 }}>
-                <span>📷 No photos yet</span>
+                <span>{nl ? '📷 Nog geen foto\u2019s' : lang === 'fr' ? '📷 Pas encore de photos' : '📷 No photos yet'}</span>
               </div>
             )}
           </div>
-          
+
           <div className="profile-info">
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-              <h1 className="text-gradient" style={{ fontSize: '2.5rem', marginBottom: '0.5rem', lineHeight: 1.1 }}>
+            {/* Name + socials */}
+            <div className="model-header">
+              <h1 className="model-name">
                 {profile.name}
               </h1>
-              <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
+              {profile.location && (
+                <p className="model-location">
+                  <MapPin size={16} /> {profile.location}
+                </p>
+              )}
+            </div>
+
+            {/* Social / action buttons */}
+            <div className="model-socials">
+              {profile.instagram && typeof profile.instagram === 'string' && profile.instagram !== 'N/A' && (
+                <a className="model-social-chip" href={`https://instagram.com/${profile.instagram.replace('@','')}`} target="_blank" rel="noopener noreferrer">
+                  <Camera size={18} /> {profile.instagram.replace('@','')}
+                </a>
+              )}
+              {profile.onlyfans && typeof profile.onlyfans === 'string' && profile.onlyfans !== 'N/A' && (
+                <a className="model-social-chip" href={profile.onlyfans.split(/,\s*/)[0]} target="_blank" rel="noopener noreferrer">
+                  <Sparkles size={18} /> OnlyFans
+                </a>
+              )}
+              <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0, marginLeft: 'auto' }}>
                 <button onClick={handleShare} className="icon-btn" title="Share" aria-label="Share profile"
-                  style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)', transition: 'var(--transition)' }}>
+                  style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '50%', width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)', transition: 'var(--transition)' }}>
                   <Share2 size={18} />
                 </button>
                 <button title="Report" aria-label="Report profile"
-                  style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)', transition: 'var(--transition)' }}
+                  style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: '50%', width: 42, height: 42, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)', transition: 'var(--transition)' }}
                   onClick={() => window.location.href = 'mailto:report@shemalewiki.online?subject=Report+Profile+' + encodeURIComponent(profile.name)}>
                   <Flag size={18} />
                 </button>
               </div>
             </div>
-            
-            <div className="profile-card-meta" style={{ fontSize: '1.05rem', marginBottom: '1.25rem', flexDirection: 'row', gap: '1.5rem', flexWrap: 'wrap' }}>
-              {profile.location && (
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <MapPin size={16} /> {profile.location}
-                </span>
-              )}
-              {profile.age && (
-                <span>🎂 {profile.age} years</span>
-              )}
-              {profile.nationality && (
-                <span>🌍 {profile.nationality}</span>
-              )}
-              {profile.languages && (
-                <span>🗣️ {profile.languages}</span>
-              )}
+
+            {/* Measurements table — agency style */}
+            <div className="model-measurements">
+              {profile.age && <div className="model-measure"><span className="model-measure-label">{L.facts.age()}</span><span className="model-measure-value">{profile.age} {lang === 'fr' ? 'ans' : nl ? 'jaar' : t.isBT() ? 'años' : 'yrs'}</span></div>}
+              {profile.nationality && <div className="model-measure"><span className="model-measure-label">{L.facts.nationality()}</span><span className="model-measure-value">{profile.nationality}</span></div>}
+              {profile.height && <div className="model-measure"><span className="model-measure-label">{L.facts.height()}</span><span className="model-measure-value">{profile.height} cm</span></div>}
+              {profile.weight && <div className="model-measure"><span className="model-measure-label">{L.facts.weight()}</span><span className="model-measure-value">{profile.weight} kg</span></div>}
+              {profile.languages && <div className="model-measure"><span className="model-measure-label">{L.facts.languages()}</span><span className="model-measure-value">{profile.languages}</span></div>}
+              {profile.endowment && profile.endowment !== '?' && <div className="model-measure"><span className="model-measure-label">{L.facts.endowment()}</span><span className="model-measure-value">{profile.endowment}</span></div>}
             </div>
 
+            {/* Services */}
+            {profile.services?.filter(s => s.available).length > 0 && (
+              <div className="tags-container" style={{ marginBottom: '1.5rem' }}>
+                {profile.services.filter(s => s.available).map((service, index) => (
+                  <span key={index} className="tag" title={service.service_name}>
+                    {serviceIcons[service.service_name?.toLowerCase()] || '✔️'} {service.service_name}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {/* Contact Card */}
-            <div className="glass" style={{ padding: '1.5rem', marginBottom: '1.5rem', borderRadius: 'var(--radius-md)' }}>
+            <div className="glass" style={{ padding: '1.75rem', marginBottom: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
               {!contactVisible ? (
                 <button 
                   onClick={() => setContactVisible(true)}
                   className="btn btn-primary"
-                  style={{ width: '100%', padding: '0.9rem', fontSize: '1.1rem' }}
+                  style={{ width: '100%', padding: '1rem', fontSize: '1rem' }}
                 >
-                  <Phone size={20} style={{ marginRight: '0.5rem' }} />
-                  Show Contact Info
+                  <Phone size={18} />
+                  {L.showContact()}
                 </button>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                  <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
-                    📞 Contact {profile.name}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <h3 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
+                    {lang === 'fr' ? `Contacter ${profile.name}` : `Contact ${profile.name}`}
                   </h3>
                   {profile.phone && (
                     <ContactRow icon={<Phone size={18} />} color="#4ade80" label="Phone" value={profile.phone} href={`tel:${profile.phone.replace(/\s/g, '')}`} />
                   )}
                   {profile.whatsapp && (
                     <ContactRow icon={<MessageCircle size={18} />} color="#25D366" label="WhatsApp" value={profile.whatsapp} 
-                      href={`https://wa.me/${profile.whatsapp.replace(/[\s\+\-\(\)]/g, '')}`} external />
+                      href={`https://wa.me/${profile.whatsapp.replace(/[\s+()-]/g, '')}`} external />
                   )}
                   {profile.email && (
                     <ContactRow icon={<Mail size={18} />} color="#60a5fa" label="Email" value={profile.email} href={`mailto:${profile.email}`} />
                   )}
-                  {profile.onlyfans && (() => {
+                  {profile.onlyfans && typeof profile.onlyfans === 'string' && profile.onlyfans !== 'N/A' && (() => {
                     const links = profile.onlyfans.split(/,\s*/).filter(Boolean);
                     if (links.length === 1) {
                       const label = links[0].includes('onlyfans.com') ? 'OnlyFans' : 'Video Link';
@@ -289,7 +341,7 @@ export default function Profile() {
                   })()}
                   {!profile.phone && !profile.whatsapp && !profile.email && !profile.onlyfans && (
                     <p style={{ color: '#94a3b8', fontSize: '0.9rem', textAlign: 'center' }}>
-                      Contact information coming soon. Check back later!
+                      {nl ? 'Contactgegevens zijn binnenkort beschikbaar. Kom later terug!' : lang === 'fr' ? 'Les coordonnées arrivent bientôt. Revenez plus tard !' : 'Contact information coming soon. Check back later!'}
                     </p>
                   )}
                   <button 
@@ -302,27 +354,16 @@ export default function Profile() {
                     onMouseOver={e => { e.target.style.borderColor = 'var(--accent-primary)'; e.target.style.color = 'var(--text-primary)'; }}
                     onMouseOut={e => { e.target.style.borderColor = 'var(--glass-border)'; e.target.style.color = 'var(--text-secondary)'; }}
                   >
-                    Hide contact info
+                    {nl ? 'Verberg contactgegevens' : lang === 'fr' ? 'Masquer les coordonnées' : 'Hide contact info'}
                   </button>
                 </div>
               )}
             </div>
 
-            {/* Services */}
-            {profile.services?.filter(s => s.available).length > 0 && (
-              <div className="tags-container" style={{ marginBottom: '1.5rem' }}>
-                {profile.services.filter(s => s.available).map((service, index) => (
-                  <span key={index} className="tag" title={service.service_name}>
-                    {serviceIcons[service.service_name?.toLowerCase()] || '✔️'} {service.service_name}
-                  </span>
-                ))}
-              </div>
-            )}
-
             {/* Bio */}
             {(profile.bio || profile.description) && (
-              <div className="profile-bio glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius-md)' }}>
-                <h3 style={{ marginTop: 0, marginBottom: '0.75rem', fontSize: '1.2rem' }}>About Me</h3>
+              <div className="profile-bio glass" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
+                <h3 style={{ marginTop: 0, marginBottom: '0.75rem', fontSize: '1.15rem', fontWeight: 600, letterSpacing: '-0.02em' }}>{L.aboutMe()}</h3>
                 <p style={{ lineHeight: 1.75, whiteSpace: 'pre-line' }}>
                   {profile.bio || profile.description}
                 </p>
@@ -331,21 +372,25 @@ export default function Profile() {
           </div>
         </div>
 
+
         {/* Personal Facts */}
-        <section style={{ marginTop: '3rem' }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '1.25rem' }}>Personal Facts</h2>
+        <section style={{ marginTop: '3.5rem' }}>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: 600, letterSpacing: '-0.025em' }}>{L.personalFacts()}</h2>
           <div className="facts-grid">
             {[
-              { key: 'age', label: 'Age', icon: '🎂' },
-              { key: 'nationality', label: 'Nationality', icon: '🌍' },
-              { key: 'languages', label: 'Languages', icon: '🗣️' },
-              { key: 'height', label: 'Height', suffix: 'cm', icon: '📏' },
-              { key: 'weight', label: 'Weight', suffix: 'kg', icon: '⚖️' },
-              { key: 'endowment', label: 'Endowment', icon: '✨' },
-            ].filter(f => profile[f.key]).map(({ key, label, suffix, icon }) => (
+              { key: 'age', label: L.facts.age(), Icon: Cake, suffix: lang === 'fr' ? ' ans' : t.isBT() ? ' años' : nl ? ' jaar' : ' yrs' },
+              { key: 'nationality', label: L.facts.nationality(), Icon: Globe },
+              { key: 'languages', label: L.facts.languages(), Icon: Languages },
+              { key: 'height', label: L.facts.height(), Icon: Ruler, suffix: ' cm' },
+              { key: 'weight', label: L.facts.weight(), Icon: Weight, suffix: ' kg' },
+              { key: 'endowment', label: L.facts.endowment(), Icon: Sparkles },
+            ].filter(f => profile[f.key]).map(({ key, label, Icon, suffix }) => (
               <div key={key} className="fact-item">
-                <div className="fact-label">{icon} {label}</div>
-                <div className="fact-value">{profile[key]}{suffix ? ` ${suffix}` : ''}</div>
+                <div className="fact-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Icon size={14} style={{ opacity: 0.7 }} />
+                  {label}
+                </div>
+                <div className="fact-value">{profile[key]}{suffix ? suffix : ''}</div>
               </div>
             ))}
           </div>
@@ -353,10 +398,15 @@ export default function Profile() {
 
         {/* Gallery */}
         {galleryPhotos.length > 1 && (
-          <section style={{ marginTop: '3rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1.25rem' }}>
-              Gallery · {galleryPhotos.length} photos
-            </h2>
+          <section style={{ marginTop: '3.5rem' }}>
+            <div className="section-header" style={{ marginTop: 0, marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 600, letterSpacing: '-0.025em' }}>
+                {L.gallery()}
+              </h2>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                {t.profilesCount(galleryPhotos.length)}
+              </span>
+            </div>
             <div className="gallery-grid">
               {galleryPhotos.map((photo, index) => (
                 <div 
@@ -380,17 +430,22 @@ export default function Profile() {
 
         {/* Similar Profiles */}
         {similarProfiles.length > 0 && (
-          <section style={{ marginTop: '3rem', borderTop: '1px solid var(--glass-border)', paddingTop: '3rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1.25rem' }}>
-              More Companions in {city}
-            </h2>
+          <section style={{ marginTop: '3.5rem', borderTop: '1px solid var(--glass-border)', paddingTop: '3.5rem' }}>
+            <div className="section-header" style={{ marginTop: 0, marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 600, letterSpacing: '-0.025em' }}>
+                {nl ? `Meer metgezellen in ${city}` : lang === 'fr' ? `Plus d'accompagnantes à ${city}` : `More Companions in ${city}`}
+              </h2>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                {lang === 'fr' ? (similarProfiles.length === 1 ? `${similarProfiles.length} profil` : `${similarProfiles.length} profils`) : nl ? (similarProfiles.length === 1 ? 'profiel' : 'profielen') : similarProfiles.length === 1 ? 'profile' : 'profiles'}
+              </span>
+            </div>
             <div style={{ 
               display: 'grid', 
               gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
               gap: '1rem' 
             }}>
               {similarProfiles.map(sp => (
-                <Link to={`/profile/${sp.id}`} key={sp.id} className="glass-card profile-card" style={{ textDecoration: 'none' }}>
+                <Link to={`${langPrefix}/profile/${sp.id}`} key={sp.id} className="glass-card profile-card" style={{ textDecoration: 'none' }}>
                   <LazyImage
                     src={(sp.photos || []).find(p => p.local_path === 'cover')?.photo_url || sp.photos?.[0]?.photo_url}
                     alt={sp.name}
@@ -403,7 +458,7 @@ export default function Profile() {
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                         <MapPin size={12} /> {sp.location || city}
                       </span>
-                      {sp.age && <span>{sp.age} yrs</span>}
+                      {sp.age && <span>{sp.age} {lang === 'fr' ? 'ans' : nl ? 'jaar' : 'yrs'}</span>}
                     </div>
                   </div>
                 </Link>
@@ -415,12 +470,12 @@ export default function Profile() {
         {/* Back to browse */}
         <div style={{ marginTop: '3rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           {city && country && (
-            <Link to={`/${contSlug}/${countrySlug}/${citySlug}`} className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-              <ArrowLeft size={16} /> All companions in {city}
+            <Link to={`${langPrefix}/${contSlug}/${countrySlug}/${citySlug}`} className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+              <ArrowLeft size={16} /> {nl ? `Alle metgezellen in ${city}` : lang === 'fr' ? `Toutes les accompagnantes à ${city}` : `All companions in ${city}`}
             </Link>
           )}
-          <Link to="/" className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-            <ChevronLeft size={16} /> Home
+          <Link to={langPrefix + '/'} className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            <ChevronLeft size={16} /> {lang === 'fr' ? 'Accueil' : nl ? 'Home' : 'Home'}
           </Link>
         </div>
 
@@ -453,7 +508,7 @@ export default function Profile() {
 }
 
 // Contact row component
-function ContactRow({ icon, color, label, value, href, external }) {
+function ContactRow({ icon, color, value, href, external }) {
   const target = external ? { target: '_blank', rel: 'noreferrer' } : {};
   return (
     <a href={href} {...target}

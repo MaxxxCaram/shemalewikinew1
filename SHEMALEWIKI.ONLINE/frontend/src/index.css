@@ -13,21 +13,21 @@
    accents. Premium / sensual / elegant. Liquid-glass + vanguard animations. */
 :root,
 [data-brand="shemalewiki"] {
-  --bg-primary: #0b0709;
-  --bg-secondary: #14100f;
-  --text-primary: #f4ece4;
-  --text-secondary: #b09a8f;
-  --accent-primary: #e7c084;
-  --accent-secondary: #d99a7c;
-  --accent-tertiary: #c75d6b;
-  --glass-bg: rgba(28, 22, 24, 0.55);
-  --glass-border: rgba(231, 192, 132, 0.16);
-  --card-bg: rgba(30, 24, 26, 0.62);
-  --card-border: rgba(231, 192, 132, 0.18);
-  --tag-bg: rgba(231, 192, 132, 0.1);
-  --tag-border: rgba(231, 192, 132, 0.32);
-  --input-bg: rgba(28, 22, 24, 0.7);
-  --input-border: rgba(231, 192, 132, 0.22);
+  --bg-primary: #0a0810;
+  --bg-secondary: #120d1a;
+  --text-primary: #f6f1f7;
+  --text-secondary: #b8a9c4;
+  --accent-primary: #d4af37;
+  --accent-secondary: #c9a2d9;
+  --accent-tertiary: #e6a8c8;
+  --glass-bg: rgba(18, 13, 26, 0.6);
+  --glass-border: rgba(212, 175, 55, 0.18);
+  --card-bg: rgba(20, 14, 28, 0.65);
+  --card-border: rgba(212, 175, 55, 0.18);
+  --tag-bg: rgba(212, 175, 55, 0.1);
+  --tag-border: rgba(212, 175, 55, 0.32);
+  --input-bg: rgba(16, 11, 24, 0.7);
+  --input-border: rgba(212, 175, 55, 0.22);
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
   --radius-lg: 1.25rem;
@@ -36,38 +36,41 @@
   --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-body: 'Space Grotesk', -apple-system, sans-serif;
   --font-weight-display: 600;
-  --letter-spacing-display: 0.01em;
-  --shadow-glow: 0 0 36px rgba(231, 192, 132, 0.22);
-  --accent-grad: linear-gradient(135deg, #e7c084 0%, #d99a7c 50%, #c75d6b 100%);
+  --letter-spacing-display: 0.02em;
+  --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.2);
+  --accent-grad: linear-gradient(135deg, #d4af37 0%, #c9a2d9 50%, #e6a8c8 100%);
+  --accent: #d4af37;
 }
 
-/* ===== BUSCATRANS THEME ===== */
+/* ===== BUSCATRANS THEME — luxury jewel (black/gold/sapphire/emerald) ===== */
 [data-brand="buscatrans"] {
-  --bg-primary: #1a0a2e;
-  --bg-secondary: #1e0f35;
-  --text-primary: #f7f3ff;
-  --text-secondary: #d4b5ff;
-  --accent-primary: #c026d3;
-  --accent-secondary: #e040a0;
-  --accent-tertiary: #7c3aed;
-  --glass-bg: rgba(26, 10, 46, 0.85);
-  --glass-border: rgba(216, 180, 254, 0.12);
-  --card-bg: #220d3d;
-  --card-border: #3d1a6e;
-  --tag-bg: rgba(224, 64, 160, 0.12);
-  --tag-border: rgba(224, 64, 160, 0.3);
-  --input-bg: #220d3d;
-  --input-border: #3d1a6e;
+  --bg-primary: #0a0a0e;
+  --bg-secondary: #0f0f16;
+  --text-primary: #f5efe0;
+  --text-secondary: #c9b88f;
+  --accent-primary: #d4af37;
+  --accent-secondary: #7aa5e0;
+  --accent-tertiary: #0f7a4d;
+  --accent-gradient: linear-gradient(135deg, #d4af37 0%, #7aa5e0 50%, #0f7a4d 100%);
+  --glass-bg: rgba(8, 8, 12, 0.85);
+  --glass-border: rgba(212, 175, 55, 0.18);
+  --card-bg: rgba(15, 15, 22, 0.85);
+  --card-border: rgba(212, 175, 55, 0.22);
+  --tag-bg: rgba(212, 175, 55, 0.1);
+  --tag-border: rgba(212, 175, 55, 0.35);
+  --input-bg: rgba(10, 10, 14, 0.8);
+  --input-border: rgba(212, 175, 55, 0.25);
   --radius-sm: 0.375rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
   --transition: all 0.3s ease;
-  --font-display: 'Playfair Display', 'Georgia', serif;
+  --font-display: 'Cormorant Garamond', 'Playfair Display', 'Georgia', serif;
   --font-body: 'DM Sans', -apple-system, sans-serif;
   --font-weight-display: 700;
-  --letter-spacing-display: -0.01em;
-  --shadow-glow: 0 0 40px rgba(192, 38, 211, 0.2);
+  --letter-spacing-display: 0.01em;
+  --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.2);
+  --accent: #d4af37;
 }
 
 /* ===== RESET & BASE ===== */
@@ -80,6 +83,12 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+}
+
+/* Elegant fade-in when the site reveals after the phoenix entrance */
+@keyframes sw-site-reveal {
+  0%   { opacity: 0; transform: translateY(24px); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
 a { color: var(--accent-primary); text-decoration: none; transition: var(--transition); }
@@ -177,6 +186,80 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 .nav-links a:hover { color: var(--text-primary); }
+
+/* New BuscaTrans luxury logo — prominent, centered */
+.nav-brand-logo {
+  height: 72px;
+  width: auto;
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.35));
+  transition: transform 0.3s ease;
+}
+.nav-brand-logo:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 18px rgba(212, 175, 55, 0.55));
+}
+[data-brand="buscatrans"] .nav-brand-logo {
+  height: 76px;
+}
+[data-brand="shemalewiki"] .nav-brand-logo-sw {
+  height: 110px;
+  width: auto;
+  border-radius: 14px;
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.35);
+}
+
+/* Giant hero logo — ShemaleWiki home (BLURRED LIMITS) */
+.hero-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.hero-logo-giant {
+  width: 420px;
+  max-width: 88vw;
+  height: auto;
+  border-radius: 18px;
+  box-shadow: 0 0 80px rgba(212, 175, 55, 0.45), 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* Trans Dashboard CTA — ShemaleWiki home */
+.btn-trans-dashboard {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 1.15rem 3rem;
+  border-radius: 999px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: #0a0810;
+  background: linear-gradient(135deg, #d4af37 0%, #c9a2d9 50%, #e6a8c8 100%);
+  box-shadow: 0 4px 24px rgba(212, 175, 55, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-trans-dashboard:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 32px rgba(212, 175, 55, 0.5);
+  color: #0a0810;
+}
+
+/* Ad banner zones */
+.ad-banner {
+  margin: 1.5rem auto;
+}
+.ad-top {
+  margin-top: 0.5rem;
+}
+.ad-bottom {
+  margin-top: 2rem;
+}
+.ad-banner .ad-placeholder {
+  color: rgba(255,255,255,0.15);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  width: 100%;
+}
 
 /* ===== BUTTONS ===== */
 .btn {
@@ -374,6 +457,83 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--card-border);
 }
 @media (max-width: 768px) { .profile-hero-img { width: 100%; height: 380px; } }
+
+/* ── Model profile (vnymodels agency style) ── */
+.model-header {
+  margin-bottom: 0.5rem;
+}
+.model-name {
+  font-size: 3rem;
+  font-weight: 400;
+  text-transform: capitalize;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.25rem;
+  color: var(--text-primary);
+}
+.model-location {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin: 0;
+}
+.model-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.model-social-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+}
+.model-social-chip:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-1px);
+}
+.model-measurements {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem 1.5rem;
+  padding: 1.25rem 0;
+  margin-bottom: 1.25rem;
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+}
+.model-measure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.model-measure-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.model-measure-value {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+@media (max-width: 768px) {
+  .model-name { font-size: 2.2rem; }
+  .model-measurements { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
 .profile-info { flex: 1; }
 .profile-bio {
   margin-top: 1.25rem;
@@ -444,6 +604,13 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.75rem;
   margin-top: 1rem;
 }
+[data-brand="shemalewiki"] .gallery-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 640px) {
+  [data-brand="shemalewiki"] .gallery-grid { grid-template-columns: 1fr; }
+}
 .gallery-img {
   width: 100%;
   height: 140px;
@@ -451,6 +618,12 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: var(--transition);
+}
+[data-brand="shemalewiki"] .gallery-img {
+  height: 320px;
+}
+@media (max-width: 640px) {
+  [data-brand="shemalewiki"] .gallery-img { height: 220px; }
 }
 .gallery-img:hover { transform: scale(1.05); }
 
@@ -1140,4 +1313,679 @@ h1, h2, h3, h4, h5, h6 {
   [data-brand="shemalewiki"] .hero-section > * { animation: none !important; opacity: 1 !important; transform: none !important; }
   [data-brand="shemalewiki"] .profile-card-img { transition: none !important; }
   .sw-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ============================================================
+   SHEMALEWIKI — ELITE LAYER (Linear / Vercel / Stripe grade)
+   Refined over "Velvet Noir". Generous spacing, premium type,
+   subtle gradients, sophisticated micro-interactions.
+   Scoped to [data-brand="shemalewiki"] only.
+   ============================================================ */
+
+/* ── 1. Premium type ramp & display polish ── */
+[data-brand="shemalewiki"] {
+  --font-display: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+  --font-body: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+  --font-weight-display: 600;
+  --letter-spacing-display: -0.02em;
+  --display-lg: clamp(3rem, 7vw, 5.5rem);
+  --display-md: clamp(2rem, 4.5vw, 3.25rem);
+  --display-sm: clamp(1.5rem, 3vw, 2rem);
+  --space-section: clamp(5rem, 10vw, 8rem);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+[data-brand="shemalewiki"] h1,
+[data-brand="shemalewiki"] h2,
+[data-brand="shemalewiki"] h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+}
+
+[data-brand="shemalewiki"] body {
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display weights tight, modern */
+[data-brand="shemalewiki"] .hero-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--display-lg);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+[data-brand="shemalewiki"] .section-title {
+  font-size: var(--display-md);
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+[data-brand="shemalewiki"] .page-title {
+  font-family: var(--font-display);
+  font-size: var(--display-md);
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── 2. Hero — Linear/Vercel style: massive type, eyebrow pill, CTA stack ── */
+[data-brand="shemalewiki"] .hero-section {
+  padding: var(--space-section) 0 4rem;
+  text-align: center;
+  position: relative;
+}
+[data-brand="shemalewiki"] .hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--text-secondary);
+  margin-bottom: 1.75rem;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
+}
+[data-brand="shemalewiki"] .hero-eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary);
+  animation: swPulse 2.4s ease-in-out infinite;
+}
+@keyframes swPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
+[data-brand="shemalewiki"] .hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin: 1.5rem auto 2.5rem;
+  letter-spacing: -0.011em;
+  line-height: 1.55;
+}
+
+/* Hero search: prominent, focus-glow */
+[data-brand="shemalewiki"] .search-container {
+  max-width: 640px;
+  gap: 0.6rem;
+}
+[data-brand="shemalewiki"] .search-input {
+  padding: 1.1rem 1.5rem;
+  font-size: 1.05rem;
+  border-radius: 999px;
+  background: var(--input-bg);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+[data-brand="shemalewiki"] .search-input:focus {
+  box-shadow:
+    0 0 0 3px rgba(231, 192, 132, 0.18),
+    0 0 40px rgba(231, 192, 132, 0.12);
+}
+[data-brand="shemalewiki"] .search-container .btn-primary {
+  border-radius: 999px;
+  padding: 1.1rem 1.75rem;
+}
+
+/* ── 3. Elite glass — softer, more luminous (Vercel/Stripe feel) ── */
+[data-brand="shemalewiki"] .glass,
+[data-brand="shemalewiki"] .glass-card,
+[data-brand="shemalewiki"] .navbar,
+[data-brand="shemalewiki"] .sticky-footer {
+  background: linear-gradient(
+    180deg,
+    rgba(30, 24, 26, 0.55) 0%,
+    rgba(20, 16, 15, 0.45) 100%
+  );
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.015) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.5);
+}
+[data-brand="shemalewiki"] .glass-card {
+  border-radius: var(--radius-lg);
+  transition: transform 0.45s var(--ease-out-expo),
+              border-color 0.45s var(--ease-out-expo),
+              box-shadow 0.45s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .glass-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(231, 192, 132, 0.35);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.08) inset,
+    0 24px 48px -12px rgba(0, 0, 0, 0.65),
+    0 0 40px -8px rgba(231, 192, 132, 0.25);
+}
+
+/* ── 4. Navbar — slim, sticky, premium ── */
+[data-brand="shemalewiki"] .navbar {
+  padding: 0.5rem 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 7, 9, 0.78) 0%,
+    rgba(11, 7, 9, 0.55) 100%
+  );
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border-bottom: 1px solid var(--glass-border);
+}
+[data-brand="shemalewiki"] .nav-brand {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  gap: 0.6rem;
+}
+[data-brand="shemalewiki"] .nav-brand img {
+  height: 28px !important;
+  margin-right: 0 !important;
+}
+[data-brand="shemalewiki"] .nav-links a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 0.35rem 0;
+  position: relative;
+}
+[data-brand="shemalewiki"] .nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 0;
+  background: var(--accent-primary);
+  transition: width 0.3s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .nav-links a:hover::after { width: 100%; }
+
+/* Slim premium pill button */
+[data-brand="shemalewiki"] .nav-right .btn-primary {
+  border-radius: 999px;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ── 5. Filter pills — refined chips ── */
+[data-brand="shemalewiki"] .filter-pill {
+  padding: 0.45rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .filter-pill:hover {
+  border-color: rgba(231, 192, 132, 0.4);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+[data-brand="shemalewiki"] .filter-pill.active {
+  background: var(--accent-grad);
+  color: #1a0f0a;
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(231, 192, 132, 0.3);
+}
+
+/* ── 6. Section headers — Linear style: tight, with link arrow ── */
+[data-brand="shemalewiki"] .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  margin-top: var(--space-section);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+[data-brand="shemalewiki"] .section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+  transition: all 0.3s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .section-link:hover {
+  color: var(--accent-primary);
+  gap: 0.5rem;
+}
+[data-brand="shemalewiki"] .section-link::after { content: "→"; }
+[data-brand="shemalewiki"] .section-link:hover::after { transform: translateX(2px); }
+
+/* ── 7. Profile cards — image-forward, image-zoom on hover, gradient scrim ── */
+[data-brand="shemalewiki"] .profiles-grid {
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+[data-brand="shemalewiki"] .glass-card.profile-card,
+[data-brand="shemalewiki"] .glass-card.sw-reveal {
+  overflow: hidden;
+  position: relative;
+}
+[data-brand="shemalewiki"] .profile-card-img {
+  height: 360px;
+  border-bottom: none;
+  transition: transform 0.7s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .glass-card:hover .profile-card-img,
+[data-brand="shemalewiki"] .glass-card.profile-card:hover .profile-card-img {
+  transform: scale(1.05);
+}
+[data-brand="shemalewiki"] .profile-card-content {
+  padding: 1.5rem;
+  position: relative;
+  z-index: 5;
+}
+[data-brand="shemalewiki"] .profile-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+[data-brand="shemalewiki"] .profile-card-meta {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+/* Image scrim overlay (sits above image, below text) */
+[data-brand="shemalewiki"] .glass-card .profile-card-gradient {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 60%;
+  background: linear-gradient(180deg, transparent 0%, rgba(11, 7, 9, 0.92) 85%);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.85;
+  transition: opacity 0.4s ease;
+}
+[data-brand="shemalewiki"] .glass-card:hover .profile-card-gradient {
+  opacity: 1;
+}
+
+/* ── 8. Buttons — refined, slim, micro-feedback ── */
+[data-brand="shemalewiki"] .btn {
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform 0.25s var(--ease-out-expo),
+              box-shadow 0.25s var(--ease-out-expo),
+              background 0.25s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .btn-primary {
+  background: var(--accent-grad);
+  color: #1a0f0a;
+  font-weight: 600;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 8px 24px -8px rgba(231, 192, 132, 0.4);
+}
+[data-brand="shemalewiki"] .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 12px 32px -8px rgba(231, 192, 132, 0.55);
+}
+[data-brand="shemalewiki"] .btn-outline {
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
+}
+[data-brand="shemalewiki"] .btn-outline:hover {
+  border-color: var(--accent-primary);
+  background: var(--glass-bg);
+}
+
+/* ── 9. Page header / breadcrumb polish ── */
+[data-brand="shemalewiki"] .page-header {
+  text-align: left;
+  margin-bottom: 2.5rem;
+  margin-top: 1rem;
+}
+[data-brand="shemalewiki"] .page-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  letter-spacing: -0.011em;
+  margin-top: 0.5rem;
+}
+[data-brand="shemalewiki"] .back-btn {
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .back-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  transform: translateX(-2px);
+}
+
+/* ── 10. Country cards (Countries.jsx) — stat-driven tiles ── */
+[data-brand="shemalewiki"] .countries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+[data-brand="shemalewiki"] .country-card {
+  padding: 1.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(30,24,26,0.55), rgba(20,16,15,0.45));
+  backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s var(--ease-out-expo), border-color 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .country-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 0%, rgba(231,192,132,0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+[data-brand="shemalewiki"] .country-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(231,192,132,0.35);
+  box-shadow: 0 18px 40px -10px rgba(0,0,0,0.6), 0 0 30px -8px rgba(231,192,132,0.2);
+}
+[data-brand="shemalewiki"] .country-card:hover::before { opacity: 1; }
+[data-brand="shemalewiki"] .country-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent-grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(231,192,132,0.25);
+}
+[data-brand="shemalewiki"] .country-icon { width: 20px; height: 20px; color: #1a0f0a; }
+[data-brand="shemalewiki"] .country-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ── 11. Profile detail — magazine layout, premium hierarchy ── */
+[data-brand="shemalewiki"] .profile-header {
+  gap: 3rem;
+  margin-top: 1rem;
+}
+[data-brand="shemalewiki"] .profile-hero-wrapper {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 20px 60px -10px rgba(0,0,0,0.7);
+}
+[data-brand="shemalewiki"] .profile-hero-img {
+  width: 420px;
+  height: 540px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  transition: transform 0.6s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .profile-hero-wrapper:hover .profile-hero-img {
+  transform: scale(1.02);
+}
+[data-brand="shemalewiki"] .hero-img-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(180deg, transparent, rgba(11,7,9,0.92));
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+[data-brand="shemalewiki"] .profile-bio.glass {
+  padding: 2rem !important;
+  border-radius: var(--radius-lg) !important;
+}
+[data-brand="shemalewiki"] .profile-bio h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+[data-brand="shemalewiki"] .fact-item {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(30,24,26,0.55), rgba(20,16,15,0.45));
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  transition: border-color 0.3s var(--ease-out-expo), transform 0.3s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .fact-item:hover {
+  border-color: rgba(231,192,132,0.3);
+  transform: translateY(-2px);
+}
+[data-brand="shemalewiki"] .fact-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+/* Breadcrumb */
+[data-brand="shemalewiki"] .city-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  flex-wrap: wrap;
+}
+[data-brand="shemalewiki"] .breadcrumb-link {
+  color: var(--text-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+}
+[data-brand="shemalewiki"] .breadcrumb-link:hover {
+  color: var(--accent-primary);
+  background: var(--tag-bg);
+}
+[data-brand="shemalewiki"] .breadcrumb-sep { opacity: 0.4; }
+[data-brand="shemalewiki"] .breadcrumb-current {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Gallery */
+[data-brand="shemalewiki"] .gallery-grid {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+[data-brand="shemalewiki"] .gallery-item {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+}
+[data-brand="shemalewiki"] .gallery-img {
+  height: 180px;
+  border-radius: var(--radius-md);
+  transition: transform 0.5s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .gallery-item:hover .gallery-img { transform: scale(1.08); }
+[data-brand="shemalewiki"] .gallery-item-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11,7,9,0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 1.5rem;
+}
+[data-brand="shemalewiki"] .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+
+/* Tags */
+[data-brand="shemalewiki"] .tag {
+  padding: 0.35rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  border-radius: 999px;
+}
+
+/* ── 12. Continent cards (Continents.jsx legacy) ── */
+[data-brand="shemalewiki"] .continent-card {
+  padding: 3rem 2rem;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(30,24,26,0.55), rgba(20,16,15,0.45));
+  backdrop-filter: blur(22px) saturate(150%);
+  transition: transform 0.5s var(--ease-out-expo), border-color 0.5s var(--ease-out-expo), box-shadow 0.5s var(--ease-out-expo);
+}
+[data-brand="shemalewiki"] .continent-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(231,192,132,0.4);
+  box-shadow: 0 20px 48px -10px rgba(0,0,0,0.65), 0 0 40px -10px rgba(231,192,132,0.25);
+}
+
+/* ── 13. Map placeholder — premium gradient tile ── */
+[data-brand="shemalewiki"] .map-placeholder {
+  background: linear-gradient(135deg, rgba(30,24,26,0.6), rgba(20,16,15,0.5));
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+[data-brand="shemalewiki"] .map-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(231,192,132,0.08), transparent 60%),
+              radial-gradient(circle at 70% 60%, rgba(199,93,107,0.08), transparent 60%);
+  pointer-events: none;
+}
+
+/* ── 14. Loading / spinner — slim ring ── */
+[data-brand="shemalewiki"] .spinner {
+  width: 28px;
+  height: 28px;
+  border-width: 2px;
+}
+[data-brand="shemalewiki"] .loading-container {
+  padding: 4rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── 15. Elite entrance: staggered fade-up for grids ── */
+[data-brand="shemalewiki"] .sw-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+  transition-delay: var(--sw-delay, 0s);
+}
+[data-brand="shemalewiki"] .sw-reveal.sw-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── 16. Elite responsive ── */
+@media (max-width: 768px) {
+  [data-brand="shemalewiki"] .hero-section { padding: 4rem 0 2.5rem; }
+  [data-brand="shemalewiki"] .hero-title { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+  [data-brand="shemalewiki"] .profile-hero-img { width: 100%; height: 420px; }
+  [data-brand="shemalewiki"] .profile-header { gap: 1.5rem; }
+  [data-brand="shemalewiki"] .countries-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  [data-brand="shemalewiki"] .hero-stats { gap: 1.5rem !important; }
+  [data-brand="shemalewiki"] .hero-stat { flex-direction: column !important; gap: 0.3rem !important; text-align: center; }
+}
+
+/* ── 17. Hero stats row (Linear/Vercel style strip) ── */
+[data-brand="shemalewiki"] .hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+}
+[data-brand="shemalewiki"] .hero-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+[data-brand="shemalewiki"] .hero-stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-primary);
+}
+[data-brand="shemalewiki"] .hero-stat-val {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+[data-brand="shemalewiki"] .hero-stat-lbl {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+/* ── 18. Empty state polish ── */
+[data-brand="shemalewiki"] .empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  letter-spacing: -0.01em;
 }

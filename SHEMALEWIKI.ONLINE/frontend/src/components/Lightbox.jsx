@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { getProxiedImageUrl } from '../utils';
 
 /**
  * Fullscreen lightbox for gallery images.
  * Keyboard: ← → to navigate, ESC to close.
  * Click outside image to close.
+ * Images are served through the proxy to bypass hotlink-blocking (web.archive.org).
  */
 export default function Lightbox({ images, currentIndex, onClose, onNavigate }) {
   const [loaded, setLoaded] = useState(false);
@@ -41,6 +43,7 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }) 
 
   const current = images[currentIndex];
   const src = current?.photo_url || current;
+  const displaySrc = getProxiedImageUrl(src);
 
   return (
     <div className="lightbox-overlay" onClick={onClose}>
@@ -62,7 +65,7 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }) 
       <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
         {!loaded && <div className="lightbox-loading"><div className="lightbox-spinner" /></div>}
         <img
-          src={src}
+          src={displaySrc}
           alt={`Photo ${currentIndex + 1}`}
           className={`lightbox-img ${loaded ? 'loaded' : ''}`}
           onLoad={() => setLoaded(true)}
