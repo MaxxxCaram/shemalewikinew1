@@ -10,6 +10,7 @@ import { getProxiedImageUrl } from '../utils';
  */
 export default function Lightbox({ images, currentIndex, onClose, onNavigate }) {
   const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
 
   const goNext = useCallback(() => {
     onNavigate((currentIndex + 1) % images.length);
@@ -37,6 +38,11 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }) 
 
   useEffect(() => {
     setLoaded(false);
+    setError(false);
+    // Safety timeout: if the proxy hangs, never leave the lightbox in an
+    // infinite "loading" state (which can contribute to a frozen UI).
+    const t = setTimeout(() => setLoaded(true), 8000);
+    return () => clearTimeout(t);
   }, [currentIndex]);
 
   if (!images || images.length === 0) return null;
@@ -63,13 +69,18 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }) 
       )}
 
       <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-        {!loaded && <div className="lightbox-loading"><div className="lightbox-spinner" /></div>}
-        <img
-          src={displaySrc}
-          alt={`Photo ${currentIndex + 1}`}
-          className={`lightbox-img ${loaded ? 'loaded' : ''}`}
-          onLoad={() => setLoaded(true)}
-        />
+        {!loaded && !error && <div className="lightbox-loading"><div className="lightbox-spinner" /></div>}
+        {error ? (
+          <div className="lightbox-error">⚠️ Could not load photo</div>
+        ) : (
+          <img
+            src={displaySrc}
+            alt={`Photo ${currentIndex + 1}`}
+            className={`lightbox-img ${loaded ? 'loaded' : ''}`}
+            onLoad={() => setLoaded(true)}
+            onError={() => { setError(true); setLoaded(true); }}
+          />
+        )}
         
         <div className="lightbox-counter">
           {currentIndex + 1} / {images.length}
