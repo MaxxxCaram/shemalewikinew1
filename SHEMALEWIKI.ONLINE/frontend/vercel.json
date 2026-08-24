@@ -13,13 +13,11 @@
     { "source": "/api/manage-photos(.*)", "destination": "/api/manage-photos.js" },
     { "source": "/api/update-profile(.*)", "destination": "/api/update-profile.js" },
     { "source": "/api/drafts(.*)", "destination": "/api/profiles.js" },
-    { "source": "/api/vivas/chat(.*)", "destination": "/api/profiles.js" },
-    { "source": "/api/travel-plans(.*)", "destination": "/api/travel-plans.js" },
+    { "source": "/api/vivas/chat(.*)", "destination": "/api/vivas/chat.js" },
     { "source": "/api/auth/login(.*)", "destination": "/api/auth/login.js" },
-    { "source": "/api/auth/magic-link(.*)", "destination": "/api/auth/magic-link.js" },
     { "source": "/api/profiles(.*)", "destination": "/api/profiles.js" },
     { "source": "/api/profiles/(.*)", "destination": "/api/profiles.js" },
-    { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|logosw|icons|city-guides|downloads|mision).*)", "destination": "/index.html" }
+    { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|llms|logosw|icons|city-guides|downloads|mision|manifest).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -27,7 +25,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co; script-src 'self' 'unsafe-inline' https://qtuzpswxzengqoqqwtpt.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co wss://qtuzpswxzengqoqqwtpt.supabase.co https://shemalewiki.online https://buscatrans.com;"
+          "value": "default-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co; script-src 'self' 'unsafe-inline' https://qtuzpswxzengqoqqwtpt.supabase.co https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' https://qtuzpswxzengqoqqwtpt.supabase.co wss://qtuzpswxzengqoqqwtpt.supabase.co https://shemalewiki.online https://buscatrans.com https://vercel.live; frame-src 'self' https://vercel.live;"
         },
         {
           "key": "Cache-Control",
@@ -36,7 +34,44 @@
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "x-vercel-skip-toolbar", "value": "1" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(?:svg|png|ico|jpg|jpeg|webp|gif|woff|woff2))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(robots|sitemap|sitemap-main|manifest|llms)(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
       ]
     }
   ]
