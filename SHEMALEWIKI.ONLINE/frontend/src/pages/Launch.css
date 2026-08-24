@@ -1,0 +1,238 @@
+.launch-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.launch-eyebrow {
+  color: var(--accent, #7c3aed);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.launch-hero h1 {
+  font-size: 2.6rem;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+}
+
+.launch-highlight {
+  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.launch-sub {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 560px;
+  margin: 0 auto 2.5rem;
+}
+
+/* Countdown */
+.launch-countdown {
+  margin: 0 auto 3rem;
+}
+
+.count-label {
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.count-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.count-cell {
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  min-width: 76px;
+}
+
+.count-num {
+  font-size: 2.2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.count-lab {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
+/* Role selector */
+.launch-role {
+  max-width: 440px;
+  margin: 0 auto 2rem;
+}
+
+.role-label {
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.role-options {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.role-option {
+  flex: 1;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 14px;
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s;
+}
+
+.role-option.active {
+  border-color: var(--accent, #7c3aed);
+  background: rgba(124, 58, 237, 0.12);
+}
+
+.role-title {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.role-desc {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.role-note {
+  color: var(--accent, #7c3aed);
+  font-size: 0.8rem;
+  margin-top: 0.75rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* Form */
+.launch-form-wrap {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.launch-form {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(236, 72, 153, 0.08));
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.launch-form h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.launch-form-sub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.launch-form input {
+  background: var(--card-bg, rgba(15, 23, 42, 0.8));
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.launch-form input:focus {
+  outline: none;
+  border-color: var(--accent, #7c3aed);
+}
+
+.launch-form button {
+  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.launch-form button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.launch-error {
+  color: #ef4444;
+  font-size: 0.85rem;
+}
+
+.launch-success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+}
+
+.launch-success-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.launch-success p {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.launch-browse {
+  margin-top: 1.5rem;
+}
+
+.launch-browse a {
+  color: var(--accent, #7c3aed);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .launch-hero h1 { font-size: 1.9rem; }
+  .count-cell { min-width: 62px; padding: 0.75rem; }
+  .count-num { font-size: 1.7rem; }
+}

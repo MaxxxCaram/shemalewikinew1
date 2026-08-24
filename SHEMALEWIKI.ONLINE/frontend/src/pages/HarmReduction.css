@@ -1,0 +1,293 @@
+.harm-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+}
+
+.harm-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.harm-eyebrow {
+  color: var(--accent, #7c3aed);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.harm-hero h1 {
+  font-size: 2.4rem;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+.harm-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto 1rem;
+}
+
+.harm-intro {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0.85;
+}
+
+/* Interactive checker */
+.harm-checker {
+  background: rgba(148, 163, 184, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.harm-checker h2 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.harm-checker-sub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.harm-selects {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.harm-selects select {
+  flex: 1;
+  min-width: 200px;
+  background: var(--card-bg, rgba(15, 23, 42, 0.8));
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.harm-plus {
+  color: var(--text-secondary);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.harm-result {
+  border: 2px solid;
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.harm-result-symbol {
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.harm-result-label {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+
+.harm-result-status {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.harm-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.harm-legend strong {
+  color: var(--text-primary);
+}
+
+.harm-basedon {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.harm-rule {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 3rem;
+}
+
+.harm-rule h2 {
+  color: #ef4444;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.harm-rule ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.harm-rule li {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.harm-substances h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.harm-card {
+  background: rgba(148, 163, 184, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.harm-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.harm-emoji {
+  font-size: 2rem;
+}
+
+.harm-card-header h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.harm-aliases {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0;
+  opacity: 0.8;
+}
+
+.harm-risk {
+  background: rgba(220, 38, 38, 0.06);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.harm-risk strong {
+  color: #ef4444;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.harm-risk p {
+  margin: 0.5rem 0 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.harm-reduce {
+  background: rgba(16, 185, 129, 0.06);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.harm-reduce strong {
+  color: #10b981;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.harm-reduce p {
+  margin: 0.5rem 0 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.harm-cta {
+  text-align: center;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(236, 72, 153, 0.1));
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  margin-top: 3rem;
+}
+
+.harm-cta h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.harm-cta p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.harm-cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.harm-cta-buttons .btn-secondary {
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: var(--text-primary);
+}
+
+.harm-disclaimer {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 2rem;
+  opacity: 0.7;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .harm-hero h1 { font-size: 1.8rem; }
+  .harm-rule, .harm-card { padding: 1.25rem; }
+}

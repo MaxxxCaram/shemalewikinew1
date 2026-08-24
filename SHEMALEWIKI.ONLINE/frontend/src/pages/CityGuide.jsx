@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { MapPin, ArrowLeft, Building2, Users, Star } from 'lucide-react';
+import { MapPin, ArrowLeft, Building2, Users } from 'lucide-react';
 import SEO from '../components/SEO';
 import { supabase } from '../supabase';
 import LazyImage from '../components/LazyImage';
-import { isLoadablePhoto } from '../utils/photoFilter';
-import { getProxiedImageUrl } from '../utils';
 
 // City guide content data — rich SEO text for each supported city
 const cityContent = {
@@ -540,11 +538,6 @@ const cityContentHe = {
   },
 };
 
-// Helper from display name
-function cityToSlug(city) {
-  return city.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-}
-
 export default function CityGuide() {
   const { continent, country, city } = useParams();
   const navigate = useNavigate();
@@ -554,16 +547,20 @@ export default function CityGuide() {
   const [content, setContent] = useState(null);
   const [travelers, setTravelers] = useState([]);
 
-  // Detect language from URL path
+  // Detect language from URL path; BuscaTrans defaults to Spanish
   const lang = typeof window !== 'undefined' 
-    ? (window.location.pathname.startsWith('/es/') || window.location.pathname.startsWith('/es') ? 'es'
+    ? (window.location.pathname.startsWith('/nl/') || window.location.pathname.startsWith('/nl') ? 'nl'
+      : window.location.pathname.startsWith('/fr/') || window.location.pathname.startsWith('/fr') ? 'fr'
+      : window.location.pathname.startsWith('/es/') || window.location.pathname.startsWith('/es') ? 'es'
       : window.location.pathname.startsWith('/he/') || window.location.pathname.startsWith('/he') ? 'he'
-      : 'en')
+      : (window.location.hostname.includes('buscatrans') ? 'es' : 'en'))
     : 'en';
+  // French uses the English city-guide body for now (interface chrome is translated).
   const contentMap = lang === 'es' ? cityContentEs : lang === 'he' ? cityContentHe : cityContent;
 
   const displayCountry = country.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   const displayCity = city.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
   // Find matching content by city slug from the correct language map
   useEffect(() => {
@@ -575,7 +572,9 @@ export default function CityGuide() {
     const fetchProfiles = async () => {
       setLoading(true);
       try {
-        // Query profiles that match this city in location
+        // Query profiles that match this city in location.
+        // Fetch a large batch then filter by photos: the 12 most recent are
+        // often photo-less UUID duplicates that would empty the city page.
         const locationPattern = `% | ${displayCity}`;
         const { data, error } = await supabase
           .from('profiles')
@@ -583,16 +582,15 @@ export default function CityGuide() {
           .ilike('location', locationPattern)
           .not('cam_chat', 'eq', 'rejected')
           .order('created_at', { ascending: false })
-          .limit(12);
+          .limit(200);
 
         if (error) throw error;
         if (data) {
-          // Filter out watermarked shemalewiki.com photos
           const arr = Array.isArray(data) ? data : [];
-          const cleaned = arr.map(p => ({
-            ...p,
-            photos: (p.photos || []).filter(ph => isLoadablePhoto(ph.photo_url))
-          })).filter(p => p.photos.length > 0); // Only show profiles WITH photos per Maxi's directive
+          const cleaned = arr
+            .map(p => ({ ...p, photos: p.photos || [] }))
+            .filter(p => p.photos.length > 0) // Only show profiles WITH photos per Maxi's directive
+            .slice(0, 12);
           setProfiles(cleaned);
           // Get total count separately
           const { count } = await supabase
@@ -620,7 +618,7 @@ export default function CityGuide() {
           const data = await resp.json();
           setTravelers(data.active || []);
         }
-      } catch (e) {
+      } catch {
         // Silently fail — travelers section is non-critical
       }
     };
@@ -686,22 +684,63 @@ export default function CityGuide() {
       viewAllCountryDesc: `דפדפו במדריך המלא של ${displayCountry} כולל ערים נוספות`,
       viewAllBtn: `צפו בכל החברים מ${displayCountry}`,
     },
+    nl: {
+      seoTitle: `Trans Metgezellen in ${displayCity} — Geverifieerde Profielen`,
+      seoDesc: (content
+        ? `Vind ${profileCount} geverifieerde trans metgezellen in ${displayCity}, ${displayCountry}. Blader door profielen met foto\u2019s en contactgegevens. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `Vind geverifieerde trans metgezellen in ${displayCity}, ${displayCountry}. Blader door ${profileCount} actieve profielen met foto\u2019s en contactgegevens.`),
+      home: 'Home',
+      backTo: `Terug naar ${displayCountry}`,
+      community: `Transgemeenschap in ${displayCity}`,
+      guideTagline: `Jouw gids voor trans metgezellen en geverifieerde profielen in ${displayCity}, ${displayCountry}`,
+      about: `Over de Transgemeenschap in ${displayCity}`,
+      theScene: 'De Transgemeenschap',
+      districts: 'Populaire wijken en gebieden',
+      tips: `Tips voor het boeken in ${displayCity}`,
+      faq: 'Veelgestelde vragen',
+      featured: `Uitgelichte Trans Metgezellen in ${displayCity}`,
+      viewAllCountry: `Bekijk alle leden in ${displayCountry}`,
+      viewAllCountryDesc: `Blader door de volledige ${displayCountry}-gids, inclusief andere steden`,
+      viewAllBtn: `Bekijk alle leden van ${displayCountry}`,
+    },
+    fr: {
+      seoTitle: `Accompagnantes trans à ${displayCity} — Profils vérifiés`,
+      seoDesc: (content
+        ? `Trouvez ${profileCount} accompagnantes trans vérifiées à ${displayCity}, ${displayCountry}. Parcourez des profils avec photos et coordonnées. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `Trouvez des accompagnantes trans vérifiées à ${displayCity}, ${displayCountry}. Parcourez ${profileCount} profils actifs avec photos et coordonnées.`),
+      home: 'Accueil',
+      backTo: `Retour à ${displayCountry}`,
+      community: `Communauté trans à ${displayCity}`,
+      guideTagline: `Votre guide des accompagnantes trans et des profils vérifiés à ${displayCity}, ${displayCountry}`,
+      about: `À propos de la communauté trans à ${displayCity}`,
+      theScene: 'La communauté trans',
+      districts: 'Quartiers et zones populaires',
+      tips: `Conseils pour réserver à ${displayCity}`,
+      faq: 'Questions fréquentes',
+      featured: `Accompagnantes trans en vedette à ${displayCity}`,
+      viewAllCountry: `Voir tous les membres à ${displayCountry}`,
+      viewAllCountryDesc: `Parcourez l'annuaire complet de ${displayCountry}, y compris les autres villes`,
+      viewAllBtn: `Voir tous les membres de ${displayCountry}`,
+    },
   };
   const t = i18n[lang] || i18n.en;
+  // Pick a string by language: locale(esText, nlText, frText, enText)
+  const locale = (es, nl, fr, en) => lang === 'es' ? es : lang === 'nl' ? nl : lang === 'fr' ? fr : en;
 
   return (
     <>
       <SEO
         title={t.seoTitle}
         description={t.seoDesc}
-        canonicalPath={`/${continent}/${country}/${city}`}
+        canonicalPath={`${langPrefix}/${continent}/${country}/${city}`}
         lang={lang}
-        alternates={(lang === 'en' 
-          ? [{ lang: 'es', path: `/es/${continent}/${country}/${city}` }, { lang: 'he', path: `/he/${continent}/${country}/${city}` }]
-          : lang === 'es'
-          ? [{ lang: 'en', path: `/en/${continent}/${country}/${city}` }, { lang: 'he', path: `/he/${continent}/${country}/${city}` }]
-          : [{ lang: 'en', path: `/en/${continent}/${country}/${city}` }, { lang: 'es', path: `/es/${continent}/${country}/${city}` }]
-        )}
+        alternates={[
+          { lang: 'en', path: `/en/${continent}/${country}/${city}` },
+          { lang: 'es', path: `/es/${continent}/${country}/${city}` },
+          { lang: 'he', path: `/he/${continent}/${country}/${city}` },
+          { lang: 'nl', path: `/nl/${continent}/${country}/${city}` },
+          { lang: 'fr', path: `/fr/${continent}/${country}/${city}` },
+        ].filter(a => a.lang !== lang)}
       />
       <div className="container" style={{ padding: '2rem 0 4rem' }}>
         {/* Breadcrumb navigation */}
@@ -712,7 +751,7 @@ export default function CityGuide() {
             {continent.charAt(0).toUpperCase() + continent.slice(1)}
           </Link>
           <span className="breadcrumb-sep">›</span>
-          <Link to={`/${continent}/${country}`} className="breadcrumb-link">
+          <Link to={`${langPrefix}/${continent}/${country}`} className="breadcrumb-link">
             {displayCountry}
           </Link>
           <span className="breadcrumb-sep">›</span>
@@ -720,7 +759,7 @@ export default function CityGuide() {
         </div>
 
         <button
-          onClick={() => navigate(`/${continent}/${country}`)}
+          onClick={() => navigate(`${langPrefix}/${continent}/${country}`)}
           className="back-btn"
         >
           <ArrowLeft className="back-icon" />
@@ -738,7 +777,7 @@ export default function CityGuide() {
           <div className="city-stats" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             <div className="city-stat">
               <Users size={20} style={{ color: 'var(--accent-primary)' }} />
-              <span><strong>{profileCount}</strong> {lang === 'es' ? 'perfiles activos' : 'active profiles'}</span>
+              <span><strong>{profileCount}</strong> {locale('perfiles activos', 'actieve profielen', 'profils actifs', 'active profiles')}</span>
             </div>
             <div className="city-stat">
               <MapPin size={20} style={{ color: 'var(--accent-primary)' }} />
@@ -752,11 +791,15 @@ export default function CityGuide() {
           <div className="city-travelers glass" style={{ padding: '1.8rem 2.5rem', marginBottom: '2rem', borderLeft: '3px solid var(--accent-primary)' }}>
             <h2 style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span>✈️</span> 
-              {lang === 'es' ? `Viajeras en ${displayCity}` : `Travelers in ${displayCity}`}
+              {locale(`Viajeras en ${displayCity}`, `Reizigers in ${displayCity}`, `Voyageuses à ${displayCity}`, `Travelers in ${displayCity}`)}
             </h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
               {lang === 'es' 
                 ? `${travelers.length} acompañante${travelers.length > 1 ? 's' : ''} llegando en las próximas 48 horas. ¡Reservá ahora!`
+                : lang === 'nl'
+                ? `${travelers.length} ${travelers.length === 1 ? 'metgezel' : 'metgezellen'} komen binnen de komende 48 uur aan. Boek nu!`
+                : lang === 'fr'
+                ? `${travelers.length} accompagnante${travelers.length > 1 ? 's' : ''} arrivant dans les prochaines 48 heures. Réservez maintenant !`
                 : `${travelers.length} companion${travelers.length > 1 ? 's' : ''} arriving in the next 48 hours. Book now!`}
             </p>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
@@ -775,9 +818,9 @@ export default function CityGuide() {
                     {t.city || displayCity}
                   </span>
                   <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                    {new Date(t.arrival_date).toLocaleDateString(lang === 'es' ? 'es' : 'en', { day: 'numeric', month: 'short' })}
+                    {new Date(t.arrival_date).toLocaleDateString(lang === 'es' ? 'es' : lang === 'nl' ? 'nl' : lang === 'fr' ? 'fr' : 'en', { day: 'numeric', month: 'short' })}
                     {' → '}
-                    {new Date(t.departure_date).toLocaleDateString(lang === 'es' ? 'es' : 'en', { day: 'numeric', month: 'short' })}
+                    {new Date(t.departure_date).toLocaleDateString(lang === 'es' ? 'es' : lang === 'nl' ? 'nl' : lang === 'fr' ? 'fr' : 'en', { day: 'numeric', month: 'short' })}
                   </span>
                 </div>
               ))}
@@ -816,7 +859,7 @@ export default function CityGuide() {
             {/* Related Keywords */}
             <div style={{ marginTop: '2rem' }}>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                {lang === 'es' ? 'También buscando:' : 'Also searching for:'}
+                {locale('También buscando:', 'Ook gezocht op:', 'Également recherché :', 'Also searching for:')}
               </p>
               <div className="tags-container">
                 {content.keywords.map((kw, idx) => (
@@ -830,7 +873,7 @@ export default function CityGuide() {
         {/* Country page link */}
         <div className="city-link-card" style={{ marginBottom: '2rem' }}>
           <Link
-            to={`/${continent}/${country}`}
+            to={`${langPrefix}/${continent}/${country}`}
             className="glass-card"
             style={{ display: 'flex', alignItems: 'center', padding: '1.5rem', gap: '1rem' }}
           >
@@ -855,16 +898,16 @@ export default function CityGuide() {
           </div>
         ) : profiles.length === 0 ? (
           <div className="empty-state">
-            <p>{lang === 'es' ? `Aún no hay perfiles en ${displayCity}.` : `No profiles found in ${displayCity} yet.`}</p>
-            <Link to={`/${continent}/${country}`} className="btn btn-primary" style={{ marginTop: '1rem' }}>
-              {lang === 'es' ? `Explorar todos los miembros de ${displayCountry}` : `Browse all ${displayCountry} members`}
+            <p>{lang === 'es' ? `Aún no hay perfiles en ${displayCity}.` : lang === 'nl' ? `Nog geen profielen gevonden in ${displayCity}.` : lang === 'fr' ? `Aucun profil trouvé à ${displayCity} pour le moment.` : `No profiles found in ${displayCity} yet.`}</p>
+            <Link to={`${langPrefix}/${continent}/${country}`} className="btn btn-primary" style={{ marginTop: '1rem' }}>
+              {lang === 'es' ? `Explorar todos los miembros de ${displayCountry}` : lang === 'nl' ? `Blader door alle leden van ${displayCountry}` : lang === 'fr' ? `Parcourir tous les membres de ${displayCountry}` : `Browse all ${displayCountry} members`}
             </Link>
           </div>
         ) : (
           <>
             <div className="profiles-grid">
               {profiles.map(profile => (
-                <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card">
+                <Link to={`${langPrefix}/profile/${profile.id}`} key={profile.id} className="glass-card">
                   <LazyImage
                     src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
                     alt={profile.name}
@@ -874,7 +917,7 @@ export default function CityGuide() {
                     <h3 className="profile-card-title">{profile.name}</h3>
                     <div className="profile-card-meta">
                       <span>📍 {profile.location || 'Unknown'}</span>
-                      {profile.age && <span>🎂 {lang === 'es' ? `Edad: ${profile.age}` : `Age: ${profile.age}`}</span>}
+                      {profile.age && <span>🎂 {lang === 'es' ? `Edad: ${profile.age}` : lang === 'nl' ? `Leeftijd: ${profile.age}` : lang === 'fr' ? `Âge : ${profile.age}` : `Age: ${profile.age}`}</span>}
                     </div>
                   </div>
                 </Link>
@@ -884,7 +927,7 @@ export default function CityGuide() {
             {/* View all link */}
             <div style={{ textAlign: 'center', marginTop: '2rem' }}>
               <Link
-                to={`/${continent}/${country}`}
+                to={`${langPrefix}/${continent}/${country}`}
                 className="btn btn-primary"
                 style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}
               >

@@ -46,7 +46,7 @@ function sanitizeName(name) {
 
 function isValidName(name) {
   const cleaned = sanitizeName(name);
-  return cleaned.length >= 2 && cleaned.length <= 50 && cleaned !== name;
+  return cleaned.length >= 2 && cleaned.length <= 50 && cleaned === String(name).trim();
 }
 
 function isValidPhotoUrl(url) {
@@ -186,8 +186,10 @@ export default async function handler(req, res) {
     const profile = data[0];
 
     // Save photo URLs to photos table (validated)
-    if (photo_urls && photo_urls.length > 0) {
-      const validPhotos = photo_urls.filter(u => isValidPhotoUrl(u));
+    const validPhotos = (photo_urls && Array.isArray(photo_urls))
+      ? photo_urls.filter(u => isValidPhotoUrl(u))
+      : [];
+    if (validPhotos.length > 0) {
       if (validPhotos.length > 0 && validPhotos.length !== photo_urls.length) {
         console.warn(`Filtered ${photo_urls.length - validPhotos.length} invalid URLs for profile ${profileId}`);
       }

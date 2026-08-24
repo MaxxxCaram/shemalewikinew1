@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   User, Lock, ArrowRight, ArrowLeft, Mail, Phone, 
-  MapPin, Globe, Camera, Video, Plus, Send, 
-  CheckCircle2, Sparkles, UserCheck, PlusCircle
+  MapPin, Globe, Plus, Send, XCircle,
+  CheckCircle2, UserCheck, PlusCircle, Languages
 } from 'lucide-react';
-import { supabase } from '../supabase';
+import { detectDashboardLang, getDashboardTranslations, SUPPORTED_LANGS } from '../i18n-dashboard';
+import AdBanner from '../components/AdBanner';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
 function compressImage(file, maxDim = 2048, quality = 0.85) {
@@ -39,6 +40,17 @@ export default function DashboardLogin() {
   const [view, setView] = useState('options'); // 'options', 'claim', 'create', 'login'
   const navigate = useNavigate();
 
+  // Language state (persisted in localStorage, detected by default)
+  const [lang, setLang] = useState(() => detectDashboardLang());
+  const t = getDashboardTranslations(lang);
+
+  const changeLang = (code) => {
+    setLang(code);
+    try {
+      localStorage.setItem('dashboard_lang', code);
+    } catch { /* ignore */ }
+  };
+
   // Login States
   const [loginIdentifier, setLoginIdentifier] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -59,14 +71,13 @@ export default function DashboardLogin() {
   const [createStep, setCreateStep] = useState(1);
   const [createLoading, setCreateLoading] = useState(false);
   const [createSuccess, setCreateSuccess] = useState(false);
-  const [createError, setCreateError] = useState('');
+  const [createError, setCreateError] = useState(''); // eslint-disable-line no-unused-vars
 
   // Step 1: Contact & Location
   const [createName, setCreateName] = useState('');
   const [createEmail, setCreateEmail] = useState('');
   const [createPhone, setCreatePhone] = useState('');
   const [createWhatsapp, setCreateWhatsapp] = useState('');
-  const [createContinent, setCreateContinent] = useState('Europe');
   const [createCountry, setCreateCountry] = useState('');
   const [createCity, setCreateCity] = useState('');
 
@@ -78,7 +89,6 @@ export default function DashboardLogin() {
   const [createNationality, setCreateNationality] = useState('');
   const [createLanguages, setCreateLanguages] = useState('');
   const [createOnlyFans, setCreateOnlyFans] = useState('');
-  const [createCamChat, setCreateCamChat] = useState('');
 
   // Step 3: Media
   const [createPhotoFiles, setCreatePhotoFiles] = useState([]);  // File objects
@@ -104,14 +114,14 @@ export default function DashboardLogin() {
       const data = await response.json();
 
       if (!response.ok) {
-        setLoginError(data.error || 'Credenciales inválidas');
+        setLoginError(data.error || t.errInvalidCredentials);
         return;
       }
 
       localStorage.setItem('dashboard_user_id', data.profile.id);
       navigate('/dashboard');
     } catch (err) {
-      setLoginError('Ocurrió un error. Verificá tu conexión.');
+      setLoginError(t.errConnection);
       console.error(err);
     } finally {
       setLoginLoading(false);
@@ -145,7 +155,7 @@ export default function DashboardLogin() {
       setClaimSuccess(true);
     } catch (err) {
       console.error(err);
-      setLoginError('No se pudo enviar la solicitud. Por favor, inténtelo de nuevo.');
+      setLoginError(t.errClaimSubmit);
     } finally {
       setClaimLoading(false);
     }
@@ -210,7 +220,7 @@ export default function DashboardLogin() {
       setCreateSuccess(true);
     } catch (err) {
       console.error(err);
-      setCreateError('No se pudo crear el perfil. Por favor, inténtelo de nuevo.');
+      setCreateError(t.errCreateProfile);
     } finally {
       setCreateLoading(false);
     }
@@ -237,7 +247,29 @@ export default function DashboardLogin() {
   };
 
   return (
-    <div className="container" style={{ padding: '3rem 0', display: 'flex', justifyContent: 'center', minHeight: '80vh', alignItems: 'center' }}>
+    <div className="container" style={{ padding: '3rem 0', display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '80vh', alignItems: 'center' }}>
+      {/* Language selector */}
+      <div style={{ position: 'fixed', top: '1.25rem', right: '1.25rem', zIndex: 50 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.06)', border: '1px solid var(--glass-border)', borderRadius: '0.6rem', padding: '0.35rem 0.75rem', backdropFilter: 'blur(8px)' }}>
+          <Languages size={16} style={{ color: 'var(--text-secondary)' }} />
+          <select
+            value={lang}
+            onChange={(e) => changeLang(e.target.value)}
+            aria-label="Language"
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', fontSize: '0.9rem', cursor: 'pointer', outline: 'none' }}
+          >
+            {SUPPORTED_LANGS.map((code) => (
+              <option key={code} value={code} style={{ color: '#000' }}>
+                {getDashboardTranslations(code).langName}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Ad banner — top */}
+      <AdBanner zoneId="" width={728} height={90} provider="trafficjunky" className="ad-top" />
+
       {/* 1. SELECTION PORTAL */}
       {view === 'options' && (
         <div style={{ maxWidth: '900px', width: '100%', padding: '0 1rem' }}>
@@ -248,10 +280,10 @@ export default function DashboardLogin() {
               style={{ display: 'inline-flex', marginBottom: '1.5rem', fontSize: '0.9rem' }}
             >
               <ArrowLeft className="back-icon" style={{ width: '1rem', height: '1rem' }} />
-              Volver al inicio
+              {t.backHome}
             </button>
-            <h1 className="text-gradient" style={{ fontSize: '2.5rem', marginBottom: '0.75rem', fontWeight: 'bold' }}>Trans Dashboard Portal</h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Selecciona una opción para acceder o administrar tu perfil</p>
+            <h1 className="text-gradient" style={{ fontSize: '2.5rem', marginBottom: '0.75rem', fontWeight: 'bold' }}>{t.portalTitle}</h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>{t.portalSubtitle}</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '2rem' }}>
@@ -265,12 +297,12 @@ export default function DashboardLogin() {
               <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(236, 72, 153, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', border: '1px solid rgba(236, 72, 153, 0.2)' }}>
                 <UserCheck size={28} style={{ color: 'var(--accent-primary)' }} />
               </div>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Reclama tu perfil</h2>
+              <h2 style={{ fontSize: '1.35rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>{t.claimTitle}</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5', flexGrow: 1, marginBottom: '1.5rem' }}>
-                Si ya figuras en nuestro sitio web pero no tienes tus accesos, solicita tu usuario y contraseña aquí.
+                {t.claimDesc}
               </p>
               <button className="btn" style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-primary)', width: '100%', border: '1px solid var(--glass-border)' }}>
-                Reclamar Perfil <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
+                {t.claimBtn} <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
               </button>
             </div>
 
@@ -283,12 +315,12 @@ export default function DashboardLogin() {
               <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(139, 92, 246, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', border: '1px solid rgba(139, 92, 246, 0.2)' }}>
                 <PlusCircle size={28} style={{ color: '#8b5cf6' }} />
               </div>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Crear perfil</h2>
+              <h2 style={{ fontSize: '1.35rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>{t.createTitle}</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5', flexGrow: 1, marginBottom: '1.5rem' }}>
-                Crea un nuevo anuncio profesional desde cero. Podrás registrar tus fotos, vídeos y todos tus datos.
+                {t.createDesc}
               </p>
               <button className="btn btn-primary" style={{ width: '100%' }}>
-                Crear Perfil <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
+                {t.createBtn} <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
               </button>
             </div>
 
@@ -301,12 +333,12 @@ export default function DashboardLogin() {
               <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
                 <Lock size={28} style={{ color: '#22c55e' }} />
               </div>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Iniciar Sesión</h2>
+              <h2 style={{ fontSize: '1.35rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>{t.loginTitle}</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5', flexGrow: 1, marginBottom: '1.5rem' }}>
-                Para las acompañantes que ya tienen su perfil actualizado y activo por nuestro equipo de administración.
+                {t.loginDesc}
               </p>
               <button className="btn" style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-primary)', width: '100%', border: '1px solid var(--glass-border)' }}>
-                Acceder <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
+                {t.loginBtn} <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
               </button>
             </div>
 
@@ -323,12 +355,12 @@ export default function DashboardLogin() {
             style={{ marginBottom: '1.5rem', fontSize: '0.9rem' }}
           >
             <ArrowLeft className="back-icon" style={{ width: '1rem', height: '1rem' }} />
-            Volver a Opciones
+            {t.backOptions}
           </button>
 
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Reclama tu perfil</h1>
-            <p style={{ color: 'var(--text-secondary)' }}>Te enviaremos tus datos de inicio de sesión</p>
+            <h1 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{t.claimTitle}</h1>
+            <p style={{ color: 'var(--text-secondary)' }}>{t.claimSubtitle}</p>
           </div>
 
           {loginError && (
@@ -342,23 +374,23 @@ export default function DashboardLogin() {
               <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.1)', marginBottom: '1.5rem', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
                 <CheckCircle2 size={32} style={{ color: '#22c55e' }} />
               </div>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>¡Solicitud enviada!</h2>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>{t.requestSentTitle}</h2>
               <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '2rem' }}>
-                Tu solicitud de reclamación de perfil ha sido registrada correctamente. Nuestro equipo validará los datos y te enviará las credenciales a la brevedad.
+                {t.requestSentDesc}
               </p>
               <button 
                 onClick={() => { setView('options'); setClaimSuccess(false); }}
                 className="btn btn-primary"
                 style={{ width: '100%' }}
               >
-                Entendido
+                {t.gotIt}
               </button>
             </div>
           ) : (
             <form onSubmit={handleClaim} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
               <div className="form-group">
-                <label htmlFor="claimNameOnSite" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nombre con el que figuras en el sitio</label>
+                <label htmlFor="claimNameOnSite" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.claimNameLabel}</label>
                 <div style={{ position: 'relative' }}>
                   <User style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                   <input 
@@ -368,7 +400,7 @@ export default function DashboardLogin() {
                     autoComplete="name"
                     className="search-input" 
                     style={{ width: '100%', paddingLeft: '3rem' }} 
-                    placeholder="Ej. Maria Martinez" 
+                    placeholder={t.placeName} 
                     value={claimNameOnSite}
                     onChange={(e) => setClaimNameOnSite(e.target.value)}
                     required
@@ -377,7 +409,7 @@ export default function DashboardLogin() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="claimEmail" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Correo Electrónico (Mail)</label>
+                <label htmlFor="claimEmail" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.claimEmailLabel}</label>
                 <div style={{ position: 'relative' }}>
                   <Mail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                   <input 
@@ -387,7 +419,7 @@ export default function DashboardLogin() {
                     autoComplete="email"
                     className="search-input" 
                     style={{ width: '100%', paddingLeft: '3rem' }} 
-                    placeholder="tuemail@ejemplo.com" 
+                    placeholder={t.placeEmail} 
                     value={claimEmail}
                     onChange={(e) => setClaimEmail(e.target.value)}
                     required
@@ -396,7 +428,7 @@ export default function DashboardLogin() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="claimPhone" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Teléfono de Contacto</label>
+                <label htmlFor="claimPhone" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.claimPhoneLabel}</label>
                 <div style={{ position: 'relative' }}>
                   <Phone style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                   <input 
@@ -406,7 +438,7 @@ export default function DashboardLogin() {
                     autoComplete="tel"
                     className="search-input" 
                     style={{ width: '100%', paddingLeft: '3rem' }} 
-                    placeholder="+34 600 000 000" 
+                    placeholder={t.placePhone} 
                     value={claimPhone}
                     onChange={(e) => setClaimPhone(e.target.value)}
                     required
@@ -416,7 +448,7 @@ export default function DashboardLogin() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label htmlFor="claimCountry" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>País</label>
+                  <label htmlFor="claimCountry" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.countryLabel}</label>
                   <div style={{ position: 'relative' }}>
                     <Globe style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
@@ -426,7 +458,7 @@ export default function DashboardLogin() {
                       autoComplete="country-name"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
-                      placeholder="Ej. España" 
+                      placeholder={t.placeCountry} 
                       value={claimCountry}
                       onChange={(e) => setClaimCountry(e.target.value)}
                       required
@@ -434,7 +466,7 @@ export default function DashboardLogin() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="claimCity" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ciudad</label>
+                  <label htmlFor="claimCity" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.cityLabel}</label>
                   <div style={{ position: 'relative' }}>
                     <MapPin style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
@@ -444,7 +476,7 @@ export default function DashboardLogin() {
                       autoComplete="address-level2"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
-                      placeholder="Ej. Madrid" 
+                      placeholder={t.placeCity} 
                       value={claimCity}
                       onChange={(e) => setClaimCity(e.target.value)}
                       required
@@ -454,13 +486,13 @@ export default function DashboardLogin() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="claimContact" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Datos de contacto adicionales / Mensaje</label>
+                <label htmlFor="claimContact" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.claimContactLabel}</label>
                 <textarea 
                   id="claimContact"
                   name="claimContact"
                   className="search-input" 
                   style={{ width: '100%', minHeight: '100px', resize: 'vertical', padding: '0.75rem 1rem' }} 
-                  placeholder="Escribe aquí cualquier dato adicional que nos ayude a verificar tu identidad..."
+                  placeholder={t.claimContactPlace}
                   value={claimContact}
                   onChange={(e) => setClaimContact(e.target.value)}
                 />
@@ -475,7 +507,7 @@ export default function DashboardLogin() {
                 {claimLoading ? (
                   <span className="spin" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}></span>
                 ) : (
-                  <>Enviar Solicitud <Send size={18} style={{ marginLeft: '0.5rem' }} /></>
+                  <>{t.submitRequest} <Send size={18} style={{ marginLeft: '0.5rem' }} /></>
                 )}
               </button>
             </form>
@@ -492,12 +524,12 @@ export default function DashboardLogin() {
             style={{ marginBottom: '1.5rem', fontSize: '0.9rem' }}
           >
             <ArrowLeft className="back-icon" style={{ width: '1rem', height: '1rem' }} />
-            Volver a Opciones
+            {t.backOptions}
           </button>
 
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Crear perfil</h1>
-            <p style={{ color: 'var(--text-secondary)' }}>Paso {createStep} de 3 — Anuncio Profesional</p>
+            <h1 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{t.createTitle}</h1>
+            <p style={{ color: 'var(--text-secondary)' }}>{t.stepOf.replace('{step}', createStep)}</p>
             
           </div>
 
@@ -506,7 +538,7 @@ export default function DashboardLogin() {
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label htmlFor="createName" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nombre / Apodo *</label>
+                  <label htmlFor="createName" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.createNameLabel}</label>
                   <div style={{ position: 'relative' }}>
                     <User style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
@@ -515,7 +547,7 @@ export default function DashboardLogin() {
                       name="createName"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
-                      placeholder="Ej. Maria Martinez" 
+                      placeholder={t.placeName} 
                       value={createName}
                       onChange={(e) => setCreateName(e.target.value)}
                       required
@@ -524,7 +556,7 @@ export default function DashboardLogin() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="createEmail" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Email de Contacto *</label>
+                  <label htmlFor="createEmail" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.createEmailLabel}</label>
                   <div style={{ position: 'relative' }}>
                     <Mail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
@@ -534,7 +566,7 @@ export default function DashboardLogin() {
                       autoComplete="email"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
-                      placeholder="tuemail@ejemplo.com" 
+                      placeholder={t.placeEmail} 
                       value={createEmail}
                       onChange={(e) => setCreateEmail(e.target.value)}
                       required
@@ -545,7 +577,7 @@ export default function DashboardLogin() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label htmlFor="createPhone" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Teléfono de Contacto *</label>
+                  <label htmlFor="createPhone" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.createPhoneLabel}</label>
                   <div style={{ position: 'relative' }}>
                     <Phone style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
@@ -555,7 +587,7 @@ export default function DashboardLogin() {
                       autoComplete="tel"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
-                      placeholder="+34 600 000 000" 
+                      placeholder={t.placePhone} 
                       value={createPhone}
                       onChange={(e) => setCreatePhone(e.target.value)}
                       required
@@ -564,7 +596,7 @@ export default function DashboardLogin() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="createWhatsapp" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>WhatsApp (opcional, si es distinto)</label>
+                  <label htmlFor="createWhatsapp" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.whatsappLabel}</label>
                   <div style={{ position: 'relative' }}>
                     <Phone style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
@@ -574,7 +606,7 @@ export default function DashboardLogin() {
                       autoComplete="tel"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
-                      placeholder="Si es distinto al teléfono" 
+                      placeholder={t.whatsappPlace} 
                       value={createWhatsapp}
                       onChange={(e) => setCreateWhatsapp(e.target.value)}
                     />
@@ -584,7 +616,7 @@ export default function DashboardLogin() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label htmlFor="createCountry" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>País *</label>
+                  <label htmlFor="createCountry" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.countryLabel} *</label>
                   <div style={{ position: 'relative' }}>
                     <Globe style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
@@ -594,7 +626,7 @@ export default function DashboardLogin() {
                       autoComplete="country-name"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
-                      placeholder="Ej. España" 
+                      placeholder={t.placeCountry} 
                       value={createCountry}
                       onChange={(e) => setCreateCountry(e.target.value)}
                       required
@@ -602,7 +634,7 @@ export default function DashboardLogin() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="createCity" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ciudad *</label>
+                  <label htmlFor="createCity" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.cityLabel} *</label>
                   <div style={{ position: 'relative' }}>
                     <MapPin style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                     <input 
@@ -612,7 +644,7 @@ export default function DashboardLogin() {
                       autoComplete="address-level2"
                       className="search-input" 
                       style={{ width: '100%', paddingLeft: '3rem' }} 
-                      placeholder="Ej. Madrid" 
+                      placeholder={t.placeCity} 
                       value={createCity}
                       onChange={(e) => setCreateCity(e.target.value)}
                       required
@@ -627,7 +659,7 @@ export default function DashboardLogin() {
                 className="btn btn-primary"
                 style={{ width: '100%', marginTop: '1rem', display: 'flex', justifyContent: 'center' }}
               >
-                Siguiente <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
+                {t.next} <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
               </button>
             </form>
           )}
@@ -636,12 +668,12 @@ export default function DashboardLogin() {
             <form onSubmit={handleCreateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
               <div className="form-group">
-                <label htmlFor="createBio" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Biografía (mínimo 50 caracteres) *</label>
+                <label htmlFor="createBio" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.bioLabel}</label>
                 <textarea 
                   id="createBio"
                   name="createBio"
                   style={{ width: '100%', minHeight: '150px', resize: 'vertical', padding: '0.75rem 1rem' }} 
-                  placeholder="Cuenta un poco sobre ti, lo que ofreces, tu estilo, disponibilidad..."
+                  placeholder={t.bioPlace}
                   value={createBio}
                   onChange={(e) => setCreateBio(e.target.value)}
                   required
@@ -651,7 +683,7 @@ export default function DashboardLogin() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label htmlFor="createAge" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Edad *</label>
+                  <label htmlFor="createAge" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.ageLabel}</label>
                   <input 
                     type="number" 
                     id="createAge"
@@ -667,7 +699,7 @@ export default function DashboardLogin() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="createHeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Altura (cm)</label>
+                  <label htmlFor="createHeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.heightLabel}</label>
                   <input 
                     type="number" 
                     id="createHeight"
@@ -684,7 +716,7 @@ export default function DashboardLogin() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
-                  <label htmlFor="createWeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Peso (kg)</label>
+                  <label htmlFor="createWeight" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.weightLabel}</label>
                   <input 
                     type="number" 
                     id="createWeight"
@@ -699,14 +731,14 @@ export default function DashboardLogin() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="createNationality" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Nacionalidad</label>
+                  <label htmlFor="createNationality" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.nationalityLabel}</label>
                   <input 
                     type="text" 
                     id="createNationality"
                     name="createNationality"
                     autoComplete="country-name"
                     style={{ width: '100%', padding: '0.75rem 1rem' }} 
-                    placeholder="Ej. Argentina" 
+                    placeholder={t.placeNationality} 
                     value={createNationality}
                     onChange={(e) => setCreateNationality(e.target.value)}
                   />
@@ -714,13 +746,13 @@ export default function DashboardLogin() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="createLanguages" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Idiomas que hablas</label>
+                <label htmlFor="createLanguages" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.languagesLabel}</label>
                 <input 
                   type="text" 
                   id="createLanguages"
                   name="createLanguages"
                   style={{ width: '100%', padding: '0.75rem 1rem' }} 
-                  placeholder="Ej. Español, Inglés, Portugués" 
+                  placeholder={t.placeLanguages} 
                   value={createLanguages}
                   onChange={(e) => setCreateLanguages(e.target.value)}
                 />
@@ -733,7 +765,7 @@ export default function DashboardLogin() {
                   className="btn"
                   style={{ flex: 1, background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-primary)' }}
                 >
-                  <ArrowLeft size={16} style={{ marginRight: '0.5rem' }} /> Anterior
+                  <ArrowLeft size={16} style={{ marginRight: '0.5rem' }} /> {t.previous}
                 </button>
                 <button 
                   type="button"
@@ -741,7 +773,7 @@ export default function DashboardLogin() {
                   className="btn btn-primary"
                   style={{ flex: 1, display: 'flex', justifyContent: 'center' }}
                 >
-                  Siguiente <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
+                  {t.next} <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} />
                 </button>
               </div>
             </form>
@@ -751,19 +783,19 @@ export default function DashboardLogin() {
             <form onSubmit={handleCreateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
               <div className="form-group">
-                <label htmlFor="createOnlyFans" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Enlaces de redes sociales / OnlyFans</label>
+                <label htmlFor="createOnlyFans" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.socialLabel}</label>
                 <textarea 
                   id="createOnlyFans"
                   name="createOnlyFans"
                   style={{ width: '100%', minHeight: '80px', resize: 'vertical', padding: '0.75rem 1rem' }} 
-                  placeholder="Uno por línea. Ejemplo:\nhttps://onlyfans.com/...\nhttps://tinder.com/..." 
+                  placeholder={t.socialPlace} 
                   value={createOnlyFans}
                   onChange={(e) => setCreateOnlyFans(e.target.value)}
                 />
               </div>
 
               <div className="form-group">
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Fotos (opcional, máx. 10)</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.photosLabel}</label>
                 <input 
                   type="file" 
                   multiple
@@ -797,7 +829,7 @@ export default function DashboardLogin() {
               </div>
 
               <div className="form-group">
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Enlaces de videos (opcional)</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.videosLabel}</label>
                 {createVideoLinks.map((link, index) => (
                   <div key={index} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                     <input 
@@ -838,7 +870,7 @@ export default function DashboardLogin() {
                   className="btn"
                   style={{ flex: 1, background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-primary)' }}
                 >
-                  <ArrowLeft size={16} style={{ marginRight: '0.5rem' }} /> Anterior
+                  <ArrowLeft size={16} style={{ marginRight: '0.5rem' }} /> {t.previous}
                 </button>
                 <button 
                   type="submit"
@@ -849,7 +881,7 @@ export default function DashboardLogin() {
                   {createLoading ? (
                     <span className="spin" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}></span>
                   ) : (
-                    <>Crear Perfil <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} /></>
+                    <>{t.createBtn} <ArrowRight size={16} style={{ marginLeft: '0.5rem' }} /></>
                   )}
                 </button>
               </div>
@@ -890,8 +922,8 @@ export default function DashboardLogin() {
           </button>
 
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Iniciar Sesión</h1>
-            <p style={{ color: 'var(--text-secondary)' }}>Ingresa tus accesos de administración</p>
+            <h1 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{t.loginTitle}</h1>
+            <p style={{ color: 'var(--text-secondary)' }}>{t.loginDesc}</p>
           </div>
 
           {loginError && (
@@ -902,7 +934,7 @@ export default function DashboardLogin() {
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div className="form-group">
-              <label htmlFor="loginIdentifier" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Usuario o Correo Electrónico</label>
+              <label htmlFor="loginIdentifier" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{t.loginUserLabel}</label>
               <div style={{ position: 'relative' }}>
                 <User style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} size={18} />
                 <input 
@@ -948,12 +980,15 @@ export default function DashboardLogin() {
               {loginLoading ? (
                 <span className="spin" style={{ display: 'inline-block', width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%' }}></span>
               ) : (
-                <>Entrar <ArrowRight size={18} style={{ marginLeft: '0.5rem' }} /></>
+                <>{t.loginBtn} <ArrowRight size={18} style={{ marginLeft: '0.5rem' }} /></>
               )}
             </button>
           </form>
         </div>
       )}
+
+      {/* Ad banner — bottom */}
+      <AdBanner zoneId="" width={728} height={90} provider="trafficjunky" className="ad-bottom" />
     </div>
   );
 }

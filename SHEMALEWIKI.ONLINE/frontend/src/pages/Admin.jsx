@@ -1,6 +1,6 @@
 // Admin Panel — password NEVER on frontend, only server-side verification
 // Login POST /api/admin/login {secret} → returns {token}
-// Subsequent requests use: Authorization: Bearer <token>
+// Subsequent requests use: Authorization: Bearer ***
 
 import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut } from 'lucide-react';
@@ -13,30 +13,26 @@ function getToken() {
 
 export default function Admin() {
   const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
   const [passInput, setPassInput] = useState('');
   const [token, setToken] = useState(getToken());
 
-  const apiHeaders = { 'Content-Type': 'application/json' };
-  if (token) {
-    apiHeaders['Authorization'] = `Bearer ${token}`;
-  }
-
-  const fetchProfiles = useCallback(async () => {
+  const doFetchProfiles = useCallback(async (tok) => {
     setLoading(true);
     try {
-      const r = await fetch(`${API_BASE}/api/admin`, { headers: apiHeaders });
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tok}` },
+      });
       if (!r.ok) {
-        const data = await r.json().catch(() => ({}));
         if (r.status === 401 || r.status === 403) {
-          // Token expired or invalid
           localStorage.removeItem('admin_token');
           setToken(null);
           setIsAuthenticated(false);
           setMsg('Sesión expirada. Ingresá tu secret de nuevo.');
         } else {
+          const data = await r.json().catch(() => ({}));
           setMsg('❌ Error: ' + (data.error || 'no disponible'));
         }
         return;
@@ -51,14 +47,16 @@ export default function Admin() {
     } finally {
       setLoading(false);
     }
-  }, [apiHeaders]);
+  }, []);
 
+  // On mount: if already have token, fetch profiles
   useEffect(() => {
-    if (token) {
+    const t = getToken();
+    if (t) {
       setIsAuthenticated(true);
-      fetchProfiles();
+      doFetchProfiles(t);
     }
-  }, [token, fetchProfiles]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -73,13 +71,16 @@ export default function Admin() {
       if (r.ok && data.token) {
         localStorage.setItem('admin_token', data.token);
         setToken(data.token);
+        setIsAuthenticated(true);
         setMsg('✅ Acceso concedido');
+        // Fetch profiles with the new token
+        await doFetchProfiles(data.token);
       } else {
         setMsg('❌ Secret incorrecto');
+        setLoading(false);
       }
-    } catch (err) {
+    } catch {
       setMsg('❌ Error de conexión');
-    } finally {
       setLoading(false);
     }
   };
@@ -88,13 +89,12 @@ export default function Admin() {
     setMsg('');
     try {
       const body = { profileId, action };
-      // Delete requires secret for safety
       if (action === 'delete') {
         body.secret = document.getElementById('admin-delete-secret')?.value || '';
       }
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: apiHeaders,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(body),
       });
       const data = await r.json();
@@ -102,7 +102,7 @@ export default function Admin() {
 
       const labels = { approve: '✅ Aprobado', reject: '❌ Rechazado', delete: '🗑️ Eliminado' };
       setMsg(labels[action] || 'OK');
-      fetchProfiles();
+      doFetchProfiles(token);
       setTimeout(() => setMsg(''), 3000);
     } catch (err) {
       setMsg('❌ ' + err.message);
@@ -116,12 +116,6 @@ export default function Admin() {
     setProfiles([]);
     setPassInput('');
     setMsg('Sesión cerrada');
-  };
-
-  const getStatus = (p) => {
-    if (p.cam_chat === 'approved') return { label: '✅ Aprobado', color: '#22c55e' };
-    if (p.cam_chat === 'rejected') return { label: '❌ Rechazado', color: '#ef4444' };
-    return { label: '⏳ Pendiente', color: '#f59e0b' };
   };
 
   // Login form — no password on frontend
@@ -139,6 +133,7 @@ export default function Admin() {
               value={passInput}
               onChange={e => setPassInput(e.target.value)}
               style={{ width: '100%', padding: '0.75rem 1rem', marginBottom: '1rem' }}
+              autoComplete="current-password"
               autoFocus
             />
             <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
@@ -166,7 +161,7 @@ export default function Admin() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button onClick={fetchProfiles} className="btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)' }}>
+          <button onClick={() => doFetchProfiles(token)} className="btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)' }}>
             <RefreshCw size={16} style={{ marginRight: '0.5rem' }} /> Refrescar
           </button>
           <button onClick={handleLogout} className="btn" style={{ background: 'transparent', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}>

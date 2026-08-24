@@ -1,0 +1,50 @@
+# ShemaleWiki Online — Full Site Context for AI
+
+> This file provides structured, detailed context about the ShemaleWiki Online / BuscaTrans platform for AI assistants and crawlers. It complements llms.txt with expanded detail.
+
+## Platform overview
+
+ShemaleWiki Online (https://shemalewiki.online) and BuscaTrans (https://buscatrans.com) are two brand-language surfaces of the same directory of verified trans companions. It is one of the first companion directories built explicitly around the safety of trans sex workers.
+
+- **Profiles**: 5,000+ verified trans companion profiles across 75+ countries.
+- **Verification**: every profile is manually reviewed by a human team before publication.
+- **Reclaim**: profiles rescued from closed escort sites can be claimed by the person they belong to, for free.
+- **Safety app**: Vivas — a free app for workers with an emergency button, safety check-in, and an anonymous blacklist of dangerous clients.
+
+## Content categories
+
+### 1. Directory profiles
+Individual companion profiles, searchable by continent → country → city, and by name. Profiles include verified photos, location, services, and contact channels. **Requires age verification (18+) to view.**
+
+### 2. Safety guides
+- **How to Hire a Trans Escort Safely** (`/guide`): client-focused safety guide covering profile verification, payment security, consent and boundaries, and red flags.
+- **Harm Reduction Guide** (`/harm-reduction`): factual, non-judgmental drug interaction chart and harm-reduction information for workers, built from consensus data (TripSit/AHF).
+
+### 3. Founder's work
+- **The Sex Worker's Sacred Covenant** (`/books`): a book by Maxima Victoria Caram — "Wisdom Traditions for Chemsex Safety, Mutual Care & Survival" (2026, 122 pp, English). Listed on Amazon and Eldar Store.
+
+### 4. Platform pages
+- `/about` — mission and verification process.
+- `/launch` — official launch landing with countdown and lead capture.
+
+## Brand identity
+
+- **ShemaleWiki Online** (English): tagline "BLURRED LIMITS — Where desire meets beyond the edge." Aesthetic: obsidian, Baccarat crystal, liquid gold, lavender refractions.
+- **BuscaTrans** (Spanish): luxury jewel aesthetic (black / gold / sapphire / emerald) with a phoenix symbol — rebirth and resilience.
+- **X/Twitter**: @shemalewikiOK
+
+## Editorial stance
+
+- Adult content, 18+ gate.
+- Non-judgmental, evidence-based harm reduction. Does not promote drug use.
+- Built by trans workers, for trans workers. No middlemen profiting from workers' visibility.
+- Privacy: personal contact data on profiles should be referenced, not scraped.
+
+## Key figures
+
+- Founder: **Maxima Victoria Caram** — human rights activist, president of PROUD Nederland, executive director of Miss Star International, sex workers' rights expert at the European Parliament.
+- Book: "The Sex Worker's Sacred Covenant" (2026).
+
+## Contact
+
+- ads@shemalewiki.online

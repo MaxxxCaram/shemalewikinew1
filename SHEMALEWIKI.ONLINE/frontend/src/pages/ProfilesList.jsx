@@ -4,7 +4,8 @@ import { Search, MapPin, ArrowLeft, Building2 } from 'lucide-react';
 import { supabase } from '../supabase';
 import LazyImage from '../components/LazyImage';
 import useScrollReveal from '../useScrollReveal';
-import { isLoadablePhoto } from '../utils/photoFilter';
+import SEO from '../components/SEO';
+import { t, getLang } from '../i18n';
 
 // City → slug matching CityGuide.jsx routing
 function cityToSlug(city) {
@@ -18,16 +19,13 @@ export default function ProfilesList() {
   const [cityCounts, setCityCounts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const lang = getLang();
+  const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
   const displayCountry = country ? country.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : '';
 
   // Vanguard scroll-reveal for ShemaleWiki cards (re-runs when profiles/cities change)
   useScrollReveal([profiles, cityCounts]);
-
-  useEffect(() => {
-    fetchProfiles();
-    fetchCityCounts();
-  }, [country]);
 
   // Extract unique cities + profile counts (only profiles WITH photos)
   const fetchCityCounts = async () => {
@@ -81,14 +79,20 @@ export default function ProfilesList() {
       if (searchQuery) {
         queryBuilder = queryBuilder.ilike('name', `%${searchQuery}%`);
       }
-      const { data, error } = await queryBuilder.order('created_at', { ascending: false }).limit(50);
+      // Fetch a larger batch (no created_at ordering) so profiles WITH photos
+      // are not pushed out by newer photo-less duplicates.
+      const { data, error } = await queryBuilder.order('created_at', { ascending: false }).limit(1000);
       
       if (error) throw error;
       if (data) {
-        const cleaned = data.map(p => ({
+        const withPhotos = data.map(p => ({
           ...p,
-          photos: (p.photos || []).filter(ph => isLoadablePhoto(ph.photo_url))
-        })).filter(p => p.photos.length > 0); // Only show profiles WITH photos per Maxi's directive
+          photos: p.photos || []
+        })).filter(p => p.photos.length > 0);
+        // If search is active, show matches even without photos; otherwise only photo-bearing profiles
+        const cleaned = searchQuery
+          ? data.map(p => ({ ...p, photos: p.photos || [] }))
+          : withPhotos;
         setProfiles(cleaned);
       }
     } catch (error) {
@@ -97,75 +101,84 @@ export default function ProfilesList() {
     setLoading(false);
   };
 
+  // Load data once the country changes (functions declared above)
+  useEffect(() => {
+    fetchProfiles();
+    fetchCityCounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [country]);
+
   const handleSearch = (e) => {
     e.preventDefault();
     fetchProfiles(searchQuery);
   };
 
   return (
-    <div className="container" style={{ padding: '2rem 0' }}>
+    <>
+      <SEO
+        title={t.seoProfilesTitle(displayCountry)}
+        description={t.seoProfilesDesc(displayCountry, cityCounts.slice(0, 5).map(c => c.city).join(', '))}
+        canonicalPath={`${langPrefix}/${continent}/${country}`}
+      />
+      <div className="container" style={{ padding: '2rem 0' }}>
       <button 
-        onClick={() => navigate(`/${continent}`)}
+        onClick={() => navigate(`${langPrefix}/${continent}`)}
         className="back-btn"
       >
         <ArrowLeft className="back-icon" />
-        Back to {continent.charAt(0).toUpperCase() + continent.slice(1)}
+        {t.backTo(continent.charAt(0).toUpperCase() + continent.slice(1))}
       </button>
 
-      <div className="page-header" style={{ textAlign: 'left', marginBottom: '2rem' }}>
-        <h1 className="page-title">Community in {displayCountry}</h1>
-        <p className="page-subtitle">Find the perfect companion</p>
+      <div className="page-header" style={{ textAlign: 'left', marginBottom: '2.5rem' }}>
+        <h1 className="page-title">{t.communityIn(displayCountry)}</h1>
+        <p className="page-subtitle">{t.findCompanion()}</p>
       </div>
 
       {/* City cards grid */}
       {cityCounts.length > 0 && (
         <section style={{ marginBottom: '2.5rem' }}>
-          <h2 style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: 700, 
-            marginBottom: '1.25rem',
-            color: 'var(--text-primary)'
-          }}>
-            Cities in {displayCountry}
-          </h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: '1rem'
-          }}>
+          <div className="section-header" style={{ marginTop: 0 }}>
+            <h2 className="section-title" style={{ fontSize: '1.5rem' }}>
+              {t.citiesIn(displayCountry)}
+            </h2>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+              {t.citiesCount(cityCounts.length)}
+            </span>
+          </div>
+          <div className="countries-grid">
             {cityCounts.map(({ city, slug, count }) => (
               <Link
                 key={city}
-                to={`/${continent}/${country}/${slug}`}
+                to={`${langPrefix}/${continent}/${country}/${slug}`}
                 className="glass-card sw-reveal"
                 style={{
-                  padding: '1.25rem',
+                  padding: '1.25rem 1.4rem',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.75rem',
+                  gap: '0.85rem',
                   textDecoration: 'none',
                   color: 'var(--text-primary)',
-                  transition: 'var(--transition)'
                 }}
               >
                 <span style={{
-                  background: 'var(--accent-primary)',
-                  borderRadius: '50%',
-                  width: 36,
-                  height: 36,
+                  background: 'var(--accent-grad)',
+                  borderRadius: '12px',
+                  width: 40,
+                  height: 40,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  flexShrink: 0
+                  flexShrink: 0,
+                  boxShadow: '0 4px 14px rgba(231,192,132,0.25)'
                 }}>
-                  <Building2 size={18} color="white" />
+                  <Building2 size={18} color="#1a0f0a" />
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div style={{ fontWeight: 600, fontSize: '1rem', letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {city}
                   </div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    {count} {count === 1 ? 'profile' : 'profiles'}
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}>
+                    {t.profilesCount(count)}
                   </div>
                 </div>
               </Link>
@@ -174,20 +187,20 @@ export default function ProfilesList() {
         </section>
       )}
 
-      <div className="search-container">
-        <form onSubmit={handleSearch} style={{ display: 'flex', width: '100%', gap: '1rem' }}>
+      <div className="search-container" style={{ marginBottom: '2.5rem' }}>
+        <form onSubmit={handleSearch} style={{ display: 'flex', width: '100%', gap: '0.6rem' }}>
           <input 
             type="text" 
             id="searchQuery"
             name="searchQuery"
             className="search-input" 
-            placeholder="Search by name, location, or keywords..."
+            placeholder={t.searchPlaceholder()}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button type="submit" className="btn btn-primary">
-            <Search size={20} />
-            Search
+            <Search size={18} />
+            {t.search()}
           </button>
         </form>
       </div>
@@ -198,31 +211,42 @@ export default function ProfilesList() {
         </div>
       ) : profiles.length === 0 ? (
         <div className="empty-state">
-          No profiles found. Try a different search.
+          {lang === 'nl' ? 'Geen profielen gevonden. Probeer een andere zoekopdracht.' : lang === 'fr' ? 'Aucun profil trouvé. Essayez une autre recherche.' : t.isBT() ? 'No se encontraron perfiles. Probá con otra búsqueda.' : 'No profiles found. Try a different search.'}
         </div>
       ) : (
-        <div className="profiles-grid">
-          {profiles.map((profile, i) => (
-            <Link to={`/profile/${profile.id}`} key={profile.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${i * 0.05}s` }}>
-              <LazyImage
-                src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
-                alt={profile.name}
-                className="profile-card-img"
-              />
-              <div className="profile-card-gradient" />
-              <div className="profile-card-content">
-                <h3 className="profile-card-title">{profile.name}</h3>
-                <div className="profile-card-meta">
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                    <MapPin size={14} /> {profile.location || 'Unknown'}
-                  </span>
-                  {profile.age && <span>🎂 {profile.age} years</span>}
+        <>
+          <div className="section-header" style={{ marginTop: 0 }}>
+            <h2 className="section-title" style={{ fontSize: '1.5rem' }}>
+              {t.profilesAvailable(profiles.length)}
+            </h2>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+              {t.updatedDaily()}
+            </span>
+          </div>
+          <div className="profiles-grid">
+            {profiles.map((profile, i) => (
+              <Link to={`${langPrefix}/profile/${profile.id}`} key={profile.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${i * 0.05}s` }}>
+                <LazyImage
+                  src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
+                  alt={profile.name}
+                  className="profile-card-img"
+                />
+                <div className="profile-card-gradient" />
+                <div className="profile-card-content">
+                  <h3 className="profile-card-title">{profile.name}</h3>
+                  <div className="profile-card-meta">
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <MapPin size={14} /> {profile.location || 'Unknown'}
+                    </span>
+                    {profile.age && <span>🎂 {profile.age} {lang === 'nl' ? 'jaar' : lang === 'fr' ? 'ans' : lang === 'es' ? 'años' : 'years'}</span>}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        </>
       )}
     </div>
+    </>
   );
 }

@@ -34,7 +34,9 @@ export default async function handler(req, res) {
     try {
       const parsedUrl = new URL(url);
       headers['Referer'] = parsedUrl.origin;
-    } catch (_) {}
+    } catch {
+      // ignore malformed URLs — fall through to plain request
+    }
 
     const response = await axios.get(url, {
       responseType: 'arraybuffer',
@@ -44,15 +46,39 @@ export default async function handler(req, res) {
     });
 
     const contentType = response.headers['content-type'] || 'image/jpeg';
+
+    // Only serve actual images. If archive.org returns HTML (404 page, redirect
+    // page, soft-404) we must NOT forward it. Small JPEGs ARE valid photos
+    // (thumbnails can be 1-3KB), so only reject non-image content-types and
+    // files that are almost certainly the 1x1 transparent (68 bytes).
+    const isImage = contentType.startsWith('image/');
+    const dataBuf = Buffer.from(response.data);
+    const isTinyTransparent = dataBuf.length <= 100; // 1x1 PNG is 68 bytes
+
+    if (!isImage || isTinyTransparent) {
+      return serveTransparent(res);
+    }
+
     res.setHeader('Content-Type', contentType);
     // Cache the image for 1 day
     res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
-    return res.status(200).send(Buffer.from(response.data));
+    return res.status(200).send(dataBuf);
   } catch (err) {
     console.error(`Image proxy failed for URL: ${url}. Error: ${err.message}`);
-    return serveFallback(res);
+    return serveTransparent(res);
   }
 };
+
+// 1x1 transparent PNG — lets the frontend onload-check reject this profile photo
+function serveTransparent(res) {
+  const transparentPng = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+    'base64'
+  );
+  res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=86400');
+  return res.status(200).send(transparentPng);
+}
 
 async function serveFallback(res) {
   try {

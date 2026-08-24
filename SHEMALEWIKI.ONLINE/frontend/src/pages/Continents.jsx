@@ -7,6 +7,8 @@ import logo from '../assets/logosw.png';
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
 const getLang = () => {
   if (typeof window === 'undefined') return 'en';
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/nl')) return 'nl';
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/fr')) return 'fr';
   if (isBT() || (typeof window !== 'undefined' && window.location.pathname.startsWith('/es'))) return 'es';
   if (typeof window !== 'undefined' && window.location.pathname.startsWith('/pt')) return 'pt';
   return 'en';
@@ -59,6 +61,30 @@ const content = {
     dashboardLabel: 'Painel',
     backLabel: '← Voltar ao início',
   },
+  nl: {
+    title: 'Trans Adressengids — ShemaleWiki',
+    desc: 'Blader door \u2019s werelds grootste meertalige gids met geverifieerde trans metgezellen en profielen. Zoek per continent en land om geverifieerde leden bij jou in de buurt te vinden.',
+    heroEyebrow: 'INTERNATIONALE TS GIDS',
+    heroHeading: 'Ontdek geverifieerde trans profielen wereldwijd.',
+    heroSub: '10.000+ profielen · 80+ landen · Dagelijks bijgewerkt',
+    searchPlaceholder: 'Stad, land of continent...',
+    featuredTitle: 'Blader per Continent',
+    featuredLink: 'Volledige gids →',
+    dashboardLabel: 'Dashboard',
+    backLabel: '← Terug naar home',
+  },
+  fr: {
+    title: 'Annuaire d\'accompagnantes trans — ShemaleWiki',
+    desc: 'Parcourez le plus grand annuaire multilingue de profils trans vérifiés. Recherchez par continent et par pays pour trouver des membres vérifiés près de chez vous.',
+    heroEyebrow: 'ANNUAIRE INTERNATIONAL TS',
+    heroHeading: 'Découvrez des profils trans vérifiés dans le monde entier.',
+    heroSub: '10 000+ profils · 80+ pays · Mis à jour chaque jour',
+    searchPlaceholder: 'Ville, pays ou continent...',
+    featuredTitle: 'Parcourir par continent',
+    featuredLink: 'Voir tout →',
+    dashboardLabel: 'Tableau de bord',
+    backLabel: '← Retour à l\'accueil',
+  },
 };
 
 export default function Continents() {
@@ -73,30 +99,32 @@ export default function Continents() {
     const q = search.trim();
     if (!q) return;
 
+    const langRoute = lang === 'es' ? '/es' : lang === 'pt' ? '/pt' : lang === 'nl' ? '/nl' : lang === 'fr' ? '/fr' : '';
+
     // Try to match continent
     const matchContinent = continents.find(c => c.name.toLowerCase() === q.toLowerCase());
     if (matchContinent) {
-      navigate(`/${lang === 'es' ? 'es/' : lang === 'pt' ? 'pt/' : ''}${matchContinent.name.toLowerCase()}`);
+      navigate(`${langRoute}/${matchContinent.name.toLowerCase()}`);
       return;
     }
     // Navigate to the search results (Countries will handle)
-    if (lang === 'es') navigate(`/es/${q.toLowerCase()}`);
-    else if (lang === 'pt') navigate(`/pt/${q.toLowerCase()}`);
-    else navigate(`/${q.toLowerCase()}`);
+    navigate(`${langRoute}/${q.toLowerCase()}`);
   };
 
-  const langPrefix = lang === 'es' ? '/es' : lang === 'pt' ? '/pt' : '';
+  const langPrefix = lang === 'es' ? '/es' : lang === 'pt' ? '/pt' : lang === 'nl' ? '/nl' : lang === 'fr' ? '/fr' : '';
 
   return (
     <>
       <SEO
         title={t.title}
         description={t.desc}
-        canonicalPath={lang === 'es' ? '/es/' : lang === 'pt' ? '/pt/' : '/'}
+        canonicalPath={lang === 'es' ? '/es/' : lang === 'pt' ? '/pt/' : lang === 'nl' ? '/nl/' : lang === 'fr' ? '/fr/' : '/'}
         alternates={[
           { lang: 'en', path: '/' },
           { lang: 'es', path: '/es/' },
           { lang: 'pt', path: '/pt/' },
+          { lang: 'nl', path: '/nl/' },
+          { lang: 'fr', path: '/fr/' },
         ]}
       />
 
@@ -190,7 +218,7 @@ export default function Continents() {
             gap: '0.4rem',
           }}>
             <Search size={18} />
-            {lang === 'es' ? 'Buscar' : lang === 'pt' ? 'Buscar' : 'Search'}
+            {lang === 'es' || lang === 'pt' ? 'Buscar' : lang === 'nl' ? 'Zoeken' : lang === 'fr' ? 'Rechercher' : 'Search'}
           </button>
         </form>
 
@@ -274,7 +302,7 @@ export default function Continents() {
                 fontSize: '0.85rem',
                 fontWeight: 600,
               }}>
-                <span>{lang === 'es' ? 'Explorar' : lang === 'pt' ? 'Explorar' : 'Explore'}</span>
+                <span>{lang === 'es' || lang === 'pt' ? 'Explorar' : lang === 'nl' ? 'Verken' : lang === 'fr' ? 'Explorer' : 'Explore'}</span>
                 <Globe size={14} />
               </div>
             </Link>

@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import SEO from '../components/SEO';
-import { supabase } from '../supabase';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
 function compressImage(file, maxDim = 2048, quality = 0.85) {

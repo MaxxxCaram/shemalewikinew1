@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Save, User, Camera, Settings, RefreshCw, Upload, Image as ImageIcon, BarChart3, ExternalLink, Plus, Trash2, CheckCircle2, Crown } from 'lucide-react';
+import { LogOut, Save, User, Camera, Settings, RefreshCw, Image as ImageIcon, BarChart3, ExternalLink, Plus, Trash2, Crown } from 'lucide-react';
 import { supabase } from '../supabase';
 import { getProxiedImageUrl } from '../utils';
+import AdBanner from '../components/AdBanner';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
 // Reduces 20MB+ photos to ~2-3MB while keeping excellent web quality
 function compressImage(file, maxDim = 2048, quality = 0.85) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
     if (!file.type.startsWith('image/')) return resolve(file); // skip non-images
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -291,6 +292,9 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Ad banner — top */}
+      <AdBanner zoneId="" width={728} height={90} provider="trafficjunky" className="ad-top" />
+
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         {/* Sidebar */}
         <div className="glass-card" style={{ padding: '1.5rem', width: '250px', height: 'fit-content' }}>
@@ -521,6 +525,9 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* Ad banner — bottom */}
+      <AdBanner zoneId="" width={728} height={90} provider="trafficjunky" className="ad-bottom" />
     </div>
   );
 }

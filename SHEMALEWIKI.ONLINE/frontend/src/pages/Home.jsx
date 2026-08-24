@@ -1,26 +1,73 @@
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Star, Heart } from 'lucide-react';
+import { Search, MapPin, ArrowRight, Sparkles, Globe2, ShieldCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import useScrollReveal from '../useScrollReveal';
 import { supabase } from '../supabase';
+import logoSw from '../assets/shemalewiki-blurred-limits.jpg';
 
 /* ── Brand detection ── */
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
 
+// Verify a photo URL actually loads in the browser (onload + timeout).
+// Returns the URL if it loads with real dimensions, otherwise null.
+// Rejects: 1x1 transparents, tiny broken decodes, placeholders (<150px).
+const PROXY = '/api/image?url=';
+const verifyPhoto = (url) =>
+  new Promise((resolve) => {
+    if (!url) return resolve(null);
+    const img = new Image();
+    const timer = setTimeout(() => { img.src = ''; resolve(null); }, 5000);
+    img.onload = () => {
+      clearTimeout(timer);
+      // A real photo must be at least 300x300 AND not a 1x1 transparent
+      const ok = img.naturalWidth >= 250 && img.naturalHeight >= 250;
+      resolve(ok ? url : null);
+    };
+    img.onerror = () => { clearTimeout(timer); resolve(null); };
+    img.src = url;
+  });
+
+// Try a list of candidate URLs in PARALLEL; return first that loads, else null.
+const verifyFirst = async (urls) => {
+  const results = await Promise.all((urls || []).map(u => u ? verifyPhoto(u) : Promise.resolve(null)));
+  return results.find(Boolean) || null;
+};
+
+// Build candidate URLs for a profile: ddg storage first (original large photos),
+// then other storage / eros, then archive via proxy. Cap at 6 for speed.
+const candidateUrls = (photos) => {
+  const ddg = [];
+  const storage = [];
+  const archive = [];
+  const coverDdg = [];
+  (photos || []).forEach(ph => {
+    if (!ph?.photo_url) return;
+    if (ph.photo_url.includes('/ddg/')) {
+      ddg.push(ph.photo_url);
+      if (ph.local_path === 'cover') coverDdg.push(ph.photo_url);
+    } else if (ph.photo_url.includes('supabase.co/storage') || ph.photo_url.includes('static2.eros.bz')) {
+      storage.push(ph.photo_url);
+    } else if (ph.photo_url.includes('web.archive.org')) {
+      archive.push(`${PROXY}${encodeURIComponent(ph.photo_url)}`);
+    }
+  });
+  return [...coverDdg, ...ddg, ...storage, ...archive].slice(0, 6);
+};
+
 /* ── Content per brand ── */
 const t = {
   shemalewiki: {
-    eyebrow: 'International Trans Community Directory',
-    heading: 'Discover verified trans profiles',
-    highlight: 'worldwide.',
-    subtitle: '10,000+ profiles · 80 countries · Updated daily · v2-photos',
+    eyebrow: 'BLURRED LIMITS',
+    heading: 'Where desire meets',
+    highlight: 'beyond the edge.',
+    subtitle: 'Verified trans companions · 5,000+ profiles · 75 countries',
     searchPlaceholder: 'City, country or region...',
     pills: ['All', 'Bangkok', 'London', 'Miami', 'Amsterdam', 'São Paulo', 'Tokyo'],
     featuredTitle: 'Featured profiles',
-    featuredLink: 'View all →',
+    featuredLink: 'View all',
     citiesTitle: 'Browse by region',
-    citiesLink: 'Full map →',
+    citiesLink: 'Full map',
     bottomNav: [
       { label: 'Home', icon: 'home', active: true },
       { label: 'Search', icon: 'search' },
@@ -28,6 +75,11 @@ const t = {
       { label: 'Account', icon: 'user' },
     ],
     heroLogo: true,
+    stats: [
+      { icon: 'globe', value: '75+', label: 'Countries' },
+      { icon: 'users', value: '5K+', label: 'Profiles' },
+      { icon: 'shield', value: '100%', label: 'Verified' },
+    ],
   },
   buscatrans: {
     eyebrow: 'El directorio que te ve como sos',
@@ -37,9 +89,9 @@ const t = {
     searchPlaceholder: 'Ciudad o país...',
     pills: ['Todas', 'Buenos Aires', 'Ciudad de México', 'Madrid', 'Lima', 'Bogotá'],
     featuredTitle: 'Perfiles destacados',
-    featuredLink: 'Ver todos →',
+    featuredLink: 'Ver todos',
     citiesTitle: 'Por ciudad',
-    citiesLink: 'Ver mapa →',
+    citiesLink: 'Ver mapa',
     bottomNav: [
       { label: 'Inicio', icon: 'home', active: true },
       { label: 'Buscar', icon: 'search' },
@@ -47,7 +99,19 @@ const t = {
       { label: 'Mi perfil', icon: 'user' },
     ],
     heroLogo: false,
+    stats: [
+      { icon: 'globe', value: '75+', label: 'Países' },
+      { icon: 'users', value: '5K+', label: 'Perfiles' },
+      { icon: 'shield', value: '100%', label: 'Verificado' },
+    ],
   },
+  };
+
+const StatIcon = ({ icon }) => {
+  if (icon === 'globe') return <Globe2 size={20} />;
+  if (icon === 'shield') return <ShieldCheck size={20} />;
+  if (icon === 'users') return <Sparkles size={20} />;
+  return null;
 };
 
 export default function Home() {
@@ -72,60 +136,81 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        // 1. Get profile_ids that have at least one REAL photo in Supabase Storage
-        //    (web.archive.org URLs are blocked by the browser, so we exclude them)
+        // 1. Get profile_ids that have ANY photo (storage or archive)
         const { data: photoRows, error: e0 } = await supabase
           .from('photos')
           .select('profile_id, photo_url')
           .not('photo_url', 'is', null)
-          .limit(2000);
+          .limit(4000);
 
         if (e0) throw e0;
 
-        // Aceptar fotos que CARGAN en el browser: Supabase Storage + static2.eros.bz
-        // (Spain tiene 138 perfiles con foto cargable entre ambos; NL solo kinky.nl bloqueado)
-        const LOADABLE = ['qtuzpswxzengqoqqwtpt.supabase.co/storage', 'static2.eros.bz'];
-        const validIds = Array.from(
-          new Set(
-            (photoRows || [])
-              .filter(p => p.profile_id && p.photo_url && LOADABLE.some(h => p.photo_url.includes(h)))
-              .map(p => p.profile_id)
-          )
-        );
+        // Count photos per profile. Photos under /ddg/ are the original site's
+        // real, large images — weight them highest for the showcase.
+        const photoCount = {};
+        (photoRows || []).forEach(p => {
+          if (!p.profile_id || !p.photo_url) return;
+          const isDdg = p.photo_url.includes('supabase.co/storage') && p.photo_url.includes('/ddg/');
+          const isStorage = p.photo_url.includes('supabase.co/storage') && !p.photo_url.includes('/ddg/');
+          const isArchive = p.photo_url.includes('web.archive.org');
+          if (isDdg || isStorage || isArchive) {
+            photoCount[p.profile_id] = (photoCount[p.profile_id] || 0) + (isDdg ? 5 : (isStorage ? 2 : 1));
+          }
+        });
 
-        let arr = [];
+        const validIds = Object.keys(photoCount).sort((a, b) => photoCount[b] - photoCount[a]);
+
+        // 2. Fetch the richest candidates (up to 40) with photos embedded
+        let pool = [];
         if (validIds.length > 0) {
-          // 2. Fetch those profiles (with their photos embedded)
           const { data: withPhotos, error: e1 } = await supabase
             .from('profiles')
             .select('*, photos(photo_url, local_path)')
-            .in('id', validIds.slice(0, 100))
+            .in('id', validIds.slice(0, 200))
             .not('cam_chat', 'eq', 'rejected')
-            .order('created_at', { ascending: false })
-            .limit(12);
+            .limit(200);
 
           if (e1) throw e1;
-          arr = Array.isArray(withPhotos) ? withPhotos : [];
+          pool = Array.isArray(withPhotos) ? withPhotos : [];
         }
 
-        // 3. If we still need more to fill the grid, grab recent approved profiles
-        if (arr.length < 12) {
+        // 3. Verify each profile's photos actually load in the browser;
+        //    keep the first 12 with a working photo. Verify profiles in parallel.
+        const verified = [];
+        const poolResults = await Promise.all(pool.map(async (p) => {
+          const working = await verifyFirst(candidateUrls(p.photos));
+          return working ? { ...p, _verifiedPhoto: working } : null;
+        }));
+        for (const p of poolResults) {
+          if (p) verified.push(p);
+          if (verified.length >= 12) break;
+        }
+
+        // 4. Fallback: recent approved profiles (in case verification pool too small)
+        if (verified.length < 12) {
           const { data: recent, error: e2 } = await supabase
             .from('profiles')
             .select('*, photos(photo_url, local_path)')
             .not('cam_chat', 'eq', 'rejected')
             .order('created_at', { ascending: false })
-            .limit(12);
+            .limit(80);
           if (!e2 && Array.isArray(recent)) {
-            const have = new Set(arr.map(p => p.id));
-            for (const p of recent) {
-              if (!have.has(p.id)) arr.push(p);
-              if (arr.length >= 12) break;
+            const have = new Set(verified.map(p => p.id));
+            const recentResults = await Promise.all(recent.map(async (p) => {
+              if (have.has(p.id)) return null;
+              const working = await verifyFirst(candidateUrls(p.photos));
+              return working ? { ...p, _verifiedPhoto: working } : null;
+            }));
+            for (const p of recentResults) {
+              if (!p) continue;
+              have.add(p.id);
+              verified.push(p);
+              if (verified.length >= 12) break;
             }
           }
         }
 
-        setProfiles(arr.slice(0, 12));
+        setProfiles(verified.slice(0, 12));
       } catch (err) {
         console.error('Home fetch failed:', err);
       } finally {
@@ -151,15 +236,11 @@ export default function Home() {
   };
 
   const getProfilePhoto = (p) => {
+    // Use the pre-verified working photo (set during fetch)
+    if (p._verifiedPhoto) return p._verifiedPhoto;
     if (p.photos && p.photos.length > 0) {
-      // Preferir fotos de Supabase Storage (cargan en el navegador).
-      // web.archive.org no permite hotlinking y el browser las bloquea.
-      const storagePhotos = p.photos.filter(ph =>
-        ph.photo_url && ph.photo_url.includes('qtuzpswxzengqoqqwtpt.supabase.co/storage')
-      );
-      const pool = storagePhotos.length > 0 ? storagePhotos : p.photos;
-      const cover = pool.find(ph => ph.local_path === 'cover');
-      return cover ? cover.photo_url : pool[0].photo_url;
+      const cover = p.photos.find(ph => ph.local_path === 'cover');
+      return cover ? cover.photo_url : p.photos[0].photo_url;
     }
     return null;
   };
@@ -168,7 +249,11 @@ export default function Home() {
     const continent = getContinentSlug(p.location);
     const country = getCountrySlug(p.location);
     const city = getCitySlug(p.location);
-    if (continent && country && city) return `/${continent}/${country}/${city}`;
+    // Featured cards should always link to the profile itself: city slugs can
+    // point to landing pages with "No profiles found" (e.g. /other/unknown/unknown).
+    if (continent && country && city && country !== 'unknown' && city !== 'unknown') {
+      return `/${continent}/${country}/${city}`;
+    }
     return `/profile/${p.id}`;
   };
 
@@ -183,12 +268,24 @@ export default function Home() {
 
       {/* ── HERO ── */}
       <section className="hero-section">
+        {brand === 'shemalewiki' && (
+          <div className="hero-logo-wrap">
+            <img src={logoSw} alt="ShemaleWiki Online" className="hero-logo-giant" />
+          </div>
+        )}
         <p className="hero-eyebrow">{content.eyebrow}</p>
         <h1 className="hero-title">
           {content.heading}{' '}
           <span className="highlight">{content.highlight}</span>
         </h1>
         <p className="hero-subtitle">{content.subtitle}</p>
+
+        {/* Trans Dashboard CTA — ShemaleWiki */}
+        {brand === 'shemalewiki' && (
+          <Link to="/dashboard/login" className="btn btn-trans-dashboard">
+            🏳️‍⚧️ If you are trans, click here
+          </Link>
+        )}
 
         {/* Search */}
         <div className="search-container">
@@ -204,6 +301,7 @@ export default function Home() {
           <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="btn btn-primary btn-lg" style={{ textDecoration: 'none' }}>
             <Search size={18} />
             {brand === 'buscatrans' ? 'Buscar' : 'Search'}
+            <ArrowRight size={16} style={{ marginLeft: '0.25rem' }} />
           </Link>
         </div>
 
@@ -226,6 +324,17 @@ export default function Home() {
             );
           })}
         </div>
+
+        {/* Stats row */}
+        <div className="hero-stats">
+          {content.stats.map((stat, i) => (
+            <div key={i} className="hero-stat">
+              <span className="hero-stat-icon"><StatIcon icon={stat.icon} /></span>
+              <span className="hero-stat-val">{stat.value}</span>
+              <span className="hero-stat-lbl">{stat.label}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ── FEATURED PROFILES ── */}
@@ -246,20 +355,29 @@ export default function Home() {
               const link = getProfileLink(p);
               return (
                 <Link to={link} key={p.id} className="glass-card sw-reveal" style={{ textDecoration: 'none', color: 'inherit', '--sw-delay': `${i * 0.06}s` }}>
-                  <div style={{ 
-                    height: '280px', 
+                  <div style={{
+                    height: '360px',
                     background: photo ? `url(${photo}) center/cover` : 'var(--card-bg)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     color: 'var(--text-secondary)', fontSize: '3rem', position: 'relative'
                   }}>
                     {!photo && '👤'}
+                    {p.cam_chat === 'approved' && (
+                      <span style={{
+                        position: 'absolute', top: '1rem', right: '1rem',
+                        padding: '0.3rem 0.75rem', borderRadius: '999px',
+                        background: 'rgba(34,197,94,0.2)', color: '#22c55e',
+                        fontSize: '0.7rem', fontWeight: 600, letterSpacing: '-0.01em',
+                        backdropFilter: 'blur(10px)', border: '1px solid rgba(34,197,94,0.35)',
+                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem'
+                      }}>
+                        <ShieldCheck size={12} /> Verified
+                      </span>
+                    )}
                   </div>
                   <div className="profile-card-content">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <h3 className="profile-card-title">{p.name}</h3>
-                      {p.cam_chat === 'approved' && (
-                        <span className="profile-card-badge badge-premium" style={{ fontSize: '0.65rem', background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>Verified</span>
-                      )}
                     </div>
                     <div className="profile-card-meta">
                       <span><MapPin size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />{getCitySlug(p.location).replace(/-/g, ' ') || p.location}</span>
@@ -284,9 +402,12 @@ export default function Home() {
           <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="section-link">{content.citiesLink}</Link>
         </div>
         <div className="map-placeholder sw-reveal">
-          <MapPin size={48} style={{ opacity: 0.3 }} />
-          <p style={{ marginTop: '0.5rem' }}>
+          <MapPin size={48} style={{ opacity: 0.4 }} />
+          <p style={{ marginTop: '0.75rem', fontSize: '1rem', fontWeight: 500 }}>
             {brand === 'buscatrans' ? 'Mapa interactivo de ciudades' : 'Interactive world map'}
+          </p>
+          <p style={{ marginTop: '0.25rem', fontSize: '0.88rem', opacity: 0.7 }}>
+            {brand === 'buscatrans' ? 'Próximamente' : 'Coming soon'}
           </p>
         </div>
       </div>

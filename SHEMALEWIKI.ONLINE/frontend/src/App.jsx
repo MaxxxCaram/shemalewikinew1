@@ -3,9 +3,10 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Component, lazy, Suspense } from 'react';
 import Home from './pages/Home';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
+import Footer from './components/Footer';
 import './index.css';
-import logoSw from './assets/logosw.png';
-import logoBT from './assets/buscatrans-logo.svg';
+import logoSw from './assets/shemalewiki-blurred-limits.jpg';
+import logoBT from './assets/buscatrans-logo.png';
 
 // Lazy load all pages except Home (critical for first paint)
 const Continents = lazy(() => import('./pages/Continents'));
@@ -21,6 +22,11 @@ const Terms = lazy(() => import('./pages/Terms'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Reclama = lazy(() => import('./pages/Reclama'));
 const Contact = lazy(() => import('./pages/Contact'));
+const About = lazy(() => import('./pages/About'));
+const Guide = lazy(() => import('./pages/Guide'));
+const Launch = lazy(() => import('./pages/Launch'));
+const HarmReduction = lazy(() => import('./pages/HarmReduction'));
+const Books = lazy(() => import('./pages/Books'));
 const Admin = lazy(() => import('./pages/Admin'));
 
 // Error Boundary: catches render errors (including .forEach on non-arrays)
@@ -75,23 +81,45 @@ if (typeof document !== 'undefined') {
 /* ── Navbar ── */
 function Navbar() {
   const bt = isBuscaTrans();
-  const brand = bt ? 'buscatrans' : 'shemalewiki';
+  // Resolve language from URL path so /fr /nl /es /pt /he get localized labels.
+  const pathLang = () => {
+    if (typeof window === 'undefined') return bt ? 'es' : 'en';
+    const p = window.location.pathname;
+    if (p.startsWith('/fr')) return 'fr';
+    if (p.startsWith('/nl')) return 'nl';
+    if (p.startsWith('/es')) return 'es';
+    if (p.startsWith('/pt')) return 'pt';
+    if (p.startsWith('/he')) return 'he';
+    return bt ? 'es' : 'en';
+  };
+  const lang = pathLang();
+  const homeTo = bt ? '/es/' : lang === 'en' ? '/' : `/${lang}/`;
+
+  const navHome =
+    lang === 'fr' ? 'Accueil' : lang === 'nl' ? 'Home' : bt ? 'Inicio' : 'Browse';
+  const navAdvertise =
+    lang === 'fr' ? 'Publier une annonce' : lang === 'nl' ? 'Adverteren' : bt ? 'Anunciar' : 'Advertise';
+  const navAbout =
+    lang === 'fr' ? 'À propos' : lang === 'nl' ? 'Over ons' : bt ? 'Sobre Nosotros' : 'About';
+  const navContact =
+    lang === 'fr' ? 'Contact' : lang === 'nl' ? 'Contact' : bt ? 'Contacto' : 'Contact';
+  const navRegister =
+    lang === 'fr' ? 'Déposer mon profil' : lang === 'nl' ? 'Profiel aanmelden' : bt ? 'Registrarse' : 'List your profile';
 
   return (
     <nav className="navbar">
       <div className="container">
         <div className="nav-links nav-left">
-          <Link to={bt ? "/es/" : "/"}>{bt ? 'Inicio' : 'Browse'}</Link>
-          <Link to={bt ? "/anunciar" : "/advertise"} style={{ color: 'var(--accent-secondary)' }}>{bt ? 'Anunciar' : 'Advertise'}</Link>
+          <Link to={homeTo}>{navHome}</Link>
+          <Link to={bt ? "/anunciar" : "/advertise"} style={{ color: 'var(--accent-secondary)' }}>{navAdvertise}</Link>
+          <Link to={bt ? "/sobre-nosotros" : "/about"}>{navAbout}</Link>
+          <Link to={bt ? "/contacto" : "/contact"}>{navContact}</Link>
         </div>
-        <Link to={bt ? "/es/" : "/"} className="nav-brand">
+        <Link to={homeTo} className="nav-brand">
           {bt ? (
-            <img src={logoBT} alt="BuscaTrans" style={{ height: '45px' }} />
+            <img src={logoBT} alt="BuscaTrans" className="nav-brand-logo" />
           ) : (
-            <>
-              <img src={logoSw} alt="ShemaleWiki Online" style={{ height: '36px', marginRight: '8px' }} />
-              <span className="text-gradient" style={{ fontFamily: 'var(--font-display)', letterSpacing: '0.02em' }}>SHEMALEWIKI</span>
-            </>
+            <img src={logoSw} alt="ShemaleWiki Online" className="nav-brand-logo nav-brand-logo-sw" />
           )}
         </Link>
         <div className="nav-links nav-right">
@@ -105,12 +133,12 @@ function Navbar() {
                 📱 Descargar App
               </a>
               <Link to="/registro" className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}>
-                Registrarse
+                {navRegister}
               </Link>
             </>
           ) : (
             <Link to="/register" className="btn btn-primary" style={{ fontSize: '0.85rem', padding: '0.5rem 1.2rem' }}>
-              List your profile
+              {navRegister}
             </Link>
           )}
         </div>
@@ -129,16 +157,21 @@ function RootRedirect() {
 
 function AppContent() {
   const { verified, verify } = useAgeVerified();
+  const isAdminRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+  // Landing/launch is a non-adult promotional page — skip the age gate so the
+  // countdown + lead form are immediately visible.
+  const isLaunchRoute = typeof window !== 'undefined' &&
+    (window.location.pathname === '/launch' || window.location.pathname === '/lanzamiento');
 
-  if (!verified) {
+  if (!verified && !isAdminRoute && !isLaunchRoute) {
     return <AgeVerification onVerify={verify} />;
   }
 
   return (
     <Router>
       <Navbar />
-      <main>
-        <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}><div className="spinner" style={{ margin: '0 auto' }}></div></div>}>
+      <main style={{ animation: 'sw-site-reveal 1.2s ease forwards' }}>
+      <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}><div className="spinner" style={{ margin: '0 auto' }}></div></div>}>
         <Routes>
           {/* Root: redirects / → /es/ on BuscaTrans, shows Home on ShemaleWiki */}
           <Route path="/" element={<RootRedirect />} />
@@ -156,6 +189,16 @@ function AppContent() {
           <Route path="/es/reclama" element={<Reclama />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/contacto" element={<Contact />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/sobre-nosotros" element={<About />} />
+          <Route path="/guide" element={<Guide />} />
+          <Route path="/guia" element={<Guide />} />
+          <Route path="/lanzamiento" element={<Launch />} />
+          <Route path="/launch" element={<Launch />} />
+          <Route path="/guia-reduccion-danos" element={<HarmReduction />} />
+          <Route path="/harm-reduction" element={<HarmReduction />} />
+          <Route path="/libros" element={<Books />} />
+          <Route path="/books" element={<Books />} />
           <Route path="/admin" element={<Admin />} />
 
           {/* Legacy continent routes */}
@@ -188,9 +231,22 @@ function AppContent() {
           <Route path="/he/:continent/:country" element={<ProfilesList />} />
           <Route path="/he/:continent/:country/:city" element={<CityGuide />} />
           <Route path="/he/profile/:id" element={<Profile />} />
+
+          <Route path="/nl" element={<Continents />} />
+          <Route path="/nl/:continent" element={<Countries />} />
+          <Route path="/nl/:continent/:country" element={<ProfilesList />} />
+          <Route path="/nl/:continent/:country/:city" element={<CityGuide />} />
+          <Route path="/nl/profile/:id" element={<Profile />} />
+
+          <Route path="/fr" element={<Continents />} />
+          <Route path="/fr/:continent" element={<Countries />} />
+          <Route path="/fr/:continent/:country" element={<ProfilesList />} />
+          <Route path="/fr/:continent/:country/:city" element={<CityGuide />} />
+          <Route path="/fr/profile/:id" element={<Profile />} />
         </Routes>
         </Suspense>
       </main>
+      <Footer />
     </Router>
   );
 }

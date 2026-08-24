@@ -60,8 +60,8 @@ export default function AdBanner({ zoneId, width = 728, height = 90, provider = 
       }}
     >
       {fallback && (
-        <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-          Publicidad
+        <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.08em', textAlign: 'center', lineHeight: 1.5, padding: '0 1rem' }}>
+          You as a business ally can advertise here
         </span>
       )}
     </div>
