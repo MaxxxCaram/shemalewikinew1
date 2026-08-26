@@ -613,7 +613,7 @@ export default function CityGuide() {
   useEffect(() => {
     const fetchTravelers = async () => {
       try {
-        const resp = await fetch(`https://shemalewiki.online/api/travel-plans/active?city=${encodeURIComponent(displayCity)}`);
+        const resp = await fetch(`/api/travel-plans/active?city=${encodeURIComponent(displayCity)}`);
         if (resp.ok) {
           const data = await resp.json();
           setTravelers(data.active || []);
