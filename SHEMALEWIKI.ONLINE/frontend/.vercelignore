@@ -1,0 +1,7 @@
+# Exclude local node_modules inside api/ — Vercel would otherwise treat every
+# .js file there as a separate serverless function and exceed the 12-function
+# Hobby plan limit (causing deployments to fail/stall).
+api/node_modules
+node_modules
+dist
+shemalewiki_recovery
