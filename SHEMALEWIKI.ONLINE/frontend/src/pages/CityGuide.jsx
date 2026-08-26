@@ -609,22 +609,6 @@ export default function CityGuide() {
     fetchProfiles();
   }, [displayCity]);
 
-  // Fetch active travelers for this city
-  useEffect(() => {
-    const fetchTravelers = async () => {
-      try {
-        const resp = await fetch(`/api/travel-plans/active?city=${encodeURIComponent(displayCity)}`);
-        if (resp.ok) {
-          const data = await resp.json();
-          setTravelers(data.active || []);
-        }
-      } catch {
-        // Silently fail — travelers section is non-critical
-      }
-    };
-    fetchTravelers();
-  }, [displayCity]);
-
   // i18n helpers — lookup by language
   const i18n = {
     en: {
