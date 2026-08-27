@@ -545,8 +545,6 @@ export default function CityGuide() {
   const [profileCount, setProfileCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState(null);
-  const [travelers, setTravelers] = useState([]);
-
   // Detect language from URL path; BuscaTrans defaults to Spanish
   const lang = typeof window !== 'undefined' 
     ? (window.location.pathname.startsWith('/nl/') || window.location.pathname.startsWith('/nl') ? 'nl'
@@ -769,48 +767,6 @@ export default function CityGuide() {
             </div>
           </div>
         </div>
-
-        {/* ✈️ Active Travelers — profiles arriving within 48h */}
-        {travelers.length > 0 && (
-          <div className="city-travelers glass" style={{ padding: '1.8rem 2.5rem', marginBottom: '2rem', borderLeft: '3px solid var(--accent-primary)' }}>
-            <h2 style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span>✈️</span> 
-              {locale(`Viajeras en ${displayCity}`, `Reizigers in ${displayCity}`, `Voyageuses à ${displayCity}`, `Travelers in ${displayCity}`)}
-            </h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              {lang === 'es' 
-                ? `${travelers.length} acompañante${travelers.length > 1 ? 's' : ''} llegando en las próximas 48 horas. ¡Reservá ahora!`
-                : lang === 'nl'
-                ? `${travelers.length} ${travelers.length === 1 ? 'metgezel' : 'metgezellen'} komen binnen de komende 48 uur aan. Boek nu!`
-                : lang === 'fr'
-                ? `${travelers.length} accompagnante${travelers.length > 1 ? 's' : ''} arrivant dans les prochaines 48 heures. Réservez maintenant !`
-                : `${travelers.length} companion${travelers.length > 1 ? 's' : ''} arriving in the next 48 hours. Book now!`}
-            </p>
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              {travelers.map((t, i) => (
-                <div key={t.plan_id || i} style={{
-                  background: 'rgba(124, 58, 237, 0.1)',
-                  border: '1px solid rgba(124, 58, 237, 0.3)',
-                  borderRadius: '12px',
-                  padding: '0.8rem 1.2rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                }}>
-                  <span>🌟</span>
-                  <span style={{ fontWeight: 700, color: '#fff' }}>
-                    {t.city || displayCity}
-                  </span>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                    {new Date(t.arrival_date).toLocaleDateString(lang === 'es' ? 'es' : lang === 'nl' ? 'nl' : lang === 'fr' ? 'fr' : 'en', { day: 'numeric', month: 'short' })}
-                    {' → '}
-                    {new Date(t.departure_date).toLocaleDateString(lang === 'es' ? 'es' : lang === 'nl' ? 'nl' : lang === 'fr' ? 'fr' : 'en', { day: 'numeric', month: 'short' })}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* City Guide Content */}
         {content && (

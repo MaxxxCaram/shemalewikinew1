@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Phone, Mail, MessageCircle, MapPin, Globe, Share2, Flag, ChevronLeft, ArrowLeft, Cake, Languages, Ruler, Weight, Sparkles, User, Camera } from 'lucide-react';
+import { Phone, Mail, MessageCircle, MapPin, Globe, Share2, Flag, ChevronLeft, ArrowLeft, Cake, Languages, Ruler, Weight, Sparkles, Camera } from 'lucide-react';
 import SEO from '../components/SEO';
 import Lightbox from '../components/Lightbox';
 import LazyImage from '../components/LazyImage';
