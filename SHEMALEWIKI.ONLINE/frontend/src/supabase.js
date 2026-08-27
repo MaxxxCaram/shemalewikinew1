@@ -4,7 +4,6 @@
 // works unchanged. Backed by PocketBase REST API.
 
 const PB_URL = import.meta.env.VITE_PB_URL || 'https://api.shemalewiki.online';
-const PB_ANON = import.meta.env.VITE_PB_ANON || '';
 
 // --- Minimal fetch helper ---
 async function pbRequest(path, options = {}) {
@@ -13,7 +12,12 @@ async function pbRequest(path, options = {}) {
   if (!res.ok) {
     // try parse error
     let msg = `PocketBase ${res.status}`;
-    try { const e = await res.json(); msg = e.message || msg; } catch {}
+    try {
+      const e = await res.json();
+      msg = e.message || msg;
+    } catch {
+      /* non-JSON error body — keep generic message */
+    }
     return { data: null, error: { message: msg, status: res.status } };
   }
   const text = await res.text();
@@ -28,14 +32,6 @@ function buildQuery(collection) {
   let isHead = false;
   let selectedFields = '*';
   let limit = null;
-  let offset = 0;
-
-  const encodeFilterValue = (v) => {
-    if (v === null || v === undefined) return "null";
-    if (typeof v === 'number') return String(v);
-    // string
-    return `'${String(v).replace(/'/g, "\\'")}'`;
-  };
 
   const q = {
     select(cols, opts = {}) {
@@ -45,6 +41,15 @@ function buildQuery(collection) {
       return q;
     },
     eq(col, v) { filters.push(`(${col}='${String(v).replace(/'/g, "''")}')`); return q; },
+    neq(col, v) { filters.push(`(${col}!='${String(v).replace(/'/g, "''")}')`); return q; },
+    in(col, arr) {
+      // PocketBase filter has no IN operator; express as OR of eq.
+      if (Array.isArray(arr) && arr.length) {
+        const orExpr = arr.map(v => `(${col}='${String(v).replace(/'/g, "''")}')`).join('||');
+        filters.push(`(${orExpr})`);
+      }
+      return q;
+    },
     ilike(col, pattern) {
       // supabase ilike: %foo% -> PocketBase ~ 'foo'
       let p = String(pattern || '');
@@ -74,7 +79,6 @@ function buildQuery(collection) {
       return q;
     },
     limit(n) { limit = n; return q; },
-    range(from, to) { offset = from; if (to) limit = (to - from + 1); return q; },
     async single() {
       params.set('perPage', '1');
       const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
