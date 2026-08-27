@@ -46,7 +46,7 @@ const candidateUrls = (photos) => {
     if (ph.photo_url.includes('/ddg/')) {
       ddg.push(ph.photo_url);
       if (ph.local_path === 'cover') coverDdg.push(ph.photo_url);
-    } else if (ph.photo_url.includes('supabase.co/storage') || ph.photo_url.includes('static2.eros.bz')) {
+    } else if (ph.photo_url.includes('supabase.co/storage') || ph.photo_url.includes('static2.eros.bz') || ph.photo_url.includes('api.shemalewiki.online/api/files') || ph.photo_url.includes('/api/files/')) {
       storage.push(ph.photo_url);
     } else if (ph.photo_url.includes('web.archive.org')) {
       archive.push(`${PROXY}${encodeURIComponent(ph.photo_url)}`);
