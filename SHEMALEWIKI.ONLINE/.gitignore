@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Data/backup/scratch — not part of the app bundle or Vercel deploy
+photos/
+shemalewiki_recovery/
+*.json
+download_and_insert.py
+fix_and_insert.py
+insert_perfiles_supabase.py
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
