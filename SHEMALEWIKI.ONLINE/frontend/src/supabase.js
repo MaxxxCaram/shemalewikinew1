@@ -74,8 +74,11 @@ function buildQuery(collection) {
       return q;
     },
     order(col, opts = {}) {
+      // PocketBase has no 'created_at' column; it exposes the auto 'created' field.
+      let c = col;
+      if (col === 'created_at' || col === 'updated_at') c = col === 'created_at' ? 'created' : 'updated';
       const dir = (opts && opts.ascending === false) ? '-' : '+';
-      params.set('sort', dir + col);
+      params.set('sort', dir + c);
       return q;
     },
     limit(n) { limit = n; return q; },
