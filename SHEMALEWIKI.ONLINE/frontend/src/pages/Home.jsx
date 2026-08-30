@@ -153,7 +153,8 @@ export default function Home() {
           const isDdg = p.photo_url.includes('supabase.co/storage') && p.photo_url.includes('/ddg/');
           const isStorage = p.photo_url.includes('supabase.co/storage') && !p.photo_url.includes('/ddg/');
           const isArchive = p.photo_url.includes('web.archive.org');
-          if (isDdg || isStorage || isArchive) {
+          const isPocketBase = p.photo_url.includes('api.shemalewiki.online');
+          if (isDdg || isStorage || isArchive || isPocketBase) {
             photoCount[p.profile_id] = (photoCount[p.profile_id] || 0) + (isDdg ? 5 : (isStorage ? 2 : 1));
           }
         });

@@ -8,6 +8,12 @@ export const getProxiedImageUrl = (url) => {
     return url;
   }
   
+  // PocketBase local storage files (api.shemalewiki.online) are same-origin
+  // reachable and have no hotlink-blocking — serve them directly, no proxy.
+  if (url.includes('api.shemalewiki.online')) {
+    return url;
+  }
+  
   // Route all external images through our secure, high-performance edge cached proxy
   return `/api/image?url=${encodeURIComponent(url)}`;
 };
