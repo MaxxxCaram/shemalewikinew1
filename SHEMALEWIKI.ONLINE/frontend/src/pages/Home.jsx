@@ -157,6 +157,7 @@ export default function Home() {
         });
 
         const validIds = Object.keys(photoCount).sort((a, b) => photoCount[b] - photoCount[a]);
+        console.log('[Home] photoRows:', (photoRows||[]).length, '| perfiles con foto:', validIds.length);
 
         // 2. Fetch the richest candidates (up to 40) with photos embedded
         let pool = [];

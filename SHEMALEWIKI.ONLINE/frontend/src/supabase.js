@@ -7,6 +7,7 @@ const PB_URL = import.meta.env.VITE_PB_URL || 'https://api.shemalewiki.online';
 
 // --- Minimal fetch helper ---
 async function pbRequest(path, options = {}) {
+  console.log('[PB]', path);
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
   const res = await fetch(`${PB_URL}${path}`, { ...options, headers });
   if (!res.ok) {
@@ -142,6 +143,7 @@ function buildQuery(collection) {
             ? `${PB_URL}/api/files/${ph.collectionId || ''}/${ph.id}/${ph.file}`
             : ph.photo_url,
         }));
+        console.log('[PB] photos items:', items.length, '| con file:', items.filter(i=>i.file).length, '| muestra:', items[0] ? items[0].photo_url.slice(0,50) : 'none');
       }
       return { data: items, error: null, count: countExact ? (data.totalItems || items.length) : null };
     },
