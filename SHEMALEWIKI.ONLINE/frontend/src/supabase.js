@@ -92,60 +92,57 @@ function buildQuery(collection) {
       const items = (data && data.items) || [];
       return { data: items[0] || null, error: items.length ? null : { message: 'No rows' } };
     },
-    async execute() { return q.then && q.then ? await q : q; },
-    async then() {
-      // If select includes a join like '*, photos(...)', fetch profiles + photos
-      const joinMatch = selectedFields.match(/photos\s*\(\s*([^)]*)\s*\)/);
-      if (joinMatch) {
-        params.set('perPage', String(limit || 500));
+    execute() { return this; },
+    then(onFulfilled, onRejected) {
+      const run = async () => {
+        // If select includes a join like '*, photos(...)', fetch profiles + photos
+        const joinMatch = selectedFields.match(/photos\s*\(\s*([^)]*)\s*\)/);
+        if (joinMatch) {
+          params.set('perPage', String(limit || 500));
+          const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
+          const { data, error } = await pbRequest(path);
+          if (error) return { data: null, error, count: null };
+          let items = (data && data.items) || [];
+          // fetch photos for the returned profile ids
+          const profIds = items.map(p => p.id);
+          let photos = [];
+          if (profIds.length) {
+            const idFilter = `(${profIds.map(id => `profile_id='${id}'`).join('||')})`;
+            const phPath = `/api/collections/photos/records?perPage=2000&filter=${encodeURIComponent(idFilter)}`;
+            const { data: phData } = await pbRequest(phPath);
+            photos = (phData && phData.items) || [];
+          }
+          items = items.map(p => ({ ...p, photos: photos.filter(ph => ph.profile_id === p.id) }));
+          items = items.map(p => ({
+            ...p,
+            photos: (p.photos || []).map(ph => ({
+              ...ph,
+              photo_url: ph.file
+                ? `${PB_URL}/api/files/${ph.collectionId || ''}/${ph.id}/${ph.file}`
+                : ph.photo_url,
+              local_path: ph.local_path || '',
+            })),
+          }));
+          return { data: items, error: null, count: countExact ? items.length : null };
+        }
+        // plain select
+        params.set('perPage', String(limit || (isHead ? 1 : 500)));
         const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
         const { data, error } = await pbRequest(path);
         if (error) return { data: null, error, count: null };
         let items = (data && data.items) || [];
-        // fetch photos for the returned profile ids
-        const profIds = items.map(p => p.id);
-        let photos = [];
-        if (profIds.length) {
-          const idFilter = `(${profIds.map(id => `profile_id='${id}'`).join('||')})`;
-          const phPath = `/api/collections/photos/records?perPage=2000&filter=${encodeURIComponent(idFilter)}`;
-          const { data: phData } = await pbRequest(phPath);
-          photos = (phData && phData.items) || [];
-        }
-        items = items.map(p => ({ ...p, photos: photos.filter(ph => ph.profile_id === p.id) }));
-        // Resolve each photo's display URL: prefer PocketBase local storage file,
-        // fall back to the original photo_url (Supabase/archive) while migration
-        // of that photo is still pending.
-        items = items.map(p => ({
-          ...p,
-          photos: (p.photos || []).map(ph => ({
+        if (collection === 'photos') {
+          items = items.map(ph => ({
             ...ph,
             photo_url: ph.file
               ? `${PB_URL}/api/files/${ph.collectionId || ''}/${ph.id}/${ph.file}`
               : ph.photo_url,
-            local_path: ph.local_path || '',
-          })),
-        }));
-        return { data: items, error: null, count: countExact ? items.length : null };
-      }
-      // plain select
-      params.set('perPage', String(limit || (isHead ? 1 : 500)));
-      const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
-      const { data, error } = await pbRequest(path);
-      if (error) return { data: null, error, count: null };
-      let items = (data && data.items) || [];
-      // For the photos collection, resolve photo_url to the PocketBase local
-      // storage file when present (else the home featured verify fails on the
-      // stale Supabase URL and shows no photos).
-      if (collection === 'photos') {
-        items = items.map(ph => ({
-          ...ph,
-          photo_url: ph.file
-            ? `${PB_URL}/api/files/${ph.collectionId || ''}/${ph.id}/${ph.file}`
-            : ph.photo_url,
-        }));
-        console.log('[PB] photos items:', items.length, '| con file:', items.filter(i=>i.file).length, '| muestra:', items[0] ? items[0].photo_url.slice(0,50) : 'none');
-      }
-      return { data: items, error: null, count: countExact ? (data.totalItems || items.length) : null };
+          }));
+        }
+        return { data: items, error: null, count: countExact ? (data.totalItems || items.length) : null };
+      };
+      // thenable: must call onFulfilled/onRejected so `await` resolves.
+      return run().then(onFulfilled, onRejected);
     },
   };
   return q;
