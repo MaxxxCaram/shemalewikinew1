@@ -130,7 +130,18 @@ function buildQuery(collection) {
       const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
       const { data, error } = await pbRequest(path);
       if (error) return { data: null, error, count: null };
-      const items = (data && data.items) || [];
+      let items = (data && data.items) || [];
+      // For the photos collection, resolve photo_url to the PocketBase local
+      // storage file when present (else the home featured verify fails on the
+      // stale Supabase URL and shows no photos).
+      if (collection === 'photos') {
+        items = items.map(ph => ({
+          ...ph,
+          photo_url: ph.file
+            ? `${PB_URL}/api/files/${ph.collectionId || ''}/${ph.id}/${ph.file}`
+            : ph.photo_url,
+        }));
+      }
       return { data: items, error: null, count: countExact ? (data.totalItems || items.length) : null };
     },
   };
