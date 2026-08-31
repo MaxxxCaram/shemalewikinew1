@@ -66,10 +66,11 @@ function buildQuery(collection) {
     },
     not(col, op, v) {
       // supabase .not('cam_chat','eq','rejected') -> (cam_chat!='rejected')
+      // .not('photo_url','is',null) means "photo_url IS NOT null" -> (photo_url!=null)
       if (op === 'eq') filters.push(`(${col}!='${String(v).replace(/'/g, "''")}')`);
       else if (op === 'is') {
-        if (v === null) filters.push(`(${col}=null)`);
-        else filters.push(`(${col}!=null)`);
+        if (v === null) filters.push(`(${col}!=null)`);
+        else filters.push(`(${col}=null)`);
       }
       return q;
     },
