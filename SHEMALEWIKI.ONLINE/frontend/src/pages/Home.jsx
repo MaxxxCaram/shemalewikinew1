@@ -20,8 +20,9 @@ const verifyPhoto = (url) =>
     const timer = setTimeout(() => { img.src = ''; resolve(null); }, 5000);
     img.onload = () => {
       clearTimeout(timer);
-      // A real photo must be at least 300x300 AND not a 1x1 transparent
-      const ok = img.naturalWidth >= 250 && img.naturalHeight >= 250;
+      // A real photo must be at least 80x80 AND not a 1x1 transparent.
+      // (PocketBase-migrated photos are 100x133 thumbs; kinky HD are larger.)
+      const ok = img.naturalWidth >= 80 && img.naturalHeight >= 80;
       resolve(ok ? url : null);
     };
     img.onerror = () => { clearTimeout(timer); resolve(null); };
