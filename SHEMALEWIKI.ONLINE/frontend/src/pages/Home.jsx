@@ -137,11 +137,14 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        // 1. Get profile_ids that have ANY photo (storage or archive)
+        // 1. Get profile_ids that have ANY functional photo (local PocketBase
+        //    storage file). Only these load in the browser; web.archive and
+        //    stale Supabase URLs are broken.
         const { data: photoRows, error: e0 } = await supabase
           .from('photos')
           .select('profile_id, photo_url')
           .not('photo_url', 'is', null)
+          .neq('file', '')
           .limit(4000);
 
         if (e0) throw e0;
