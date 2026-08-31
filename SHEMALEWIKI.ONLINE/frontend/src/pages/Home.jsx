@@ -16,17 +16,10 @@ const PROXY = '/api/image?url=';
 const verifyPhoto = (url) =>
   new Promise((resolve) => {
     if (!url) return resolve(null);
-    const img = new Image();
-    const timer = setTimeout(() => { img.src = ''; resolve(null); }, 5000);
-    img.onload = () => {
-      clearTimeout(timer);
-      // A real photo must be at least 80x80 AND not a 1x1 transparent.
-      // (PocketBase-migrated photos are 100x133 thumbs; kinky HD are larger.)
-      const ok = img.naturalWidth >= 80 && img.naturalHeight >= 80;
-      resolve(ok ? url : null);
-    };
-    img.onerror = () => { clearTimeout(timer); resolve(null); };
-    img.src = url;
+    // Since we already filter to PocketBase local-storage files (file != ''),
+    // skip the slow per-image Image() probe and trust them — it was causing
+    // the featured grid to hang on loading forever (128 profiles x 6 urls x 5s).
+    resolve(url);
   });
 
 // Try a list of candidate URLs in PARALLEL; return first that loads, else null.
