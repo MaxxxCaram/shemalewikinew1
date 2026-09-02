@@ -46,7 +46,7 @@ const candidateUrls = (photos) => {
       archive.push(`${PROXY}${encodeURIComponent(ph.photo_url)}`);
     }
   });
-  return [...coverDdg, ...ddg, ...storage, ...archive].slice(0, 6);
+  return [...storage, ...coverDdg, ...ddg].slice(0, 6);
 };
 
 /* ── Content per brand ── */
@@ -151,7 +151,7 @@ export default function Home() {
           const isStorage = p.photo_url.includes('supabase.co/storage') && !p.photo_url.includes('/ddg/');
           const isArchive = p.photo_url.includes('web.archive.org');
           const isPocketBase = p.photo_url.includes('api.shemalewiki.online');
-          if (isDdg || isStorage || isArchive || isPocketBase) {
+          if (isDdg || isStorage || isPocketBase) {
             photoCount[p.profile_id] = (photoCount[p.profile_id] || 0) + (isDdg ? 5 : (isStorage ? 2 : 1));
           }
         });
