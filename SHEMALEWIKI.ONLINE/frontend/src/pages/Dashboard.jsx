@@ -4,6 +4,7 @@ import { LogOut, Save, User, Camera, Settings, RefreshCw, Image as ImageIcon, Ba
 import { supabase } from '../supabase';
 import { getProxiedImageUrl } from '../utils';
 import AdBanner from '../components/AdBanner';
+import AdSlot from '../components/AdSlot';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
 // Reduces 20MB+ photos to ~2-3MB while keeping excellent web quality
@@ -292,8 +293,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Ad banner — top */}
-      <AdBanner zoneId="" width={728} height={90} provider="trafficjunky" className="ad-top" />
+      {/* Ad banner — top (panel trans) */}
+      <AdSlot slot="dashboard-top" audience="panel_trans" width={728} height={90} className="ad-top" />
 
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         {/* Sidebar */}
@@ -526,8 +527,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Ad banner — bottom */}
-      <AdBanner zoneId="" width={728} height={90} provider="trafficjunky" className="ad-bottom" />
+      {/* Ad banner — bottom (panel trans) */}
+      <AdSlot slot="dashboard-bottom" audience="panel_trans" width={728} height={90} className="ad-bottom" />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Search, MapPin, ArrowRight, Sparkles, Globe2, ShieldCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
+import AdSlot from '../components/AdSlot';
 import useScrollReveal from '../useScrollReveal';
 import { supabase } from '../supabase';
 import logoSw from '../assets/shemalewiki-blurred-limits.jpg';
@@ -336,7 +337,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FEATURED PROFILES ── */}
+            {/* ── AD SLOT: clientes (home) ── */}
+            <AdSlot slot="home-top" audience="clients" width={728} height={90} className="ad-top" />
+
+            {/* ── FEATURED PROFILES ── */}
       <div className="container">
         <div className="section-header">
           <h2 className="section-title">{content.featuredTitle}</h2>

@@ -5,6 +5,7 @@ import { supabase } from '../supabase';
 import LazyImage from '../components/LazyImage';
 import useScrollReveal from '../useScrollReveal';
 import SEO from '../components/SEO';
+import AdSlot from '../components/AdSlot';
 import { t, getLang } from '../i18n';
 
 // City → slug matching CityGuide.jsx routing
@@ -130,9 +131,12 @@ export default function ProfilesList() {
       </button>
 
       <div className="page-header" style={{ textAlign: 'left', marginBottom: '2.5rem' }}>
-        <h1 className="page-title">{t.communityIn(displayCountry)}</h1>
-        <p className="page-subtitle">{t.findCompanion()}</p>
-      </div>
+              <h1 className="page-title">{t.communityIn(displayCountry)}</h1>
+              <p className="page-subtitle">{t.findCompanion()}</p>
+            </div>
+
+            {/* AD SLOT: clientes (country list) */}
+            <AdSlot slot="country-top" audience="clients" width={728} height={90} className="ad-top" />
 
       {/* City cards grid */}
       {cityCounts.length > 0 && (

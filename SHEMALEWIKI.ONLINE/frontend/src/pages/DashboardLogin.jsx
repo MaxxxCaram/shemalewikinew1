@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { detectDashboardLang, getDashboardTranslations, SUPPORTED_LANGS } from '../i18n-dashboard';
 import AdBanner from '../components/AdBanner';
+import AdSlot from '../components/AdSlot';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
 function compressImage(file, maxDim = 2048, quality = 0.85) {
@@ -267,10 +268,10 @@ export default function DashboardLogin() {
         </div>
       </div>
 
-      {/* Ad banner — top */}
-      <AdBanner zoneId="" width={728} height={90} provider="trafficjunky" className="ad-top" />
+      {/* Ad banner — top (panel trans: cirujanos, clínicas, extensiones) */}
+            <AdSlot slot="dashboard-top" audience="panel_trans" width={728} height={90} className="ad-top" />
 
-      {/* 1. SELECTION PORTAL */}
+            {/* 1. SELECTION PORTAL */}
       {view === 'options' && (
         <div style={{ maxWidth: '900px', width: '100%', padding: '0 1rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
@@ -987,8 +988,8 @@ export default function DashboardLogin() {
         </div>
       )}
 
-      {/* Ad banner — bottom */}
-      <AdBanner zoneId="" width={728} height={90} provider="trafficjunky" className="ad-bottom" />
+      {/* Ad banner — bottom (panel trans) */}
+      <AdSlot slot="dashboard-bottom" audience="panel_trans" width={728} height={90} className="ad-bottom" />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { MapPin, ArrowLeft, Building2, Users } from 'lucide-react';
 import SEO from '../components/SEO';
+import AdSlot from '../components/AdSlot';
 import { supabase } from '../supabase';
 import LazyImage from '../components/LazyImage';
 
@@ -738,7 +739,10 @@ export default function CityGuide() {
           </Link>
           <span className="breadcrumb-sep">›</span>
           <span className="breadcrumb-current">{displayCity}</span>
-        </div>
+                  </div>
+
+                  {/* AD SLOT: clientes (city) */}
+                  <AdSlot slot="city-top" audience="clients" width={728} height={90} className="ad-top" />
 
         <button
           onClick={() => navigate(`${langPrefix}/${continent}/${country}`)}

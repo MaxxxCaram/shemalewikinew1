@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Phone, Mail, MessageCircle, MapPin, Globe, Share2, Flag, ChevronLeft, ArrowLeft, Cake, Languages, Ruler, Weight, Sparkles, Camera } from 'lucide-react';
 import SEO from '../components/SEO';
+import AdSlot from '../components/AdSlot';
 import Lightbox from '../components/Lightbox';
 import LazyImage from '../components/LazyImage';
 import { isLoadablePhoto } from '../utils/photoFilter';
@@ -203,6 +204,9 @@ export default function Profile() {
           <span className="breadcrumb-sep">›</span>
           <span className="breadcrumb-current">{profile.name}</span>
         </nav>
+
+        {/* AD SLOT: clientes (profile) */}
+        <AdSlot slot="profile-top" audience="clients" width={728} height={90} className="ad-top" />
 
         {/* Profile Header — agency-style (vnymodels-inspired) */}
         <div className="profile-header">
