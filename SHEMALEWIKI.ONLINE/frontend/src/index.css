@@ -513,6 +513,36 @@ h1, h2, h3, h4, h5, h6 {
   border-top: 1px solid var(--glass-border);
   border-bottom: 1px solid var(--glass-border);
 }
+/* VNY left panel style: stacked vertical stats list */
+[data-brand="shemalewiki"] .model-measurements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 0;
+  margin-bottom: 1rem;
+}
+[data-brand="shemalewiki"] .model-measure {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+[data-brand="shemalewiki"] .model-measure-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+[data-brand="shemalewiki"] .model-measure-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: right;
+}
 .model-measure {
   display: flex;
   flex-direction: column;
@@ -1748,6 +1778,11 @@ h1, h2, h3, h4, h5, h6 {
 [data-brand="shemalewiki"] .profile-header {
   gap: 3rem;
   margin-top: 1rem;
+  /* VNY style: stats left, hero photo right */
+  flex-direction: row-reverse;
+}
+@media (max-width: 768px) {
+  [data-brand="shemalewiki"] .profile-header { flex-direction: column; }
 }
 [data-brand="shemalewiki"] .profile-hero-wrapper {
   position: relative;
