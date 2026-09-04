@@ -586,10 +586,10 @@ export default function CityGuide() {
         if (error) throw error;
         if (data) {
           const arr = Array.isArray(data) ? data : [];
-          // Show ALL real profiles of the city (no photo filter, no 12-cap).
-          // Hide only rejected. A girl without photos is still a real listing.
+          // Show ONLY profiles with a real, loadable photo — no placeholders.
           const cleaned = arr
-            .map(p => ({ ...p, photos: p.photos || [] }));
+            .map(p => ({ ...p, photos: p.photos || [] }))
+            .filter(p => p.photos.some(ph => ph.photo_url && !/web\.archive\.org|shemalewiki\.com/i.test(ph.photo_url)));
           setProfiles(cleaned);
           // Get total count separately
           const { count } = await supabase

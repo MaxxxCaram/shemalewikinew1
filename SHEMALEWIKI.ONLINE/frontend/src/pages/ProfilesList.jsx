@@ -86,11 +86,10 @@ export default function ProfilesList() {
       
       if (error) throw error;
       if (data) {
-        // Show ALL real profiles (no photo filter). Profiles without photos
-        // are real girls too — hiding them made the site look empty.
-        // Only exclude rejected. Search shows matches regardless of photos.
-        const cleaned = data.map(p => ({ ...p, photos: p.photos || [] }));
-        setProfiles(cleaned);
+        // Show ONLY profiles with a real, loadable photo — no placeholders.
+        const withPhotos = data.map(p => ({ ...p, photos: p.photos || [] }))
+          .filter(p => p.photos.some(ph => ph.photo_url && !/web\.archive\.org|shemalewiki\.com/i.test(ph.photo_url)));
+        setProfiles(withPhotos);
       }
     } catch (error) {
       console.error("Error fetching profiles", error);
