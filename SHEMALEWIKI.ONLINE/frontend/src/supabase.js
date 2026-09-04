@@ -25,6 +25,28 @@ async function pbRequest(path, options = {}) {
   return { data: text ? JSON.parse(text) : null, error: null };
 }
 
+// Fetch ALL records across pages (PocketBase caps perPage at 500).
+// Used when the caller requests limit > 500 (e.g. .limit(2000)).
+// `path` is the full path incl. any filter, WITHOUT perPage/page.
+async function pbFetchAll(path, maxItems) {
+  const perPage = 500;
+  const items = [];
+  const want = maxItems || Infinity;
+  let page = 1;
+  for (;;) {
+    const sep = path.includes('?') ? '&' : '?';
+    const { data, error } = await pbRequest(`${path}${sep}perPage=${perPage}&page=${page}`);
+    if (error) return { data: null, error };
+    const batch = (data && data.items) || [];
+    items.push(...batch);
+    const got = items.length;
+    const total = (data && data.totalItems) || 0;
+    if (!batch.length || got >= total || got >= want) break;
+    page += 1;
+  }
+  return { data: { items }, error: null };
+}
+
 // --- Query builder mimicking supabase.from().select().eq()... ---
 function buildQuery(collection) {
   const filters = [];     // PocketBase filter expressions
@@ -98,9 +120,12 @@ function buildQuery(collection) {
         // If select includes a join like '*, photos(...)', fetch profiles + photos
         const joinMatch = selectedFields.match(/photos\s*\(\s*([^)]*)\s*\)/);
         if (joinMatch) {
-          params.set('perPage', String(limit || 500));
+          // paginate if limit > 500 (PocketBase caps perPage at 500)
+          const wantItems = limit || 500;
           const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
-          const { data, error } = await pbRequest(path);
+          const { data, error } = wantItems > 500
+            ? await pbFetchAll(path, wantItems)
+            : await pbRequest(path);
           if (error) return { data: null, error, count: null };
           let items = (data && data.items) || [];
           // fetch photos for the returned profile ids
@@ -126,9 +151,11 @@ function buildQuery(collection) {
           return { data: items, error: null, count: countExact ? items.length : null };
         }
         // plain select
-        params.set('perPage', String(limit || (isHead ? 1 : 500)));
+        const wantItems = limit || (isHead ? 1 : 500);
         const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
-        const { data, error } = await pbRequest(path);
+        const { data, error } = wantItems > 500
+          ? await pbFetchAll(path, wantItems)
+          : await pbRequest(path);
         if (error) return { data: null, error, count: null };
         let items = (data && data.items) || [];
         if (collection === 'photos') {
