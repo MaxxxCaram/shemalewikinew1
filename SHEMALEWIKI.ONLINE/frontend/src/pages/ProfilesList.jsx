@@ -82,18 +82,14 @@ export default function ProfilesList() {
       }
       // Fetch a larger batch (no created_at ordering) so profiles WITH photos
       // are not pushed out by newer photo-less duplicates.
-      const { data, error } = await queryBuilder.order('created_at', { ascending: false }).limit(1000);
+      const { data, error } = await queryBuilder.order('created_at', { ascending: false }).limit(2000);
       
       if (error) throw error;
       if (data) {
-        const withPhotos = data.map(p => ({
-          ...p,
-          photos: p.photos || []
-        })).filter(p => p.photos.length > 0);
-        // If search is active, show matches even without photos; otherwise only photo-bearing profiles
-        const cleaned = searchQuery
-          ? data.map(p => ({ ...p, photos: p.photos || [] }))
-          : withPhotos;
+        // Show ALL real profiles (no photo filter). Profiles without photos
+        // are real girls too — hiding them made the site look empty.
+        // Only exclude rejected. Search shows matches regardless of photos.
+        const cleaned = data.map(p => ({ ...p, photos: p.photos || [] }));
         setProfiles(cleaned);
       }
     } catch (error) {

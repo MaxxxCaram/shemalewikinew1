@@ -581,15 +581,15 @@ export default function CityGuide() {
           .ilike('location', locationPattern)
           .not('cam_chat', 'eq', 'rejected')
           .order('created_at', { ascending: false })
-          .limit(200);
+          .limit(2000);
 
         if (error) throw error;
         if (data) {
           const arr = Array.isArray(data) ? data : [];
+          // Show ALL real profiles of the city (no photo filter, no 12-cap).
+          // Hide only rejected. A girl without photos is still a real listing.
           const cleaned = arr
-            .map(p => ({ ...p, photos: p.photos || [] }))
-            .filter(p => p.photos.length > 0) // Only show profiles WITH photos per Maxi's directive
-            .slice(0, 12);
+            .map(p => ({ ...p, photos: p.photos || [] }));
           setProfiles(cleaned);
           // Get total count separately
           const { count } = await supabase
