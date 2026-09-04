@@ -128,14 +128,20 @@ function buildQuery(collection) {
             : await pbRequest(path);
           if (error) return { data: null, error, count: null };
           let items = (data && data.items) || [];
-          // fetch photos for the returned profile ids
+          // fetch photos for the returned profile ids, CHUNKED to <=500 ids
+          // per query (a giant OR of >500 profile_id breaks PocketBase with 400).
           const profIds = items.map(p => p.id);
           let photos = [];
           if (profIds.length) {
-            const idFilter = `(${profIds.map(id => `profile_id='${id}'`).join('||')})`;
-            const phPath = `/api/collections/photos/records?perPage=2000&filter=${encodeURIComponent(idFilter)}`;
-            const { data: phData } = await pbRequest(phPath);
-            photos = (phData && phData.items) || [];
+            const CHUNK = 450;
+            const groups = [];
+            for (let i = 0; i < profIds.length; i += CHUNK) groups.push(profIds.slice(i, i + CHUNK));
+            for (const grp of groups) {
+              const idFilter = `(${grp.map(id => `profile_id='${id}'`).join('||')})`;
+              const phPath = `/api/collections/photos/records?perPage=2000&filter=${encodeURIComponent(idFilter)}`;
+              const { data: phData } = await pbRequest(phPath);
+              photos.push(...((phData && phData.items) || []));
+            }
           }
           items = items.map(p => ({ ...p, photos: photos.filter(ph => ph.profile_id === p.id) }));
           items = items.map(p => ({
