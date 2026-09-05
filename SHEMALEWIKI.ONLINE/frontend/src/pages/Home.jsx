@@ -131,85 +131,37 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        // 1. Get profile_ids that have ANY functional photo (local PocketBase
-        //    storage file). Only these load in the browser; web.archive and
-        //    stale Supabase URLs are broken.
-        const { data: photoRows, error: e0 } = await supabase
-          .from('photos')
-          .select('profile_id, photo_url')
-          .not('photo_url', 'is', null)
-          .neq('file', '')
-          .limit(4000);
+        // 1. Fetch recent approved profiles WITH their photos embedded.
+        //    Avoid the old approach (downloading 4000 photo rows then a giant
+        //    IN(...) query of ~385 ids) which flooded the network and main
+        //    thread. Profiles are ordered newest-first and filtered client-side
+        //    to those with a real, loadable photo.
+        const { data: recent, error: e1 } = await supabase
+          .from('profiles')
+          .select('*, photos(photo_url, local_path, file)')
+          .not('cam_chat', 'eq', 'rejected')
+          .order('created_at', { ascending: false })
+          .limit(200);
+        if (e1) throw e1;
+        const arr = Array.isArray(recent) ? recent : [];
 
-        if (e0) throw e0;
-
-        // Count photos per profile. Photos under /ddg/ are the original site's
-        // real, large images — weight them highest for the showcase.
-        const photoCount = {};
-        (photoRows || []).forEach(p => {
-          if (!p.profile_id || !p.photo_url) return;
-          const isDdg = p.photo_url.includes('supabase.co/storage') && p.photo_url.includes('/ddg/');
-          const isStorage = p.photo_url.includes('supabase.co/storage') && !p.photo_url.includes('/ddg/');
-          const isArchive = p.photo_url.includes('web.archive.org');
-          const isPocketBase = p.photo_url.includes('api.shemalewiki.online');
-          if (isDdg || isStorage || isPocketBase) {
-            photoCount[p.profile_id] = (photoCount[p.profile_id] || 0) + (isDdg ? 5 : (isStorage ? 2 : 1));
-          }
-        });
-
-        const validIds = Object.keys(photoCount).sort((a, b) => photoCount[b] - photoCount[a]);
-        console.log('[Home] photoRows:', (photoRows||[]).length, '| perfiles con foto:', validIds.length);
-
-        // 2. Fetch the richest candidates (up to 40) with photos embedded
-        let pool = [];
-        if (validIds.length > 0) {
-          const { data: withPhotos, error: e1 } = await supabase
-            .from('profiles')
-            .select('*, photos(photo_url, local_path)')
-            .in('id', validIds.slice(0, 200))
-            .not('cam_chat', 'eq', 'rejected')
-            .limit(200);
-
-          if (e1) throw e1;
-          pool = Array.isArray(withPhotos) ? withPhotos : [];
-        }
-
-        // 3. Verify each profile's photos actually load in the browser;
-        //    keep the first 12 with a working photo. Verify profiles in parallel.
+        // 2. Keep the first 12 that have at least one real photo.
         const verified = [];
-        const poolResults = await Promise.all(pool.map(async (p) => {
-          const working = await verifyFirst(candidateUrls(p.photos));
-          return working ? { ...p, _verifiedPhoto: working } : null;
-        }));
-        for (const p of poolResults) {
-          if (p) verified.push(p);
-          if (verified.length >= 12) break;
-        }
-
-        // 4. Fallback: recent approved profiles (in case verification pool too small)
-        if (verified.length < 12) {
-          const { data: recent, error: e2 } = await supabase
-            .from('profiles')
-            .select('*, photos(photo_url, local_path)')
-            .not('cam_chat', 'eq', 'rejected')
-            .order('created_at', { ascending: false })
-            .limit(80);
-          if (!e2 && Array.isArray(recent)) {
-            const have = new Set(verified.map(p => p.id));
-            const recentResults = await Promise.all(recent.map(async (p) => {
-              if (have.has(p.id)) return null;
-              const working = await verifyFirst(candidateUrls(p.photos));
-              return working ? { ...p, _verifiedPhoto: working } : null;
-            }));
-            for (const p of recentResults) {
-              if (!p) continue;
-              have.add(p.id);
-              verified.push(p);
-              if (verified.length >= 12) break;
-            }
+        for (const p of arr) {
+          const goodPhotos = (p.photos || []).filter(ph => {
+            const u = ((ph?.photo_url) || '').toLowerCase();
+            if (ph?.file) return true;                       // real PB storage
+            if (/web\.archive\.org|shemalewiki\.com|xhamster|youtube|pornhub|xvideos/.test(u)) return false;
+            return u.includes('api/files') || u.includes('eros');
+          });
+          if (goodPhotos.length > 0) {
+            const working = goodPhotos[0].photo_url;
+            verified.push({ ...p, _verifiedPhoto: working });
+            if (verified.length >= 12) break;
           }
         }
 
+        console.log('[Home] profiles escaneados:', arr.length, '| featured con foto:', verified.length);
         setProfiles(verified.slice(0, 12));
       } catch (err) {
         console.error('Home fetch failed:', err);
