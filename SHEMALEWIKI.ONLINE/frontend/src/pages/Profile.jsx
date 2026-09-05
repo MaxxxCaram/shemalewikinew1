@@ -68,11 +68,18 @@ export default function Profile() {
       const { data: photos } = await supabase.from('photos').select('*').eq('profile_id', id);
       const { data: services } = await supabase.from('services').select('*').eq('profile_id', id);
       
-      const cleanPhotos = (photos || []).filter(p => isLoadablePhoto(p.photo_url) && hasRealFile(p));
+      const cleanPhotos = (photos || [])
+        .filter(p => isLoadablePhoto(p.photo_url) && hasRealFile(p));
+      // HD-first: si hay fotos webp HD (batch kinky/distintas), van primero.
+      // Los thumbs 60x60 / 248px del scrape viejo (patron 80966_*.jpg) quedan al final;
+      // si el perfil SOLO tiene thumbs, igual se muestran (mejor que nada).
+      const hd = cleanPhotos.filter(p => /\.webp$/i.test(p.file || ''));
+      const rest = cleanPhotos.filter(p => !/\.webp$/i.test(p.file || ''));
+      const ordered = [...hd, ...rest];
       
       setProfile({
         ...profileData,
-        photos: cleanPhotos,
+        photos: ordered,
         services: services || []
       });
 
