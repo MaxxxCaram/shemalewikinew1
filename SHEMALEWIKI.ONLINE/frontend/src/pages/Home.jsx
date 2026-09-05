@@ -132,21 +132,31 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        // 0. Detect visitor country via Vercel edge (no permission prompt).
-        let geo = null;
+        // 0. Detect visitor country client-side (timezone + language).
+        //    No server function needed (Vercel Hobby caps at 12 APIs) and no
+        //    permission prompt. Covers the vast majority of real visitors.
+        let geoCountryName = null;
         try {
-          const g = await fetch('/api/geo');
-          if (g.ok) geo = await g.json();   // { country: 'ES' | 'NL' | ... }
-        } catch { /* geo optional — fall back to global below */ }
-
-        // Map ISO country code -> the country name used in location strings.
-        const COUNTRY_NAMES = {
-          NL: 'Netherlands', ES: 'Spain', FR: 'France', BE: 'Belgium',
-          MX: 'Mexico', AR: 'Argentina', BR: 'Brazil', DE: 'Germany',
-          GB: 'United Kingdom', UK: 'United Kingdom', IT: 'Italy', PT: 'Portugal',
-          US: 'United States', CH: 'Switzerland', AT: 'Austria',
-        };
-        const geoCountryName = geo?.country ? COUNTRY_NAMES[geo.country] : null;
+          const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+          const COUNTRY_BY_TZ = {
+            'Europe/Amsterdam': 'Netherlands', 'Europe/Madrid': 'Spain',
+            'Europe/Paris': 'France', 'Europe/Brussels': 'Belgium',
+            'America/Mexico_City': 'Mexico', 'America/Argentina/Buenos_Aires': 'Argentina',
+            'America/Buenos_Aires': 'Argentina', 'America/Sao_Paulo': 'Brazil',
+            'Europe/Berlin': 'Germany', 'Europe/London': 'United Kingdom',
+            'Europe/Rome': 'Italy', 'Europe/Lisbon': 'Portugal',
+            'America/New_York': 'United States', 'America/Chicago': 'United States',
+            'America/Los_Angeles': 'United States', 'Europe/Zurich': 'Switzerland',
+            'Europe/Vienna': 'Austria',
+          };
+          geoCountryName = COUNTRY_BY_TZ[tz] || null;
+          // language fallback (e.g. 'es-419' variants, 'nl', 'pt-BR')
+          if (!geoCountryName) {
+            const lang = (navigator.language || '').toLowerCase();
+            if (lang.startsWith('nl')) geoCountryName = 'Netherlands';
+            else if (lang.startsWith('es-ar')) geoCountryName = 'Argentina';
+          }
+        } catch { /* Intl unavailable — global fallback below */ }
         if (geoCountryName) setGeoCountry(geoCountryName);
 
         const hasRealPhoto = (p) => (p.photos || []).some(ph => {
