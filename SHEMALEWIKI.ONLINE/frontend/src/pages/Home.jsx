@@ -116,6 +116,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [geoCountry, setGeoCountry] = useState(null);
 
   // Vanguard scroll-reveal for ShemaleWiki feature cards + city block
   useScrollReveal([profiles]);
@@ -131,37 +132,70 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        // 1. Fetch recent approved profiles WITH their photos embedded.
-        //    Avoid the old approach (downloading 4000 photo rows then a giant
-        //    IN(...) query of ~385 ids) which flooded the network and main
-        //    thread. Profiles are ordered newest-first and filtered client-side
-        //    to those with a real, loadable photo.
-        const { data: recent, error: e1 } = await supabase
-          .from('profiles')
-          .select('*, photos(photo_url, local_path, file)')
-          .not('cam_chat', 'eq', 'rejected')
-          .order('created_at', { ascending: false })
-          .limit(200);
-        if (e1) throw e1;
-        const arr = Array.isArray(recent) ? recent : [];
+        // 0. Detect visitor country via Vercel edge (no permission prompt).
+        let geo = null;
+        try {
+          const g = await fetch('/api/geo');
+          if (g.ok) geo = await g.json();   // { country: 'ES' | 'NL' | ... }
+        } catch { /* geo optional — fall back to global below */ }
 
-        // 2. Keep the first 12 that have at least one real photo.
-        const verified = [];
-        for (const p of arr) {
-          const goodPhotos = (p.photos || []).filter(ph => {
-            const u = ((ph?.photo_url) || '').toLowerCase();
-            if (ph?.file) return true;                       // real PB storage
-            if (/web\.archive\.org|shemalewiki\.com|xhamster|youtube|pornhub|xvideos/.test(u)) return false;
-            return u.includes('api/files') || u.includes('eros');
-          });
-          if (goodPhotos.length > 0) {
-            const working = goodPhotos[0].photo_url;
-            verified.push({ ...p, _verifiedPhoto: working });
-            if (verified.length >= 12) break;
+        // Map ISO country code -> the country name used in location strings.
+        const COUNTRY_NAMES = {
+          NL: 'Netherlands', ES: 'Spain', FR: 'France', BE: 'Belgium',
+          MX: 'Mexico', AR: 'Argentina', BR: 'Brazil', DE: 'Germany',
+          GB: 'United Kingdom', UK: 'United Kingdom', IT: 'Italy', PT: 'Portugal',
+          US: 'United States', CH: 'Switzerland', AT: 'Austria',
+        };
+        const geoCountryName = geo?.country ? COUNTRY_NAMES[geo.country] : null;
+        if (geoCountryName) setGeoCountry(geoCountryName);
+
+        const hasRealPhoto = (p) => (p.photos || []).some(ph => {
+          const u = ((ph?.photo_url) || '').toLowerCase();
+          if (ph?.file) return true;
+          if (/web\.archive\.org|shemalewiki\.com|xhamster|youtube|pornhub|xvideos/.test(u)) return false;
+          return u.includes('api/files') || u.includes('eros');
+        });
+
+        const pickVerified = (list, want) => {
+          const out = [];
+          for (const p of list) {
+            if (!hasRealPhoto(p)) continue;
+            const cover = (p.photos || []).find(ph => ph.file) || (p.photos || [])[0];
+            out.push({ ...p, _verifiedPhoto: cover?.photo_url });
+            if (out.length >= want) break;
           }
+          return out;
+        };
+
+        let verified = [];
+        // 1. Try geo: profiles from the visitor's country first.
+        if (geoCountryName) {
+          const { data: local } = await supabase
+            .from('profiles')
+            .select('*, photos(photo_url, local_path, file)')
+            .not('cam_chat', 'eq', 'rejected')
+            .ilike('location', `% | ${geoCountryName}%`)
+            .order('created_at', { ascending: false })
+            .limit(200);
+          verified = pickVerified(Array.isArray(local) ? local : [], 12);
+          console.log('[Home] geo:', geoCountryName, '| perfiles locales con foto:', verified.length);
         }
 
-        console.log('[Home] profiles escaneados:', arr.length, '| featured con foto:', verified.length);
+        // 2. Fill up with global recents (never show an empty grid).
+        if (verified.length < 12) {
+          const { data: recent, error: e1 } = await supabase
+            .from('profiles')
+            .select('*, photos(photo_url, local_path, file)')
+            .not('cam_chat', 'eq', 'rejected')
+            .order('created_at', { ascending: false })
+            .limit(200);
+          if (e1) throw e1;
+          const have = new Set(verified.map(p => p.id));
+          const rest = (Array.isArray(recent) ? recent : []).filter(p => !have.has(p.id));
+          verified = verified.concat(pickVerified(rest, 12 - verified.length));
+        }
+
+        console.log('[Home] featured final:', verified.length);
         setProfiles(verified.slice(0, 12));
       } catch (err) {
         console.error('Home fetch failed:', err);
@@ -295,7 +329,9 @@ export default function Home() {
             {/* ── FEATURED PROFILES ── */}
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">{content.featuredTitle}</h2>
+          <h2 className="section-title">
+            {geoCountry ? `${content.featuredTitle} · ${geoCountry}` : content.featuredTitle}
+          </h2>
           <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="section-link">{content.featuredLink}</Link>
         </div>
 
