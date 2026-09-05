@@ -5,7 +5,7 @@ import SEO from '../components/SEO';
 import AdSlot from '../components/AdSlot';
 import Lightbox from '../components/Lightbox';
 import LazyImage from '../components/LazyImage';
-import { isLoadablePhoto } from '../utils/photoFilter';
+import { isLoadablePhoto, hasRealFile } from '../utils/photoFilter';
 import { supabase } from '../supabase';
 import { t, getLang } from '../i18n';
 
@@ -68,7 +68,7 @@ export default function Profile() {
       const { data: photos } = await supabase.from('photos').select('*').eq('profile_id', id);
       const { data: services } = await supabase.from('services').select('*').eq('profile_id', id);
       
-      const cleanPhotos = (photos || []).filter(p => isLoadablePhoto(p.photo_url));
+      const cleanPhotos = (photos || []).filter(p => isLoadablePhoto(p.photo_url) && hasRealFile(p));
       
       setProfile({
         ...profileData,
