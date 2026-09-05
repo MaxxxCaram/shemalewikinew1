@@ -3,7 +3,9 @@ import { getProxiedImageUrl } from '../utils';
 
 /**
  * Lazy-loaded image with blur-up placeholder and graceful fallback.
- * Uses IntersectionObserver to only load when visible.
+ * Uses IntersectionObserver to lazy-load, but ALWAYS falls back to loading
+ * after a short timeout — so a photo never stays stuck as a skeleton
+ * (the bug where gallery/hero photos never appeared and clicks did nothing).
  */
 export default function LazyImage({ src, alt, className, style, fallback }) {
   const [loaded, setLoaded] = useState(false);
@@ -12,21 +14,27 @@ export default function LazyImage({ src, alt, className, style, fallback }) {
   const imgRef = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' } // preload 200px before visible
-    );
+    // Fallback timer: if IntersectionObserver never fires (element already in
+    // view at mount, or observer unavailable), force-load after 500ms.
+    const forceTimer = setTimeout(() => setInView(true), 500);
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setInView(true);
+            observer.disconnect();
+            clearTimeout(forceTimer);
+          }
+        },
+        { rootMargin: '200px' }
+      );
+      if (imgRef.current) observer.observe(imgRef.current);
+      return () => { observer.disconnect(); clearTimeout(forceTimer); };
     }
-
-    return () => observer.disconnect();
+    // No IntersectionObserver — load immediately.
+    setInView(true);
+    return () => clearTimeout(forceTimer);
   }, []);
 
   const displaySrc = error
