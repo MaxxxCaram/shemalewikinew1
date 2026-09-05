@@ -61,9 +61,12 @@ export default function AgeVerification({ onVerify }) {
 
   const handleAccept = () => {
     setPhase('entering');
+    // Short cinematic beat, then enter. Never hold the user 10s on a video
+    // that may not load (hosting/format/autoplay-blocked) — that left users
+    // stuck on "Welcome" and unable to reach any profile.
     setTimeout(() => {
       onVerify();
-    }, 10000);
+    }, 2500);
   };
   const handleDecline = () => setPhase('denied');
 
