@@ -39,7 +39,7 @@ export default function AdSlot({ slot, audience = 'clients', width = 728, height
           setAd({ ...item, img });
         }
       } catch (e) {
-        // silencioso: si falla, mostramos el fallback
+        console.error(`[AdSlot] fetch error (slot=${slot}):`, e?.message || e);
       } finally {
         if (!cancelled) setLoaded(true);
       }

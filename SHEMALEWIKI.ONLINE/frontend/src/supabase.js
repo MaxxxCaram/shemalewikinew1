@@ -19,6 +19,7 @@ async function pbRequest(path, options = {}) {
     } catch {
       /* non-JSON error body — keep generic message */
     }
+    console.error(`[PB Error] ${res.status}: ${msg} | ${path.slice(0, 120)}`);
     return { data: null, error: { message: msg, status: res.status } };
   }
   const text = await res.text();
