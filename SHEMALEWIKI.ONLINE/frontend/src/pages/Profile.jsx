@@ -222,6 +222,7 @@ export default function Profile() {
               src={heroPhoto?.photo_url}
               alt={profile.name}
               className="profile-hero-img"
+              eager
             />
             {heroPhoto && (
               <div className="hero-img-overlay">

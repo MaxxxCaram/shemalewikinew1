@@ -7,7 +7,7 @@ import { getProxiedImageUrl } from '../utils';
  * after a short timeout — so a photo never stays stuck as a skeleton
  * (the bug where gallery/hero photos never appeared and clicks did nothing).
  */
-export default function LazyImage({ src, alt, className, style, fallback }) {
+export default function LazyImage({ src, alt, className, style, fallback, eager = false }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [inView, setInView] = useState(false);
@@ -55,7 +55,8 @@ export default function LazyImage({ src, alt, className, style, fallback }) {
           className={`lazy-img ${loaded ? 'lazy-img-loaded' : ''}`}
           onLoad={() => setLoaded(true)}
           onError={() => setError(true)}
-          loading="lazy"
+          loading={eager ? 'eager' : 'lazy'}
+          fetchPriority={eager ? 'high' : 'auto'}
         />
       )}
     </div>

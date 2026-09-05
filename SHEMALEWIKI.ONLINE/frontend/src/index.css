@@ -2024,3 +2024,36 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1rem;
   letter-spacing: -0.01em;
 }
+
+/* ── CLS + LCP fixes: internal .lazy-img always fills its sized wrapper,
+     and image wrappers reserve aspect-ratio so nothing shifts on load. ── */
+.lazy-img-wrapper > .lazy-img,
+.lazy-img-wrapper > img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+.lazy-img-skeleton {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  background: var(--card-bg);
+  overflow: hidden;
+}
+.lazy-img-wrapper {
+  position: relative;
+  background: var(--card-bg);
+  overflow: hidden;
+}
+/* hero already sized by .profile-hero-img (width/height fixed); gallery too.
+   Ensure the inner image inherits cover behavior regardless of wrapper class. */
+.gallery-item .lazy-img-wrapper,
+.gallery-item {
+  aspect-ratio: 3 / 4;
+}
+.profile-card .lazy-img-wrapper,
+.profile-card {
+  aspect-ratio: 3 / 4;
+}
