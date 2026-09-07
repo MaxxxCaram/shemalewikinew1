@@ -2132,3 +2132,38 @@ h1, h2, h3, h4, h5, h6 {
   .lightbox-nav { width: 42px; height: 42px; }
   .lightbox-close { width: 40px; height: 40px; }
 }
+
+/* ── World Map (Browse by region) ── */
+.worldmap-wrap {
+  position: relative;
+  margin: 1.5rem auto 0;
+  max-width: 960px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.02);
+  overflow: hidden;
+}
+.worldmap-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.worldmap-hint {
+  position: absolute;
+  bottom: 0.85rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(231,192,132,0.25);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .worldmap-hint { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
+}

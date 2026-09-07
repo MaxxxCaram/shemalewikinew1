@@ -3,6 +3,7 @@ import { Search, MapPin, ArrowRight, Sparkles, Globe2, ShieldCheck } from 'lucid
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import AdSlot from '../components/AdSlot';
+import WorldMap from '../components/WorldMap';
 import useScrollReveal from '../useScrollReveal';
 import { supabase } from '../supabase';
 import logoSw from '../assets/shemalewiki-blurred-limits.jpg';
@@ -402,15 +403,7 @@ export default function Home() {
           <h2 className="section-title">{content.citiesTitle}</h2>
           <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="section-link">{content.citiesLink}</Link>
         </div>
-        <div className="map-placeholder sw-reveal">
-          <MapPin size={48} style={{ opacity: 0.4 }} />
-          <p style={{ marginTop: '0.75rem', fontSize: '1rem', fontWeight: 500 }}>
-            {brand === 'buscatrans' ? 'Mapa interactivo de ciudades' : 'Interactive world map'}
-          </p>
-          <p style={{ marginTop: '0.25rem', fontSize: '0.88rem', opacity: 0.7 }}>
-            {brand === 'buscatrans' ? 'Próximamente' : 'Coming soon'}
-          </p>
-        </div>
+        <WorldMap />
       </div>
 
       <div style={{ height: '80px' }} />
