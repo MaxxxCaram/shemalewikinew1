@@ -20,7 +20,7 @@ const content = {
       },
       {
         h: 'Who runs this',
-        p: 'ShemaleWiki Online is operated by a small independent team focused on quality and privacy. We do not sell user data, we do not run third-party ads on profile pages, and we keep the site free to browse and free to list.',
+        p: 'ShemaleWiki Online is operated by a small independent team focused on quality and privacy. We do not sell user data and we keep the site free to browse and free to list. A limited number of directly-managed sponsor slots appear on profile and directory pages — curated by us, never resold to ad networks, and clearly labeled.',
       },
       {
         h: 'How to reach us',
@@ -45,7 +45,7 @@ const content = {
       },
       {
         h: 'Quiénes lo manejan',
-        p: 'BuscaTrans es operado por un pequeño equipo independiente enfocado en calidad y privacidad. No vendemos datos de usuarios, no publicamos publicidad de terceros en las páginas de perfil y mantenemos el sitio gratis para navegar y gratis para publicar.',
+        p: 'BuscaTrans es operado por un equipo independiente pequeño, enfocado en calidad y privacidad. No vendemos datos de usuarios y el sitio es gratis para navegar y publicar. Un número limitado de espacios de auspicio gestionados directamente aparece en las páginas de perfil y directorio — curados por nosotros, nunca revendidos a redes de anuncios, y claramente identificados.',
       },
       {
         h: 'Cómo contactarnos',
