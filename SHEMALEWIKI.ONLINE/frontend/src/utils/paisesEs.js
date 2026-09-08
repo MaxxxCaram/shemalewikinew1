@@ -27,6 +27,14 @@ export const PAISES_ES = {
   'Latvia': 'Letonia', 'Lithuania': 'Lituania', 'Finland': 'Finlandia',
   'Luxembourg': 'Luxemburgo', 'Georgia': 'Georgia', 'Albania': 'Albania',
   'Bosnia y Herzegovina': 'Bosnia y Herzegovina',
+
+  'Albania': 'Albania', 'Andorra': 'Andorra', 'Austria': 'Austria',
+  'Belarus': 'Bielorrusia', 'Iceland': 'Islandia', 'Kosovo': 'Kosovo',
+  'Malta': 'Malta', 'Moldova': 'Moldavia', 'Montenegro': 'Montenegro',
+  'North Macedonia': 'Macedonia del Norte', 'San Marino': 'San Marino',
+  'Bosnia': 'Bosnia', 'Monaco': 'Mónaco', 'Liechtenstein': 'Liechtenstein',
+  'Iceland': 'Islandia',
+
 };
 
 export const CONTINENTES_ES = {
