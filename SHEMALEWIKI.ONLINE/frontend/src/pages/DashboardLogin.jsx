@@ -6,7 +6,6 @@ import {
   CheckCircle2, UserCheck, PlusCircle, Languages
 } from 'lucide-react';
 import { detectDashboardLang, getDashboardTranslations, SUPPORTED_LANGS } from '../i18n-dashboard';
-import AdBanner from '../components/AdBanner';
 import AdSlot from '../components/AdSlot';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit

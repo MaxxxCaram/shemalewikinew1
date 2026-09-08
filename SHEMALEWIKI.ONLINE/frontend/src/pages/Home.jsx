@@ -11,45 +11,6 @@ import logoSw from '../assets/shemalewiki-blurred-limits.jpg';
 /* ── Brand detection ── */
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
 
-// Verify a photo URL actually loads in the browser (onload + timeout).
-// Returns the URL if it loads with real dimensions, otherwise null.
-// Rejects: 1x1 transparents, tiny broken decodes, placeholders (<150px).
-const PROXY = '/api/image?url=';
-const verifyPhoto = (url) =>
-  new Promise((resolve) => {
-    if (!url) return resolve(null);
-    // Since we already filter to PocketBase local-storage files (file != ''),
-    // skip the slow per-image Image() probe and trust them — it was causing
-    // the featured grid to hang on loading forever (128 profiles x 6 urls x 5s).
-    resolve(url);
-  });
-
-// Try a list of candidate URLs in PARALLEL; return first that loads, else null.
-const verifyFirst = async (urls) => {
-  const results = await Promise.all((urls || []).map(u => u ? verifyPhoto(u) : Promise.resolve(null)));
-  return results.find(Boolean) || null;
-};
-
-// Build candidate URLs for a profile: ddg storage first (original large photos),
-// then other storage / eros, then archive via proxy. Cap at 6 for speed.
-const candidateUrls = (photos) => {
-  const ddg = [];
-  const storage = [];
-  const archive = [];
-  const coverDdg = [];
-  (photos || []).forEach(ph => {
-    if (!ph?.photo_url) return;
-    if (ph.photo_url.includes('/ddg/')) {
-      ddg.push(ph.photo_url);
-      if (ph.local_path === 'cover') coverDdg.push(ph.photo_url);
-    } else if (ph.photo_url.includes('supabase.co/storage') || ph.photo_url.includes('static2.eros.bz') || ph.photo_url.includes('api.shemalewiki.online/api/files') || ph.photo_url.includes('/api/files/')) {
-      storage.push(ph.photo_url);
-    } else if (ph.photo_url.includes('web.archive.org')) {
-      archive.push(`${PROXY}${encodeURIComponent(ph.photo_url)}`);
-    }
-  });
-  return [...storage, ...coverDdg, ...ddg].slice(0, 6);
-};
 
 /* ── Content per brand ── */
 const t = {

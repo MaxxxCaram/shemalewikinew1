@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { LogOut, Save, User, Camera, Settings, RefreshCw, Image as ImageIcon, BarChart3, ExternalLink, Plus, Trash2, Crown } from 'lucide-react';
 import { supabase } from '../supabase';
 import { getProxiedImageUrl } from '../utils';
-import AdBanner from '../components/AdBanner';
 import AdSlot from '../components/AdSlot';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
