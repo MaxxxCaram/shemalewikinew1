@@ -46,7 +46,9 @@ export default function Countries() {
   }, [searchParams, langPrefix, navigate]);
 
   // Capitalize continent name for display and DB query
-  const displayContinent = esEspanol() ? continenteEs(continent) : continent.charAt(0).toUpperCase() + continent.slice(1);
+  const continentEn = continent.charAt(0).toUpperCase() + continent.slice(1);
+  // SIEMPRE consultar en ingles (la DB guarda 'Europe | ...'). Solo el display se traduce.
+  const displayContinent = esEspanol() ? continenteEs(continent) : continentEn;
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -56,7 +58,8 @@ export default function Countries() {
         const { data, error } = await supabase
           .from('profiles')
           .select('location')
-          .ilike('location', `${displayContinent} |%`);
+          .ilike('location', `${continentEn} |%`)
+          .limit(4000);
 
         if (error) throw error;
 

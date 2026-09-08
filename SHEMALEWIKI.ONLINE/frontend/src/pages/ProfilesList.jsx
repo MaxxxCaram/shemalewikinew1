@@ -36,7 +36,7 @@ export default function ProfilesList() {
       const { data, error } = await supabase
         .from('profiles')
         .select('location, photos(id)')
-        .ilike('location', `% | ${displayCountry} |%`)
+        .ilike('location', `% | ${displayCountryRaw} |%`)
         .not('cam_chat', 'eq', 'rejected')
         .limit(1000);
 
@@ -76,7 +76,7 @@ export default function ProfilesList() {
       let queryBuilder = supabase
         .from('profiles')
         .select('*, photos(photo_url, local_path)')
-        .ilike('location', `% | ${displayCountry} |%`)
+        .ilike('location', `% | ${displayCountryRaw} |%`)
         .not('cam_chat', 'eq', 'rejected');
         
       if (searchQuery) {
