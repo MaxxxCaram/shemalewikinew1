@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { MapPin, ArrowLeft } from 'lucide-react';
 import SEO from '../components/SEO';
 import { supabase } from '../supabase';
+import { paisEs, continenteEs, esEspanol } from '../utils/paisesEs';
 import { t, getLang } from '../i18n';
 
 // City slug → country/continent mapping, used to resolve ?search= city pills
@@ -45,7 +46,7 @@ export default function Countries() {
   }, [searchParams, langPrefix, navigate]);
 
   // Capitalize continent name for display and DB query
-  const displayContinent = continent.charAt(0).toUpperCase() + continent.slice(1);
+  const displayContinent = esEspanol() ? continenteEs(continent) : continent.charAt(0).toUpperCase() + continent.slice(1);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -141,7 +142,7 @@ export default function Countries() {
                       <MapPin className="country-icon" />
                     </div>
                     <span className="country-name">
-                      {country}
+                      {esEspanol() ? paisEs(country) : country}
                     </span>
                   </Link>
                 ))}
@@ -191,7 +192,7 @@ export default function Countries() {
                   <MapPin className="country-icon" />
                 </div>
                 <span className="country-name">
-                  {country}
+                  {esEspanol() ? paisEs(country) : country}
                 </span>
               </Link>
             ))}

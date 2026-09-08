@@ -4,6 +4,7 @@ import { MapPin, ArrowLeft, Building2, Users } from 'lucide-react';
 import SEO from '../components/SEO';
 import AdSlot from '../components/AdSlot';
 import { supabase } from '../supabase';
+import { paisEs, continenteEs, esEspanol } from '../utils/paisesEs';
 import LazyImage from '../components/LazyImage';
 
 // City guide content data — rich SEO text for each supported city
@@ -557,7 +558,8 @@ export default function CityGuide() {
   // French uses the English city-guide body for now (interface chrome is translated).
   const contentMap = lang === 'es' ? cityContentEs : lang === 'he' ? cityContentHe : cityContent;
 
-  const displayCountry = country.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const displayCountryRaw = country.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const displayCountry = esEspanol() ? paisEs(displayCountryRaw) : displayCountryRaw;
   const displayCity = city.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
@@ -731,7 +733,7 @@ export default function CityGuide() {
           <Link to="/" className="breadcrumb-link">{t.home}</Link>
           <span className="breadcrumb-sep">›</span>
           <Link to={`/${lang === 'en' ? '' : lang + '/'}${continent}`} className="breadcrumb-link">
-            {continent.charAt(0).toUpperCase() + continent.slice(1)}
+            {esEspanol() ? continenteEs(continent) : continent.charAt(0).toUpperCase() + continent.slice(1)}
           </Link>
           <span className="breadcrumb-sep">›</span>
           <Link to={`${langPrefix}/${continent}/${country}`} className="breadcrumb-link">

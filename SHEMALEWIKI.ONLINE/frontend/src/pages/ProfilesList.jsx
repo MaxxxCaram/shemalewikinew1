@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Search, MapPin, ArrowLeft, Building2 } from 'lucide-react';
 import { supabase } from '../supabase';
+import { paisEs, continenteEs, esEspanol } from '../utils/paisesEs';
 import LazyImage from '../components/LazyImage';
 import useScrollReveal from '../useScrollReveal';
 import SEO from '../components/SEO';
@@ -23,7 +24,8 @@ export default function ProfilesList() {
   const lang = getLang();
   const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
-  const displayCountry = country ? country.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : '';
+  const displayCountryRaw = country ? country.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : '';
+  const displayCountry = esEspanol() ? paisEs(displayCountryRaw) : displayCountryRaw;
 
   // Vanguard scroll-reveal for ShemaleWiki cards (re-runs when profiles/cities change)
   useScrollReveal([profiles, cityCounts]);
@@ -122,7 +124,7 @@ export default function ProfilesList() {
         className="back-btn"
       >
         <ArrowLeft className="back-icon" />
-        {t.backTo(continent.charAt(0).toUpperCase() + continent.slice(1))}
+        {t.backTo(esEspanol() ? continenteEs(continent) : continent.charAt(0).toUpperCase() + continent.slice(1))}
       </button>
 
       <div className="page-header" style={{ textAlign: 'left', marginBottom: '2.5rem' }}>
