@@ -13,21 +13,21 @@
    accents. Premium / sensual / elegant. Liquid-glass + vanguard animations. */
 :root,
 [data-brand="shemalewiki"] {
-  --bg-primary: #0a0810;
-  --bg-secondary: #120d1a;
-  --text-primary: #f6f1f7;
-  --text-secondary: #b8a9c4;
-  --accent-primary: #d4af37;
-  --accent-secondary: #c9a2d9;
-  --accent-tertiary: #e6a8c8;
-  --glass-bg: rgba(18, 13, 26, 0.6);
-  --glass-border: rgba(212, 175, 55, 0.18);
-  --card-bg: rgba(20, 14, 28, 0.65);
-  --card-border: rgba(212, 175, 55, 0.18);
-  --tag-bg: rgba(212, 175, 55, 0.1);
-  --tag-border: rgba(212, 175, 55, 0.32);
-  --input-bg: rgba(16, 11, 24, 0.7);
-  --input-border: rgba(212, 175, 55, 0.22);
+  --bg-primary: #060318;
+  --bg-secondary: #0d0724;
+  --text-primary: #f4f2ff;
+  --text-secondary: #a99ec9;
+  --accent-primary: #00e5ff;
+  --accent-secondary: #9d4dff;
+  --accent-tertiary: #ff5eb7;
+  --glass-bg: rgba(13, 7, 36, 0.6);
+  --glass-border: rgba(0, 229, 255, 0.18);
+  --card-bg: rgba(16, 9, 38, 0.65);
+  --card-border: rgba(0, 229, 255, 0.16);
+  --tag-bg: rgba(0, 229, 255, 0.08);
+  --tag-border: rgba(0, 229, 255, 0.3);
+  --input-bg: rgba(10, 5, 28, 0.7);
+  --input-border: rgba(0, 229, 255, 0.2);
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
   --radius-lg: 1.25rem;
@@ -37,9 +37,12 @@
   --font-body: 'Space Grotesk', -apple-system, sans-serif;
   --font-weight-display: 600;
   --letter-spacing-display: 0.02em;
-  --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.2);
-  --accent-grad: linear-gradient(135deg, #d4af37 0%, #c9a2d9 50%, #e6a8c8 100%);
-  --accent: #d4af37;
+  /* Tornasol animado: cyan -> violeta -> magenta, hue-rota continuamente */
+  --shadow-glow: 0 0 40px rgba(0, 229, 255, 0.22);
+  --accent-grad: linear-gradient(120deg, #00e5ff 0%, #9d4dff 45%, #ff5eb7 75%, #00e5ff 100%);
+  --accent: #00e5ff;
+  --grad-liquid: linear-gradient(120deg, #00e5ff 0%, #7a4dff 30%, #ff4fc4 60%, #00e5ff 85%);
+  --grad-liquid-size: 400% 400%;
 }
 
 /* ===== BUSCATRANS THEME — luxury jewel (black/gold/sapphire/emerald) ===== */
@@ -1013,6 +1016,26 @@ h1, h2, h3, h4, h5, h6 {
 /* ===== ANIMATIONS ===== */
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── TORNASOL / LIQUID GRADIENT — la fusion que no existe todavia ── */
+@keyframes swTornasol {
+  0%   { background-position: 0% 50%; filter: hue-rotate(0deg); }
+  50%  { background-position: 100% 50%; filter: hue-rotate(35deg); }
+  100% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+}
+.sw-liquid,
+[data-brand="shemalewiki"] .btn-primary,
+[data-brand="shemalewiki"] .btn-cta,
+[data-brand="shemalewiki"] .accent-grad {
+  background: var(--grad-liquid) !important;
+  background-size: var(--grad-liquid-size) !important;
+  animation: swTornasol 9s ease-in-out infinite !important;
+}
+/* glow neon en hover de tarjetas */
+[data-brand="shemalewiki"] .glass-card:hover {
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.15), 0 0 60px rgba(157, 77, 255, 0.1);
+  border-color: rgba(0, 229, 255, 0.35);
+}
 .fade-in { animation: fadeIn 0.4s ease; }
 
 /* ===== SPINNER ===== */
