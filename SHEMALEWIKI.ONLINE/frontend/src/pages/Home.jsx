@@ -18,7 +18,7 @@ const t = {
     eyebrow: 'BLURRED LIMITS',
     heading: 'Where desire meets',
     highlight: 'beyond the edge.',
-    subtitle: 'Verified trans companions · 5,000+ profiles · 75 countries',
+    subtitle: 'Trans companions · 5,000+ profiles · 75 countries',
     searchPlaceholder: 'City, country or region...',
     pills: ['All', 'Bangkok', 'London', 'Miami', 'Amsterdam', 'São Paulo', 'Tokyo'],
     featuredTitle: 'Featured profiles',
@@ -35,7 +35,7 @@ const t = {
     stats: [
       { icon: 'globe', value: '75+', label: 'Countries' },
       { icon: 'users', value: '5K+', label: 'Profiles' },
-      { icon: 'shield', value: '100%', label: 'Verified' },
+      { icon: 'shield', value: '100%', label: 'Reviewed' },
     ],
   },
   buscatrans: {
@@ -334,7 +334,7 @@ export default function Home() {
                         backdropFilter: 'blur(10px)', border: '1px solid rgba(34,197,94,0.35)',
                         display: 'inline-flex', alignItems: 'center', gap: '0.3rem'
                       }}>
-                        <ShieldCheck size={12} /> Verified
+                        <ShieldCheck size={12} /> Reviewed
                       </span>
                     )}
                   </div>

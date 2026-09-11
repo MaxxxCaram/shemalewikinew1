@@ -49,6 +49,7 @@ export default function Profile() {
   const [similarProfiles, setSimilarProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [contactVisible, setContactVisible] = useState(false);
+  const [contactData, setContactData] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [toast, setToast] = useState('');
@@ -306,7 +307,14 @@ export default function Profile() {
             <div className="glass" style={{ padding: '1.75rem', marginBottom: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
               {!contactVisible ? (
                 <button 
-                  onClick={() => setContactVisible(true)}
+                  onClick={async () => {
+                    setContactVisible(true);
+                    try {
+                      const r = await fetch(`/api/contact-info?profile_id=${profile.id}`);
+                      if (r.ok) setContactData(await r.json());
+                      else setContactData({ error: true });
+                    } catch { setContactData({ error: true }); }
+                  }}
                   className="btn btn-primary"
                   style={{ width: '100%', padding: '1rem', fontSize: '1rem' }}
                 >
@@ -318,15 +326,15 @@ export default function Profile() {
                   <h3 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
                     {lang === 'fr' ? `Contacter ${profile.name}` : `Contact ${profile.name}`}
                   </h3>
-                  {profile.phone && (
-                    <ContactRow icon={<Phone size={18} />} color="#4ade80" label="Phone" value={profile.phone} href={`tel:${profile.phone.replace(/\s/g, '')}`} />
+                  {contactData?.phone && (
+                    <ContactRow icon={<Phone size={18} />} color="#4ade80" label="Phone" value={contactData.phone} href={`tel:${contactData.phone.replace(/\s/g, '')}`} />
                   )}
-                  {profile.whatsapp && (
-                    <ContactRow icon={<MessageCircle size={18} />} color="#25D366" label="WhatsApp" value={profile.whatsapp} 
-                      href={`https://wa.me/${profile.whatsapp.replace(/[\s+()-]/g, '')}`} external />
+                  {contactData?.whatsapp && (
+                    <ContactRow icon={<MessageCircle size={18} />} color="#25D366" label="WhatsApp" value={contactData.whatsapp}
+                      href={`https://wa.me/${contactData.whatsapp.replace(/[\s+()-]/g, '')}`} external />
                   )}
-                  {profile.email && (
-                    <ContactRow icon={<Mail size={18} />} color="#60a5fa" label="Email" value={profile.email} href={`mailto:${profile.email}`} />
+                  {contactData?.email && (
+                    <ContactRow icon={<Mail size={18} />} color="#60a5fa" label="Email" value={contactData.email} href={`mailto:${contactData.email}`} />
                   )}
                   {profile.onlyfans && typeof profile.onlyfans === 'string' && profile.onlyfans !== 'N/A' && (() => {
                     const links = profile.onlyfans.split(/,\s*/).filter(Boolean);
