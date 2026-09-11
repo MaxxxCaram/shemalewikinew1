@@ -8,10 +8,22 @@ import useScrollReveal from '../useScrollReveal';
 import SEO from '../components/SEO';
 import AdSlot from '../components/AdSlot';
 import { t, getLang } from '../i18n';
+import { hasRealFile, isLoadablePhoto } from '../utils/photoFilter';
 
 // City → slug matching CityGuide.jsx routing
 function cityToSlug(city) {
   return city.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+// Cover of a card: prefer a real PocketBase file, then any loadable image URL,
+// so the thumbnail is never a dead/blocked/1px placeholder.
+function pickCover(photos) {
+  const list = Array.isArray(photos) ? photos : [];
+  const byCover = list.find(p => p.local_path === 'cover' && (hasRealFile(p) || (p.photo_url && isLoadablePhoto(p.photo_url))));
+  const real = list.find(p => hasRealFile(p));
+  const loadable = list.find(p => p.photo_url && isLoadablePhoto(p.photo_url));
+  const chosen = byCover || real || loadable || list[0];
+  return chosen ? chosen.photo_url : undefined;
 }
 
 export default function ProfilesList() {
@@ -89,8 +101,11 @@ export default function ProfilesList() {
       if (error) throw error;
       if (data) {
         // Show ONLY profiles with a real, loadable photo — no placeholders.
+        // A photo counts as real when it is a PocketBase file or a known-good
+        // image URL (utils/photoFilter); dead archive/proxy hosts and video
+        // links are excluded so no card renders a broken cover.
         const withPhotos = data.map(p => ({ ...p, photos: p.photos || [] }))
-          .filter(p => p.photos.some(ph => ph.photo_url && !/web\.archive\.org|shemalewiki\.com/i.test(ph.photo_url)));
+          .filter(p => p.photos.some(ph => hasRealFile(ph) || (ph.photo_url && isLoadablePhoto(ph.photo_url))));
         setProfiles(withPhotos);
       }
     } catch (error) {
@@ -228,7 +243,7 @@ export default function ProfilesList() {
             {profiles.map((profile, i) => (
               <Link to={`${langPrefix}/profile/${profile.id}`} key={profile.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${i * 0.05}s` }}>
                 <LazyImage
-                  src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
+                  src={pickCover(profile.photos)}
                   alt={profile.name}
                   className="profile-card-img"
                 />

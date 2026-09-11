@@ -12,6 +12,8 @@
 // broken images or open to black — the "photos don't open" bug.
 const BROKEN_HOSTS = [
   'web.archive.org', 'shemalewiki.com', 'cdn.shemalewiki.com',
+  // image-proxy hosts that return a 1px placeholder instead of the photo
+  'duckduckgo.com', 'external-content.duckduckgo',
   // video / non-image hosts that must never render as a gallery photo
   'xhamster', 'pornhub', 'xvideos', 'redtube', 'youtube', 'youtu.be',
   'onlyfans.com', 'vimeo', 'twitch', 'tiktok.com',

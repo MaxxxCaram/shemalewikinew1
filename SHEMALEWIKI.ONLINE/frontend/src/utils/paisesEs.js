@@ -25,15 +25,14 @@ export const PAISES_ES = {
   'Hungary': 'Hungría', 'Croatia': 'Croacia', 'Serbia': 'Serbia',
   'Slovakia': 'Eslovaquia', 'Slovenia': 'Eslovenia', 'Estonia': 'Estonia',
   'Latvia': 'Letonia', 'Lithuania': 'Lituania', 'Finland': 'Finlandia',
-  'Luxembourg': 'Luxemburgo', 'Georgia': 'Georgia', 'Albania': 'Albania',
+  'Luxembourg': 'Luxemburgo', 'Georgia': 'Georgia',
   'Bosnia y Herzegovina': 'Bosnia y Herzegovina',
 
-  'Albania': 'Albania', 'Andorra': 'Andorra', 'Austria': 'Austria',
+  'Albania': 'Albania', 'Andorra': 'Andorra',
   'Belarus': 'Bielorrusia', 'Iceland': 'Islandia', 'Kosovo': 'Kosovo',
   'Malta': 'Malta', 'Moldova': 'Moldavia', 'Montenegro': 'Montenegro',
   'North Macedonia': 'Macedonia del Norte', 'San Marino': 'San Marino',
   'Bosnia': 'Bosnia', 'Monaco': 'Mónaco', 'Liechtenstein': 'Liechtenstein',
-  'Iceland': 'Islandia',
 
 };
 
