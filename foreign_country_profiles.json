@@ -1,0 +1,367 @@
+[
+  {
+    "id": "8979",
+    "location": "Other | Belgien | Brugge",
+    "variant": "belgien"
+  },
+  {
+    "id": "9425",
+    "location": "Other | Belgien | Wetteren",
+    "variant": "belgien"
+  },
+  {
+    "id": "9129",
+    "location": "Other | Holland | Rotterdam",
+    "variant": "holland"
+  },
+  {
+    "id": "9946",
+    "location": "Other | Holland | Amsterdam",
+    "variant": "holland"
+  },
+  {
+    "id": "9126",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9127",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9131",
+    "location": "Other | Danmark | &#197;rhus",
+    "variant": "danmark"
+  },
+  {
+    "id": "9132",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9206",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9389",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9504",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9922",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9936",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9937",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9938",
+    "location": "Other | Danmark | Randers",
+    "variant": "danmark"
+  },
+  {
+    "id": "9940",
+    "location": "Other | Danmark | Vejle",
+    "variant": "danmark"
+  },
+  {
+    "id": "9942",
+    "location": "Other | Danmark | K&#248;benhavn",
+    "variant": "danmark"
+  },
+  {
+    "id": "9921",
+    "location": "Other | Frankrig | Agen",
+    "variant": "frankrig"
+  },
+  {
+    "id": "9925",
+    "location": "Other | Frankrig | Pau",
+    "variant": "frankrig"
+  },
+  {
+    "id": "9939",
+    "location": "Other | Frankrig | Ivry-sur-seine",
+    "variant": "frankrig"
+  },
+  {
+    "id": "4688",
+    "location": "Other | Tyskland | Leipzig",
+    "variant": "tyskland"
+  },
+  {
+    "id": "9920",
+    "location": "Other | Tyskland | M&#252;nchen",
+    "variant": "tyskland"
+  },
+  {
+    "id": "9923",
+    "location": "Other | Tyskland | Leipzig",
+    "variant": "tyskland"
+  },
+  {
+    "id": "9926",
+    "location": "Other | Tyskland | Berlin",
+    "variant": "tyskland"
+  },
+  {
+    "id": "9989",
+    "location": "Other | Tyskland | D&#252;sseldorf",
+    "variant": "tyskland"
+  },
+  {
+    "id": "9123",
+    "location": "Other | Sverige | G&#246;teborg",
+    "variant": "sverige"
+  },
+  {
+    "id": "9934",
+    "location": "Other | Sverige | Stockholm",
+    "variant": "sverige"
+  },
+  {
+    "id": "9992",
+    "location": "Other | Sverige | Malm&#246;",
+    "variant": "sverige"
+  },
+  {
+    "id": "9929",
+    "location": "Other | Polen | Warszawa",
+    "variant": "polen"
+  },
+  {
+    "id": "9919",
+    "location": "Other | Tjekkiet | Brno",
+    "variant": "tjekkiet"
+  },
+  {
+    "id": "9178",
+    "location": "Other | Schweiz | Z&#252;rich",
+    "variant": "schweiz"
+  },
+  {
+    "id": "4054",
+    "location": "Other | Schweiz | Z&#252;rich",
+    "variant": "schweiz"
+  },
+  {
+    "id": "9128",
+    "location": "Other | Schweiz | Z&#252;rich",
+    "variant": "schweiz"
+  },
+  {
+    "id": "9340",
+    "location": "Other | Schweiz | Z&#252;rich",
+    "variant": "schweiz"
+  },
+  {
+    "id": "9924",
+    "location": "Other | Schweiz | Olten",
+    "variant": "schweiz"
+  },
+  {
+    "id": "9943",
+    "location": "Other | Schweiz | Z&#252;rich",
+    "variant": "schweiz"
+  },
+  {
+    "id": "9976",
+    "location": "Other | Schweiz | Z&#252;rich",
+    "variant": "schweiz"
+  },
+  {
+    "id": "9701",
+    "location": "Other | Norge | Trondheim",
+    "variant": "norge"
+  },
+  {
+    "id": "9932",
+    "location": "Other | Norge | Oslo",
+    "variant": "norge"
+  },
+  {
+    "id": "9261",
+    "location": "Other | Norge | Oslo",
+    "variant": "norge"
+  },
+  {
+    "id": "9124",
+    "location": "Other | Norge | Oslo",
+    "variant": "norge"
+  },
+  {
+    "id": "9122",
+    "location": "Other | Norge | Oslo",
+    "variant": "norge"
+  },
+  {
+    "id": "9376",
+    "location": "Other | Norge | Bergen",
+    "variant": "norge"
+  },
+  {
+    "id": "9388",
+    "location": "Other | Norge | Trondheim",
+    "variant": "norge"
+  },
+  {
+    "id": "9931",
+    "location": "Other | Norge | Oslo",
+    "variant": "norge"
+  },
+  {
+    "id": "9928",
+    "location": "Other | Kroatien | Zagreb",
+    "variant": "kroatien"
+  },
+  {
+    "id": "9118",
+    "location": "Other | Serbien | Belgrade (&#1041;&#1077;&#1086;&#1075;&#1088;&#1072;&#1076;)",
+    "variant": "serbien"
+  },
+  {
+    "id": "8826",
+    "location": "Other | Spanien | Barcelona",
+    "variant": "spanien"
+  },
+  {
+    "id": "8918",
+    "location": "Other | Spanien | Barcelona",
+    "variant": "spanien"
+  },
+  {
+    "id": "9171",
+    "location": "Other | Spanien | Barcelona",
+    "variant": "spanien"
+  },
+  {
+    "id": "9804",
+    "location": "Other | Spanien | La Coru&#241;a",
+    "variant": "spanien"
+  },
+  {
+    "id": "9894",
+    "location": "Europe | Finland | Kemi",
+    "variant": "finland"
+  },
+  {
+    "id": "78a87182-0bd5-4830-b1fd-12216629f489",
+    "location": "Europe | Finland",
+    "variant": "finland"
+  },
+  {
+    "id": "9783",
+    "location": "Europe | Finland | Helsinki",
+    "variant": "finland"
+  },
+  {
+    "id": "1790",
+    "location": "Europe | Finland | Helsinki",
+    "variant": "finland"
+  },
+  {
+    "id": "1897",
+    "location": "Europe | Finland | Tampere",
+    "variant": "finland"
+  },
+  {
+    "id": "2146",
+    "location": "Europe | Finland | Vaasa",
+    "variant": "finland"
+  },
+  {
+    "id": "2511",
+    "location": "Europe | Finland | Turku",
+    "variant": "finland"
+  },
+  {
+    "id": "9944",
+    "location": "Europe | Finland | Helsinki",
+    "variant": "finland"
+  },
+  {
+    "id": "2610",
+    "location": "Europe | Finland | Turku",
+    "variant": "finland"
+  },
+  {
+    "id": "2941",
+    "location": "Europe | Finland | Turku",
+    "variant": "finland"
+  },
+  {
+    "id": "9868",
+    "location": "Europe | Finland | Turku",
+    "variant": "finland"
+  },
+  {
+    "id": "3810",
+    "location": "Europe | Finland | Vantaa",
+    "variant": "finland"
+  },
+  {
+    "id": "9523",
+    "location": "Europe | Finland | Tampere",
+    "variant": "finland"
+  },
+  {
+    "id": "5143",
+    "location": "Europe | Finland | Helsinki",
+    "variant": "finland"
+  },
+  {
+    "id": "9628",
+    "location": "Europe | Finland | Tampere",
+    "variant": "finland"
+  },
+  {
+    "id": "5419",
+    "location": "Europe | Finland | Tampere",
+    "variant": "finland"
+  },
+  {
+    "id": "9838",
+    "location": "Europe | Finland | Helsinki",
+    "variant": "finland"
+  },
+  {
+    "id": "6022",
+    "location": "Europe | Finland | Helsinki",
+    "variant": "finland"
+  },
+  {
+    "id": "6115",
+    "location": "Europe | Finland | Helsinki",
+    "variant": "finland"
+  },
+  {
+    "id": "6539",
+    "location": "Europe | Finland | Helsinki",
+    "variant": "finland"
+  },
+  {
+    "id": "2043",
+    "location": "Europe | Ukraine | Odessa (&#1054;&#1076;&#1077;&#1089;&#1089;&#1072;)",
+    "variant": "ukraine"
+  },
+  {
+    "id": "3459",
+    "location": "Europe | Ukraine | Kiev (&#1050;&#1080;&#1111;&#1074;)",
+    "variant": "ukraine"
+  }
+]

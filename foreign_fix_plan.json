@@ -1,0 +1,257 @@
+[
+  {
+    "id": "4688",
+    "old": "Other | Tyskland | Leipzig",
+    "new": "Europe | Germany | Leipzig"
+  },
+  {
+    "id": "9178",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Europe | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9701",
+    "old": "Other | Norge | Trondheim",
+    "new": "Europe | Norway | Trondheim"
+  },
+  {
+    "id": "9932",
+    "old": "Other | Norge | Oslo",
+    "new": "Europe | Norway | Oslo"
+  },
+  {
+    "id": "9261",
+    "old": "Other | Norge | Oslo",
+    "new": "Europe | Norway | Oslo"
+  },
+  {
+    "id": "4054",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Europe | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9123",
+    "old": "Other | Sverige | G&#246;teborg",
+    "new": "Europe | Sweden | G&#246;teborg"
+  },
+  {
+    "id": "9124",
+    "old": "Other | Norge | Oslo",
+    "new": "Europe | Norway | Oslo"
+  },
+  {
+    "id": "9122",
+    "old": "Other | Norge | Oslo",
+    "new": "Europe | Norway | Oslo"
+  },
+  {
+    "id": "8826",
+    "old": "Other | Spanien | Barcelona",
+    "new": "Europe | Spain | Barcelona"
+  },
+  {
+    "id": "8918",
+    "old": "Other | Spanien | Barcelona",
+    "new": "Europe | Spain | Barcelona"
+  },
+  {
+    "id": "8979",
+    "old": "Other | Belgien | Brugge",
+    "new": "Europe | Belgium | Brugge"
+  },
+  {
+    "id": "9118",
+    "old": "Other | Serbien | Belgrade (&#1041;&#1077;&#1086;&#1075;&#1088;&#1072;&#1076;)",
+    "new": "Europe | Serbia | Belgrade (&#1041;&#1077;&#1086;&#1075;&#1088;&#1072;&#1076;)"
+  },
+  {
+    "id": "9126",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9127",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9171",
+    "old": "Other | Spanien | Barcelona",
+    "new": "Europe | Spain | Barcelona"
+  },
+  {
+    "id": "9128",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Europe | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9129",
+    "old": "Other | Holland | Rotterdam",
+    "new": "Europe | Netherlands | Rotterdam"
+  },
+  {
+    "id": "9131",
+    "old": "Other | Danmark | &#197;rhus",
+    "new": "Europe | Denmark | &#197;rhus"
+  },
+  {
+    "id": "9132",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9206",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9340",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Europe | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9376",
+    "old": "Other | Norge | Bergen",
+    "new": "Europe | Norway | Bergen"
+  },
+  {
+    "id": "9388",
+    "old": "Other | Norge | Trondheim",
+    "new": "Europe | Norway | Trondheim"
+  },
+  {
+    "id": "9389",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9425",
+    "old": "Other | Belgien | Wetteren",
+    "new": "Europe | Belgium | Wetteren"
+  },
+  {
+    "id": "9504",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9804",
+    "old": "Other | Spanien | La Coru&#241;a",
+    "new": "Europe | Spain | La Coru&#241;a"
+  },
+  {
+    "id": "9919",
+    "old": "Other | Tjekkiet | Brno",
+    "new": "Europe | Czech Republic | Brno"
+  },
+  {
+    "id": "9920",
+    "old": "Other | Tyskland | M&#252;nchen",
+    "new": "Europe | Germany | M&#252;nchen"
+  },
+  {
+    "id": "9921",
+    "old": "Other | Frankrig | Agen",
+    "new": "Europe | France | Agen"
+  },
+  {
+    "id": "9922",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9923",
+    "old": "Other | Tyskland | Leipzig",
+    "new": "Europe | Germany | Leipzig"
+  },
+  {
+    "id": "9924",
+    "old": "Other | Schweiz | Olten",
+    "new": "Europe | Switzerland | Olten"
+  },
+  {
+    "id": "9925",
+    "old": "Other | Frankrig | Pau",
+    "new": "Europe | France | Pau"
+  },
+  {
+    "id": "9926",
+    "old": "Other | Tyskland | Berlin",
+    "new": "Europe | Germany | Berlin"
+  },
+  {
+    "id": "9928",
+    "old": "Other | Kroatien | Zagreb",
+    "new": "Europe | Croatia | Zagreb"
+  },
+  {
+    "id": "9929",
+    "old": "Other | Polen | Warszawa",
+    "new": "Europe | Poland | Warszawa"
+  },
+  {
+    "id": "9931",
+    "old": "Other | Norge | Oslo",
+    "new": "Europe | Norway | Oslo"
+  },
+  {
+    "id": "9934",
+    "old": "Other | Sverige | Stockholm",
+    "new": "Europe | Sweden | Stockholm"
+  },
+  {
+    "id": "9936",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9937",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9938",
+    "old": "Other | Danmark | Randers",
+    "new": "Europe | Denmark | Randers"
+  },
+  {
+    "id": "9939",
+    "old": "Other | Frankrig | Ivry-sur-seine",
+    "new": "Europe | France | Ivry-sur-seine"
+  },
+  {
+    "id": "9940",
+    "old": "Other | Danmark | Vejle",
+    "new": "Europe | Denmark | Vejle"
+  },
+  {
+    "id": "9942",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Europe | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9943",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Europe | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9946",
+    "old": "Other | Holland | Amsterdam",
+    "new": "Europe | Netherlands | Amsterdam"
+  },
+  {
+    "id": "9976",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Europe | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9989",
+    "old": "Other | Tyskland | D&#252;sseldorf",
+    "new": "Europe | Germany | D&#252;sseldorf"
+  },
+  {
+    "id": "9992",
+    "old": "Other | Sverige | Malm&#246;",
+    "new": "Europe | Sweden | Malm&#246;"
+  }
+]

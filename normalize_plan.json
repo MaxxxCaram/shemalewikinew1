@@ -1,0 +1,4822 @@
+[
+  {
+    "id": "d1e8213d-d2c0-499e-a8f5-00b8ca394f1c",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1691",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2871",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2115",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "96686cd9-e710-49d2-b9d4-bf729b7219ce",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "3660",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2072",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3238",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2a6a5cdf-99a2-4714-9c22-340f19f14619",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "559061fd-2c3a-4f0a-8cd6-9c3465a9b76d",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "4213",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3d7f1c0e-ac6c-4caa-9e13-1dea3e9812da",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "4390",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "80a23777-dfc6-4aaa-b600-f2f844c8096f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "08f10ef7-d727-4c15-bf01-d5b559fb0cd1",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "c50bfcdf-02c0-427e-900c-f6a9a7e397b6",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "cb373470-f046-4460-8a33-37937b4e9950",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "7ab20e78-82cb-461a-8a13-9ee2bf6c4a1e",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "404f8b42-2fd6-4fb5-bf89-2637e1aedcae",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1b9744b7-9e55-4890-bca1-253c00b92601",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "e3f97d57-c455-4248-b170-96f72e28106d",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b224d135-b91c-44fa-a483-53d469bb4932",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "9ffb1771-8f5d-4e88-8365-dce00a33675f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1827",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "b36914d4-059b-433b-b7e3-fb8f0bfa2ec5",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "ba3d103f-efa2-454e-bd10-35d5d82281d2",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "714372b3-aff3-41eb-baed-cf0e1b951323",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1829",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "8bb0b2f6-4596-4842-b99d-d9491ae54b41",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1823",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9e80d0ae-ff06-4208-a763-612a470e0823",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "e876f98c-ddbd-4123-af55-f8a65bc6438b",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "81ab09ae-64f1-4ba2-9793-66f55172f480",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "5d9902c2-2fa4-4d63-bf25-569e57e168f7",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1862",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2711",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1ff152c3-e25d-49e7-98f1-0329c34f9f65",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b50c17da-0cf6-4212-8cad-b03ec13128a4",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "12f754c9-f6e5-43c4-b6a1-7a042ca5d94a",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1672",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "c43b7394-9a09-4661-ba36-0b005e3bf3f0",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1699",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2896",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "56528897-2202-40dc-8074-32e732e5f1c6",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "9a8193ea-4932-4f6f-a6dc-bfafd69b0ed3",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "9dec3075-5cf3-4581-ab8a-62c331bfb433",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "9fecba43-1427-4b8e-a923-6c5fbbf6e120",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "81b3ad57-41e6-40dc-9ef2-50814d9c7648",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b67c08f0-5e1c-409d-ba40-b3b044d684db",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "d89671a3-0308-4ac8-a063-12f6516a0816",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "8d530c18-603b-4e0d-a08f-c27d0fae63f7",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "bb0b3d2a-22f1-4ba4-880a-5b4bcaf75d42",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "a9324804-ed11-4f23-804e-2945302dc055",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "3738815f-12c4-4807-b017-59f00258c75b",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "f3961b43-6dd8-42e9-970c-8ecae26a2e4f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "abd48659-39ee-4b55-98e0-36fd3fee1659",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "886b066b-1d66-4b00-bce3-9856c1a0afbb",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "f7795135-a81c-4df3-8ed3-213ccd7dae21",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "654b705e-8d90-4165-a3e8-5b97508e5ba1",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "83014a86-0db8-409d-83e8-cf604cd16aa2",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "9f4f17cc-3ee4-40dd-9671-cadf2ee7b707",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "4c1bcd24-2054-43ca-a226-c11a597048d9",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "10772cb1-8e1a-4afe-9a7f-db0f9e2756d5",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "c5340c9e-1592-4e5c-a225-c493f847f97f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "492c0b25-d0dd-4d3b-99a7-37b758f24dbf",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "4fb0f746-3d61-44d5-81b9-9c0d8e35db01",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "bbce536a-7302-441e-abf4-59f4e5e68890",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "cd8846bf-dba2-499a-a5b4-3389115dfeb1",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1282097a-5564-4781-959a-d356d3fdba85",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1c287820-90fd-40f2-b0fe-03ff0fb08c01",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "922e27a2-d3c7-4dcf-8f23-5e275e04d257",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "255e8eec-b48a-4060-8171-bef63e8705ec",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b2cc8144-d97e-49cf-9657-27d633707cc1",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "7b30df0f-31ac-4646-8655-d62be8efadcf",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "c8c793f8-3de2-4b17-b155-6be0ab198600",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "02920a7a-5993-427f-9e2f-af02c4bde6e9",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "e8c80b71-e75d-433b-93d9-634944b4666e",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "258ffecd-7b81-4aa9-9876-907964c0ecec",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "67f9eba9-6ff2-4439-b8e8-7f24a69a1a1f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "0105aee3-fd00-4d76-b0b2-8cca763afd2e",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "31ac90f9-39f9-4cee-a4c1-8d0dd5bb97e8",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "9a63093b-41d0-46e7-b78e-75b574447a2e",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "782ea067-3bb5-4c82-b280-3785e1dece82",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "29ef5aac-027c-4f27-a3c1-64502ee304ce",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "19bce36f-ecb0-4e62-9564-e5cff5312fb2",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "78677a16-4a05-4bb2-be6a-d5e8bde92ad0",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "dc272abe-3417-4312-af3d-a6522e79deae",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "294795ca-f0bd-4874-9920-5b446867b87d",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "ad24b830-bf84-4e97-ae3a-c1366cf6ed5f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2193f837-daa1-4aa3-b4fe-72a1cc195547",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "eec4c6ec-c8b6-4217-a469-bee5ce08d5b4",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "aabecf7e-ff70-4edb-9d17-4c46db2b07df",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "f5e17eeb-06a6-4115-b13c-2d12446ebd53",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "3b96ded9-c1a6-492e-996c-62d1108892b9",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "25d35b9e-3089-487c-9a30-ab03dad12c67",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "69e01f1e-13e4-432d-8841-c750c4a61777",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "4d0b0582-80fa-4527-ad80-0490f9621ec0",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "404d7598-a65e-419b-9870-6f4c6eeb4eb3",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b0d534e1-ca31-4544-a838-79d2d04f82d0",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "727b1e9a-fc22-4883-99af-79248c7e919f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "6f0a68ac-8ed0-4bcc-80b0-f3ee4ce69f75",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "5cde5b1d-83cf-43b6-9cbb-53f56279420f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "81eaf3a3-4a88-4c8d-9b92-ad6f4a0810cf",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "fd14ab49-90b1-4b38-95aa-34f63bfa3e85",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "7e18a059-2097-4b07-a44b-23a17f686826",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "effbd999-5cb0-4b81-9681-2665ac0f427f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "940e8989-ea47-4fca-895a-13a57b6c56aa",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "83e350a2-f8ff-4c55-8424-4e994bfd36dc",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "f362b040-b2d5-46f9-a4c2-ad63004f8395",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "674bf9a4-9f3b-44ba-bbb1-a789f0c171d2",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "e8c532e0-86fb-4e20-a545-7c3f44c42d32",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b0b74e98-b9ff-44de-a996-820d732fdf62",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b1c3a64a-470f-45e5-913d-f418eba81ea7",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2b648451-9fa2-496d-8fdb-77f72776f451",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "ea72b0b0-8f05-4bda-a582-2ed773c5abe9",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "e9601e3c-f4ae-4c58-ad19-2d7fc14b1082",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "dc6b09e3-88cb-482c-82da-4c8a9b0f5901",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "30abb199-a50b-49f3-acbf-a63ae26bf2dc",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "6fb7fd26-682c-48e8-98ea-16666bff51d3",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "6f8e0cf1-485b-4889-8e03-aacf1a7df48b",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "d62491c4-501d-4458-ac3e-608b2c6fe7d9",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "f371e149-2e30-4d73-9483-4f1534360a56",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "54d92881-103f-463b-9b48-ee06d20b3c4d",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "e133b7c3-9f92-45f8-9aca-c58f83b0d236",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "abc6e1f6-382a-4321-9be5-48a086fc3d12",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "74ae5ae7-af9a-4604-861e-45f7ac853969",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "69e43fc8-7b01-486e-b601-cac8dc073cbc",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "3263a5b1-84c9-4f7a-994e-ae2e05c20e0c",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "d3c93d94-fef7-45a2-9559-8dfca72d4d90",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "5d0bc604-788a-4403-bcd8-e7a13e5e00f8",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "6bbe6148-c5a3-493e-84d9-f1003c2993a1",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2dd005b0-521d-4d63-aeea-4dd30185161b",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "537f3b97-af9f-402b-8dfe-810c22b6b9b7",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "801dcd26-c55f-4aeb-bbf0-ee79fedc2d21",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b5bc59e0-0769-491d-bd1f-4f96f5163a49",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1959",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1993",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3995",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2070",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2023",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2141",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2520",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2551",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2572",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2715",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2749",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2785",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "97d8b191-f8d2-40c0-94ea-d2f9dceb404e",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2788",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4189",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "48887e49-67a6-469a-984d-85cf801cb80f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "15312901-0780-4f08-b92d-d03d5ee2501d",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "884f419a-b352-42e1-aaff-ad77aabe002f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1811",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1812",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1813",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "6dbce543-fb17-44c3-bc85-5c18ecb06bdb",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "dc05d26b-6ccd-494d-9bb1-5979ec8fcb42",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "01b398fa-e016-4df9-9203-6666abb3de19",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1820",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1821",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "d646fd82-af9c-46fa-bdc6-dce3d7f48c6e",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "5d1965b8-7081-4aed-ac39-06b77662f8dc",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "5b1b9ca7-7696-4633-a059-4a83b7ff8ae4",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "8aa40221-0f1e-46cf-9137-2ded47cc97b0",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "bb607870-5349-4969-a01a-0218379170e6",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "993c7433-1f57-438d-b05f-59b1af068f5d",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "ff0940a9-30f1-4770-a6c8-54e8f3f2c58c",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2760",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1928",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "db0a72f6-b3c7-464d-a6af-6c2e9b135aad",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "f0bb4b9b-58ad-4b33-b9b2-de422e853dc8",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "4b74f77d-9a2f-48e4-840d-8e9db33594c6",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "1908",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3d12718c-4206-4b14-8fa1-2ce1b429d099",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "a2f09f37-1e0a-44d0-8033-833a5d08d41b",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "9fe56ce0-66e1-4eee-aae5-022b68895f2d",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2870",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4a05aea0-7ae6-4ddc-9e21-e4159f815758",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "adc97f7a-aa34-4b98-aefd-858934221820",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2588",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "47a748e9-c5a9-4111-b7ba-402958870f7e",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "ee419260-5241-4ba9-990f-93b8a845a426",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "0cfbc467-e8c7-44d4-b7af-0b1db6f817cc",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "dc391954-e06a-4fca-bff6-35f708bfff66",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "e65a4681-e740-4abc-a1f3-8b4b1fb9410a",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2622",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2651",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "7d58aa8c-2f0e-42fe-b1a0-0fd387a99f4d",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2778",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2805",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2329",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "fa02b3d7-d721-4af4-9835-6937d6af0e77",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "f4ada8ef-9853-4efa-8e4b-ae619314dc94",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "18618490-a54e-46de-b80c-4a3e42da9a2f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "4a9fbb5a-8dbb-4332-b63c-59048f62dd49",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2869",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3054",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2983",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2984",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3387",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3523",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3086",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3278",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3184",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3185",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2356",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2372",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "61660c46-7714-4036-9f61-7a0ffdbac42f",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "3583",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3692",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3119",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "78dde4a2-6bbd-4638-af46-bd530969d165",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "874d67c0-5db3-4be0-9259-e51d6d23dba3",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "335913bd-ec12-4180-9c22-666d8906fe17",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2391",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2654",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2688",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4795",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4006",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4014",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "3980",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "5045",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5286",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1899",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "7282",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "8508",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9820",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9821",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1825",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1881",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1903",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2004",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2108",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2219",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2431",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2432",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2434",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2607",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2897",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3761",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1702",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1680",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1685",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1687",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1720",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1722",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1724",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1725",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1749",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1753",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2212",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1798",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1815",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1838",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1841",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1866",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1906",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1919",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2187",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1926",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1927",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1933",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1934",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1936",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9819",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1678",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1713",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1735",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1676",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1692",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1694",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1729",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1733",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1704",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1705",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1710",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1730",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1714",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1739",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1742",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1747",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1748",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1758",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1759",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1760",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1763",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1765",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1766",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1767",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1948",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1776",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1777",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1783",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1784",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1789",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1824",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1797",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1832",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1835",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1852",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1853",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1859",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1861",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1867",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1871",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1872",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1876",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1877",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1878",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1887",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1892",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1921",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1922",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1925",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1939",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1952",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1953",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1961",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1957",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1958",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2069",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1964",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1960",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1971",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1972",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1962",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1970",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1980",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1982",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1974",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1975",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1978",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1989",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1996",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1984",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2012",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1990",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2020",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "2021",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2114",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1995",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2030",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1997",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2094",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2039",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2045",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2001",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2005",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2014",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2015",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2073",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2088",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2090",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2092",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2103",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2025",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2026",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2121",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2122",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2027",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2029",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2128",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2035",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2095",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2049",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2050",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2052",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2053",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2147",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3693",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2138",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2055",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2149",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2056",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2154",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2157",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2164",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2171",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2062",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2064",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2065",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2066",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2067",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2080",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2081",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2083",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2084",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2198",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2087",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2112",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2124",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2200",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2209",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2126",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2127",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2225",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2228",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2233",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2148",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2242",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2150",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2151",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2152",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2168",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2254",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2255",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2177",
+    "old": "Other | People's Republic of China | Macau (&#28595;&#38272;)",
+    "new": "Other | China | Macau (&#28595;&#38272;)"
+  },
+  {
+    "id": "2184",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2235",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2194",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2280",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2281",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2284",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2201",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2447",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2217",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2244",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3899",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2311",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2249",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2328",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3920",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2323",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2336",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2275",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2337",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2339",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2259",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2342",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2351",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2260",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2265",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2266",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2276",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2360",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2381",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2370",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2277",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2279",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2355",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2384",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2387",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2389",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2390",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2393",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2394",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2396",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2312",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2313",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2316",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2317",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2417",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2318",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2319",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2353",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2427",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2438",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2439",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2457",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2470",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2601",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2479",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2482",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2350",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2358",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2361",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2401",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2374",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2510",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2512",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2379",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2402",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2407",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2413",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2542",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2543",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2553",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2414",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2418",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2561",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2565",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2422",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2579",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2428",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2440",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2593",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2620",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "2441",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2443",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2458",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2600",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2604",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2611",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2459",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2461",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2463",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2615",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2478",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2480",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2483",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2639",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2641",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2644",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2647",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2652",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2489",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "2500",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2659",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2518",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2683",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2685",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2697",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2706",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2521",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2556",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2717",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2529",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2532",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2724",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2559",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2750",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2751",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2552",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "2765",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2555",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2787",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2796",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2563",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2564",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2589",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2571",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2824",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2573",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2575",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2581",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2596",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2865",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2597",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2598",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2599",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2602",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2619",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2889",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2893",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2623",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2903",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2633",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2635",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2915",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2921",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2636",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2924",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2657",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2660",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2662",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2664",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2668",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2951",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2957",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2672",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2673",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2674",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2676",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2679",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2798",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2690",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2965",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2709",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2710",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2700",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2807",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2970",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "2976",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2978",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2980",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2990",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2991",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2718",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2719",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3000",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2720",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3003",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2731",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2732",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2742",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3029",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "3030",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3036",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2757",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2754",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3070",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2755",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2756",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2763",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2766",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2769",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3087",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3099",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2770",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "2779",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2782",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2790",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2791",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2794",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2800",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2802",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2803",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2860",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2806",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3285",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3320",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3325",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3328",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2809",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2813",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3342",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3365",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2815",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3411",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3444",
+    "old": "Other | Croatia (local name: Hrvatska) | Zagreb",
+    "new": "Other | Croatia | Zagreb"
+  },
+  {
+    "id": "2828",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2833",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3507",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3514",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2840",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2843",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2859",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3596",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3637",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2884",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3687",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2912",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2925",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2928",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2929",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2931",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3784",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3799",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "2948",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3010",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3011",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3012",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3016",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3898",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3018",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3019",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3020",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3959",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3045",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3046",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3048",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3049",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3051",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4048",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3075",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3120",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4148",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3339",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3202",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4298",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4301",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3224",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4513",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3250",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4359",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4371",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4388",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "4427",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4435",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3477",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3559",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3662",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3642",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "4630",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4707",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3750",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "4741",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3751",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "3755",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "3757",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3771",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3801",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3824",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "5140",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "3856",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "5828",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9839",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3887",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3930",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "4105",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4109",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "4131",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4133",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4138",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4164",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4172",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4175",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4183",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "4231",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "6647",
+    "old": "Asia | United Arab Emirates | Abu Dhabi (&#1585;&#1610;&#1588;&#1610;&#1603;&#1610;&#1588;)",
+    "new": "Asia | UAE | Abu Dhabi (&#1585;&#1610;&#1588;&#1610;&#1603;&#1610;&#1588;)"
+  },
+  {
+    "id": "4242",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4310",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4313",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "6726",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4360",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "4431",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "4437",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4469",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4473",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4532",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4734",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4668",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4688",
+    "old": "Other | Tyskland | Leipzig",
+    "new": "Other | Germany | Leipzig"
+  },
+  {
+    "id": "4742",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "5102",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5064",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9842",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9530",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9822",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9823",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9824",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9825",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9826",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9827",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9828",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9829",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9830",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9831",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9832",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9833",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "c5683382-b764-4676-86d8-cbc778ef0f38",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "b38a858a-7ae2-42f5-84b2-99653865bbda",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "69b07044-dd26-4ce4-9494-33ce69369793",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "93850db6-ecdf-475a-8324-c0fcaf22ca40",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "2165",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "ce53de92-25bc-4645-b23a-097ba58a5a99",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "d0621720-3f4e-4804-8d6f-54901605b0ed",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "e130c2ef-d178-43e0-b952-fc4ce4660a2e",
+    "old": "Other | Unknown",
+    "new": "Other"
+  },
+  {
+    "id": "5218",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "8715",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9119",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9178",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Other | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9194",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9506",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9666",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9687",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9701",
+    "old": "Other | Norge | Trondheim",
+    "new": "Other | Norway | Trondheim"
+  },
+  {
+    "id": "9932",
+    "old": "Other | Norge | Oslo",
+    "new": "Other | Norway | Oslo"
+  },
+  {
+    "id": "1690",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1711",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1785",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9261",
+    "old": "Other | Norge | Oslo",
+    "new": "Other | Norway | Oslo"
+  },
+  {
+    "id": "1771",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1807",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1834",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2612",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1918",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1895",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1905",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1917",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1924",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1943",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1944",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1969",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "1977",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2002",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "2019",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3206",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2091",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2111",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2137",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2156",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2163",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "2172",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2202",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2227",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2252",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "2288",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2290",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2321",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2338",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2357",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2386",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2409",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2437",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2448",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2491",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2508",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2538",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2606",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2665",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2723",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2739",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2740",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2820",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2795",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "9836",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "2883",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2882",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2890",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2892",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3053",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2920",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "2953",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3001",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9556",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "3009",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "3389",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3101",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "3146",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3153",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3181",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "3225",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3242",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3248",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "3264",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "9738",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9560",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "3391",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3399",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "3557",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "3580",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "3581",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "3623",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3651",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "3742",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "3777",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "9492",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "3798",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "3812",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4031",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "4032",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4043",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4046",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "4054",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Other | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "4106",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4126",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4135",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4282",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4283",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "4358",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4539",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "4533",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4545",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "4633",
+    "old": "Asia | United Arab Emirates | Dubai (&#1583;&#1576;&#1610;)",
+    "new": "Asia | UAE | Dubai (&#1583;&#1576;&#1610;)"
+  },
+  {
+    "id": "4645",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "4792",
+    "old": "Other | Republic of the | Philippines",
+    "new": "Other | Philippines | Philippines"
+  },
+  {
+    "id": "9837",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "4884",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5284",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5358",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5855",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5758",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5622",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5983",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "5998",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9123",
+    "old": "Other | Sverige | G&#246;teborg",
+    "new": "Other | Sweden | G&#246;teborg"
+  },
+  {
+    "id": "6085",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "6636",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9124",
+    "old": "Other | Norge | Oslo",
+    "new": "Other | Norway | Oslo"
+  },
+  {
+    "id": "6610",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "7517",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "6791",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9121",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "7311",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "7393",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "7472",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9518",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "7766",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9122",
+    "old": "Other | Norge | Oslo",
+    "new": "Other | Norway | Oslo"
+  },
+  {
+    "id": "8085",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "8826",
+    "old": "Other | Spanien | Barcelona",
+    "new": "Other | Spain | Barcelona"
+  },
+  {
+    "id": "8885",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "8918",
+    "old": "Other | Spanien | Barcelona",
+    "new": "Other | Spain | Barcelona"
+  },
+  {
+    "id": "8922",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "8979",
+    "old": "Other | Belgien | Brugge",
+    "new": "Other | Belgium | Brugge"
+  },
+  {
+    "id": "9097",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9118",
+    "old": "Other | Serbien | Belgrade (&#1041;&#1077;&#1086;&#1075;&#1088;&#1072;&#1076;)",
+    "new": "Other | Serbia | Belgrade (&#1041;&#1077;&#1086;&#1075;&#1088;&#1072;&#1076;)"
+  },
+  {
+    "id": "9120",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9126",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9127",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9171",
+    "old": "Other | Spanien | Barcelona",
+    "new": "Other | Spain | Barcelona"
+  },
+  {
+    "id": "9128",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Other | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9129",
+    "old": "Other | Holland | Rotterdam",
+    "new": "Other | Netherlands | Rotterdam"
+  },
+  {
+    "id": "9131",
+    "old": "Other | Danmark | &#197;rhus",
+    "new": "Other | Denmark | &#197;rhus"
+  },
+  {
+    "id": "9132",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9206",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9235",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9249",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9283",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9340",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Other | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9363",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9376",
+    "old": "Other | Norge | Bergen",
+    "new": "Other | Norway | Bergen"
+  },
+  {
+    "id": "9388",
+    "old": "Other | Norge | Trondheim",
+    "new": "Other | Norway | Trondheim"
+  },
+  {
+    "id": "9389",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9397",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9425",
+    "old": "Other | Belgien | Wetteren",
+    "new": "Other | Belgium | Wetteren"
+  },
+  {
+    "id": "9437",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9438",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9440",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9454",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9501",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9504",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9505",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9507",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9512",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9595",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9740",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9600",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9601",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9615",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9619",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9643",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9651",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9664",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9790",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9716",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9723",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9724",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9726",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9733",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9749",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9752",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9769",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9772",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9788",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9870",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9801",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9804",
+    "old": "Other | Spanien | La Coru&#241;a",
+    "new": "Other | Spain | La Coru&#241;a"
+  },
+  {
+    "id": "9809",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9846",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9847",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9863",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9879",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9896",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9897",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9902",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9919",
+    "old": "Other | Tjekkiet | Brno",
+    "new": "Other | Czech Republic | Brno"
+  },
+  {
+    "id": "9920",
+    "old": "Other | Tyskland | M&#252;nchen",
+    "new": "Other | Germany | M&#252;nchen"
+  },
+  {
+    "id": "9921",
+    "old": "Other | Frankrig | Agen",
+    "new": "Other | France | Agen"
+  },
+  {
+    "id": "9922",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9923",
+    "old": "Other | Tyskland | Leipzig",
+    "new": "Other | Germany | Leipzig"
+  },
+  {
+    "id": "9924",
+    "old": "Other | Schweiz | Olten",
+    "new": "Other | Switzerland | Olten"
+  },
+  {
+    "id": "9925",
+    "old": "Other | Frankrig | Pau",
+    "new": "Other | France | Pau"
+  },
+  {
+    "id": "9926",
+    "old": "Other | Tyskland | Berlin",
+    "new": "Other | Germany | Berlin"
+  },
+  {
+    "id": "9927",
+    "old": "Other | trans | Transsexuellen",
+    "new": "Other | Transsexuellen"
+  },
+  {
+    "id": "9928",
+    "old": "Other | Kroatien | Zagreb",
+    "new": "Other | Croatia | Zagreb"
+  },
+  {
+    "id": "9929",
+    "old": "Other | Polen | Warszawa",
+    "new": "Other | Poland | Warszawa"
+  },
+  {
+    "id": "9931",
+    "old": "Other | Norge | Oslo",
+    "new": "Other | Norway | Oslo"
+  },
+  {
+    "id": "9934",
+    "old": "Other | Sverige | Stockholm",
+    "new": "Other | Sweden | Stockholm"
+  },
+  {
+    "id": "9936",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9937",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9938",
+    "old": "Other | Danmark | Randers",
+    "new": "Other | Denmark | Randers"
+  },
+  {
+    "id": "9939",
+    "old": "Other | Frankrig | Ivry-sur-seine",
+    "new": "Other | France | Ivry-sur-seine"
+  },
+  {
+    "id": "9940",
+    "old": "Other | Danmark | Vejle",
+    "new": "Other | Denmark | Vejle"
+  },
+  {
+    "id": "9941",
+    "old": "Other | Unknown | Unknown",
+    "new": "Other | Unknown"
+  },
+  {
+    "id": "9942",
+    "old": "Other | Danmark | K&#248;benhavn",
+    "new": "Other | Denmark | K&#248;benhavn"
+  },
+  {
+    "id": "9943",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Other | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9946",
+    "old": "Other | Holland | Amsterdam",
+    "new": "Other | Netherlands | Amsterdam"
+  },
+  {
+    "id": "9976",
+    "old": "Other | Schweiz | Z&#252;rich",
+    "new": "Other | Switzerland | Z&#252;rich"
+  },
+  {
+    "id": "9989",
+    "old": "Other | Tyskland | D&#252;sseldorf",
+    "new": "Other | Germany | D&#252;sseldorf"
+  },
+  {
+    "id": "9992",
+    "old": "Other | Sverige | Malm&#246;",
+    "new": "Other | Sweden | Malm&#246;"
+  },
+  {
+    "id": "1b17f7e1-c204-4e8d-be5b-a32c8a5cc1be",
+    "old": "Other | Unknown",
+    "new": "Other"
+  }
+]
