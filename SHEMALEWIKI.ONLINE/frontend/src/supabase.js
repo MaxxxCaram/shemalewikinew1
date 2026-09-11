@@ -143,6 +143,17 @@ function buildQuery(collection) {
               const { data: phData } = await pbRequest(phPath);
               photos.push(...((phData && phData.items) || []));
             }
+            // Covers: una foto marcada local_path='cover' por perfil. PocketBase
+            // capa perPage en 500, asi que el fetch general (2000 pedidos) pierde
+            // la mayoria de los perfiles y desaparecen del listado. Pedir los
+            // covers aparte (1 fila por perfil) garantiza portada para todos.
+            for (const grp of groups) {
+              const covFilter = `(${grp.map(id => `profile_id='${id}'`).join('||')})&&(local_path='cover')`;
+              const covPath = `/api/collections/photos/records?filter=${encodeURIComponent(covFilter)}`;
+              const { data: covData } = await pbFetchAll(covPath, grp.length + 50);
+              photos.push(...((covData && covData.items) || []));
+            }
+            photos = photos.filter((ph, i, arr) => arr.findIndex(x => x.id === ph.id) === i);
           }
           items = items.map(p => ({ ...p, photos: photos.filter(ph => ph.profile_id === p.id) }));
           items = items.map(p => ({
