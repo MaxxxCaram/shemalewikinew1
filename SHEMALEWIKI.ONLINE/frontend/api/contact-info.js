@@ -2,9 +2,9 @@
 // Serves PII (phone/whatsapp/email) from the protected profile_contacts
 // collection, with basic rate-limiting per IP. The data itself is no longer
 // exposed in the public profiles API.
-const PB_URL = process.env.PB_URL || 'http://127.0.0.1:8080';
+const PB_URL = process.env.PB_URL || 'https://api.shemalewiki.online';
 const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
-const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS || '';
+const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS || 'Admin-PocketBase-2026!';
 
 // simple in-memory rate limiter (per IP, 10 req/min)
 const rateMap = {};
