@@ -103,20 +103,24 @@ export default function Dashboard() {
     setMessage('');
 
     try {
-      const userId = localStorage.getItem('dashboard_user_id');
-      const r = await fetch(`${API_BASE}/api/update-profile`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, profile })
-      });
-
-      if (!r.ok) {
-        const err = await r.json();
-        throw new Error(err.error || 'Update failed');
-      }
-
-      const result = await r.json();
-      setProfile(result.profile || profile);
+      const profileId = localStorage.getItem('dashboard_user_id');
+      // Only send editable fields (not system fields)
+      const data = {
+        name: profile.name || '',
+        bio: profile.bio || '',
+        description: profile.description || '',
+        location: profile.location || '',
+        age: profile.age || '',
+        height: profile.height || '',
+        weight: profile.weight || '',
+        endowment: profile.endowment || '',
+        nationality: profile.nationality || '',
+        languages: profile.languages || '',
+        onlyfans: profile.onlyfans || '',
+      };
+      // PB enforces owner = @request.auth.id via the users session
+      const updated = await pb.collection('profiles').update(profileId, data);
+      setProfile(prev => ({ ...prev, ...updated }));
       setMessage('✅ Profile updated successfully!');
       setTimeout(() => setMessage(''), 4000);
     } catch (error) {
@@ -138,30 +142,18 @@ export default function Dashboard() {
       let succeeded = 0;
       const errors = [];
 
-      // Upload one photo at a time to stay under Vercel's 4.5MB body limit
+      // Upload directly to PocketBase files (owner is enforced by PB session)
       for (const file of files) {
-        // Compress professional photos before upload
         const compressed = await compressImage(file);
         const formData = new FormData();
         formData.append('profile_id', profile.id);
-        formData.append('files', compressed);
+        formData.append('file', compressed);
 
         try {
-          const uploadRes = await fetch('/api/upload-photos', {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (!uploadRes.ok) {
-            const errText = await uploadRes.text();
-            errors.push(`${file.name || 'photo'}: ${errText}`);
-            continue;
-          }
-
-          const uploadData = await uploadRes.json();
-          succeeded += uploadData.count || 0;
+          const created = await pb.collection('photos').create(formData);
+          succeeded += 1;
         } catch (fileErr) {
-          errors.push(`${file.name || 'photo'}: ${fileErr.message}`);
+          errors.push(`${file.name || 'photo'}: ${fileErr.message || 'upload failed'}`);
         }
       }
 
@@ -194,19 +186,16 @@ export default function Dashboard() {
     setUploadMessage('');
 
     try {
-      const res = await fetch('/api/manage-photos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile_id: profile.id, photo_url: newVideoLink.trim() }),
+      await pb.collection('photos').create({
+        profile_id: profile.id,
+        photo_url: newVideoLink.trim(),
       });
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errData.error || 'Failed to add video');
-      }
 
       setNewVideoLink('');
       setUploadMessage('✅ Video link added!');
-      const { data: mediaData } = await supabase.from('photos').select('*').eq('profile_id', profile.id);
+      const mediaData = await pb.collection('photos').getFullList({
+        filter: `profile_id = "${profile.id}"`,
+      });
       setUserMedia(Array.isArray(mediaData) ? mediaData : []);
       setTimeout(() => setUploadMessage(''), 3000);
     } catch (err) {
@@ -219,7 +208,7 @@ export default function Dashboard() {
 
   const handleDeleteMedia = async (photoId) => {
     try {
-      const res = await fetch(`/api/manage-photos?photoId=${photoId}`, { method: 'DELETE' });
+      await pb.collection('photos').delete(photoId);
       if (!res.ok) {
         const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
         throw new Error(errData.error || 'Failed to remove');
@@ -235,10 +224,9 @@ export default function Dashboard() {
 
   const handleSetCover = async (photoId) => {
     try {
-      const res = await fetch('/api/manage-photos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'set-cover', profile_id: profile.id, photo_id: photoId }),
+      // Clear all covers, then set the new one (2 PB calls)
+      await pb.send('/api/collections/photos/records', {
+        method: 'POST', body: JSON.stringify({ filter: `profile_id='${profile.id}'` })
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({ error: 'Unknown error' }));

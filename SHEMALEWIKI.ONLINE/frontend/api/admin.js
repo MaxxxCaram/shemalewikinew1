@@ -1,29 +1,13 @@
-// Admin Panel — auth server-side, password never sent to frontend
-// Uses a shared secret verified by the server, returns JWT-like token
-// The secret is configurable via Vercel env: ADMIN_SECRET
+// Vercel Serverless Function: POST /api/admin
+// Admin panel — login as PocketBase superuser, then approve/reject claims.
+// Routes: POST { action: 'login', password } → { token }
+//         POST { action: 'list-claims' } → { claims }
+//         POST { action: 'approve-claim', claim_id } → { profile_id, owner }
+//         POST { action: 'reject-claim', claim_id } → { ok }
 
-import { createHmac, randomBytes } from 'crypto';
-
-const ADMIN_SECRET = process.env.ADMIN_SECRET;
-const SESSION_TTL = 24 * 60 * 60 * 1000; // 24h
-
-function generateToken() {
-  const rand = randomBytes(32).toString('hex');
-  const ts = Date.now().toString();
-  const hmac = createHmac('sha256', ADMIN_SECRET).update(`${rand}:${ts}`).digest('hex');
-  return `${rand}.${ts}.${hmac}`;
-}
-
-function verifyToken(tokenStr) {
-  if (!tokenStr || typeof tokenStr !== 'string') return false;
-  const parts = tokenStr.split('.');
-  if (parts.length !== 3) return false;
-  const [rand, ts, hmac] = parts;
-  const expected = createHmac('sha256', ADMIN_SECRET).update(`${rand}:${ts}`).digest('hex');
-  if (hmac !== expected) return false;
-  const age = Date.now() - parseInt(ts);
-  return age < SESSION_TTL; // expires after 24h
-}
+const PB_URL = process.env.PB_URL || 'https://api.shemalewiki.online';
+const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
+const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS || 'Admin-PocketBase-2026!';
 
 const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
 
@@ -32,139 +16,85 @@ export default async function handler(req, res) {
   if (ALLOWED_ORIGINS.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-admin-secret');
-
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qtuzpswxzengqoqqwtpt.supabase.co';
-  const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
 
-  if (!SERVICE_KEY) {
-    return res.status(500).json({ error: 'Server config error: SERVICE_KEY missing' });
-  }
+  const { action, password, token, claim_id } = req.body || {};
 
-  const headers = {
-    'apikey': SERVICE_KEY,
-    'Authorization': `Bearer ${SERVICE_KEY}`,
-    'Content-Type': 'application/json',
-  };
-
-  // ====== GET /api/admin — list profiles (authenticated) ======
-  if (req.method === 'GET') {
-    // Check auth
-    const authHeader = req.headers.authorization || '';
-    const secretHeader = req.headers['x-admin-secret'] || '';
-
-    if (!authHeader && !secretHeader) {
-      return res.status(401).json({ error: 'Authentication required. POST to /api/admin/login first.' });
-    }
-
-    let validAuth = false;
-    if (authHeader.startsWith('Bearer ') && verifyToken(authHeader.substring(7))) {
-      validAuth = true;
-    } else if (secretHeader === ADMIN_SECRET) {
-      validAuth = true;
-    }
-
-    if (!validAuth) {
-      return res.status(403).json({ error: 'Invalid authentication' });
-    }
-
-    try {
-      const filter = req.query?.status || '';
-      let url = `${SUPABASE_URL}/rest/v1/profiles?select=*&order=created_at.desc&limit=50`;
-      if (filter) url += `&status=eq.${filter}`;
-
-      const resp = await fetch(url, { headers: { ...headers, 'Prefer': 'return=representation' } });
-      if (!resp.ok) {
-        const err = await resp.text();
-        return res.status(resp.status).json({ error: err });
-      }
-      const profiles = await resp.json();
-      return res.status(200).json({ profiles });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
-    }
-  }
-
-  // ====== POST /api/admin/login — authenticate ======
-  // Distinguish login POST from action POST by body shape:
-  // login body = {secret: string} (no profileId, no action)
-  // action body = {profileId, action}
-  if (req.method === 'POST') {
-    const body = req.body || {};
-    // === LOGIN ===
-    if (body.secret && !body.profileId && !body.action) {
-      try {
-        const { secret } = body;
-        if (!secret) {
-          return res.status(400).json({ error: 'Secret required' });
-        }
-        if (secret !== ADMIN_SECRET) {
-          return res.status(401).json({ error: 'Invalid secret' });
-        }
-        const token = generateToken();
-        return res.status(200).json({ success: true, token, expires: new Date(Date.now() + SESSION_TTL).toISOString() });
-      } catch (err) {
-        return res.status(500).json({ error: err.message });
-      }
-    }
-
-    // === ACTION (approve/reject/delete) — authenticated ===
-    const authHeader = req.headers.authorization || '';
-    const secretHeader = req.headers['x-admin-secret'] || '';
-
-    let validAuth = false;
-    if (authHeader.startsWith('Bearer ') && verifyToken(authHeader.substring(7))) {
-      validAuth = true;
-    } else if (secretHeader === ADMIN_SECRET) {
-      validAuth = true;
-    }
-
-    if (!validAuth) {
-      return res.status(403).json({ error: 'Authentication required' });
-    }
-
-    try {
-      const { profileId, action, secret: actionSecret } = body;
-
-      if (!profileId || !action) {
-        return res.status(400).json({ error: 'profileId and action required' });
-      }
-
-      // Require secret for destructive actions
-      if (action === 'delete') {
-        if (actionSecret !== ADMIN_SECRET) {
-          return res.status(403).json({ error: 'Secret required to delete' });
-        }
-        const resp = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${profileId}`, {
-          method: 'DELETE',
-          headers,
-        });
-        if (!resp.ok) {
-          const err = await resp.text();
-          return res.status(resp.status).json({ error: err });
-        }
-        return res.status(200).json({ success: true, action: 'deleted' });
-      }
-
-      const status = action === 'approve' ? 'approved' : 'rejected';
-      const resp = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${profileId}`, {
-        method: 'PATCH',
-        headers: { ...headers, 'Prefer': 'return=representation' },
-        body: JSON.stringify({ cam_chat: status }),
+  try {
+    // ── Login: authenticate as PB superuser, return token ──
+    if (action === 'login') {
+      if (!password) return res.status(400).json({ error: 'Password required.' });
+      const res2 = await fetch(`${PB_URL}/api/admins/auth-with-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identity: PB_ADMIN_EMAIL, password: password || PB_ADMIN_PASS }),
       });
-      if (!resp.ok) {
-        const err = await resp.text();
-        return res.status(resp.status).json({ error: err });
-      }
-      const data = await resp.json();
-      return res.status(200).json({ success: true, action: status, profile: data[0] });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
+      if (!res2.ok) return res.status(401).json({ error: 'Invalid admin password.' });
+      const d = await res2.json();
+      return res.status(200).json({ token: d.token });
     }
-  }
 
-  return res.status(405).json({ error: 'Method not allowed' });
+    // ── All other actions require a valid PB token ──
+    if (!token) return res.status(401).json({ error: 'Token required.' });
+    const authHeaders = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+    // ── List pending claims ──
+    if (action === 'list-claims') {
+      const r = await fetch(`${PB_URL}/api/collections/claims/records?perPage=100&sort=-created`, {
+        headers: authHeaders,
+      });
+      if (!r.ok) throw new Error('Failed to list claims.');
+      const d = await r.json();
+      return res.status(200).json({ claims: d.items || [] });
+    }
+
+    // ── Approve claim: set profiles.owner = claimant_user, mark approved ──
+    if (action === 'approve-claim') {
+      if (!claim_id) return res.status(400).json({ error: 'claim_id required.' });
+      // get claim
+      const rClaim = await fetch(`${PB_URL}/api/collections/claims/records/${claim_id}`, { headers: authHeaders });
+      const claim = await rClaim.json();
+      if (!rClaim.ok) throw new Error('Claim not found.');
+
+      // update profile: set owner and approve
+      const rUpdate = await fetch(`${PB_URL}/api/collections/profiles/records/${claim.profile}`, {
+        method: 'PATCH',
+        headers: authHeaders,
+        body: JSON.stringify({ owner: claim.claimant_user, status: 'approved' }),
+      });
+      if (!rUpdate.ok) throw new Error('Failed to update profile owner.');
+
+      // mark claim approved (need superuser to bypass the lock — we ARE superuser)
+      const rClaimUpdate = await fetch(`${PB_URL}/api/collections/claims/records/${claim_id}`, {
+        method: 'PATCH',
+        headers: authHeaders,
+        body: JSON.stringify({ status: 'approved' }),
+      });
+      if (!rClaimUpdate.ok) throw new Error('Failed to update claim status.');
+
+      return res.status(200).json({ profile_id: claim.profile, owner: claim.claimant_user });
+    }
+
+    // ── Reject claim ──
+    if (action === 'reject-claim') {
+      if (!claim_id) return res.status(400).json({ error: 'claim_id required.' });
+      const r = await fetch(`${PB_URL}/api/collections/claims/records/${claim_id}`, {
+        method: 'PATCH',
+        headers: authHeaders,
+        body: JSON.stringify({ status: 'rejected' }),
+      });
+      if (!r.ok) throw new Error('Failed to reject claim.');
+      return res.status(200).json({ ok: true });
+    }
+
+    return res.status(400).json({ error: 'Unknown action.' });
+
+  } catch (e) {
+    console.error('admin error:', e.message);
+    return res.status(500).json({ error: e.message || 'Internal error.' });
+  }
 }

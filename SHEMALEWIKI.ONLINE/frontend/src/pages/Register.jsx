@@ -207,8 +207,6 @@ export default function Register() {
     setSubmitError('');
 
     try {
-      const profileId = crypto.randomUUID();
-
       // 1. Register profile FIRST (creates the row needed for photo FK)
       const response = await fetch('/api/register', {
         method: 'POST',
@@ -217,6 +215,8 @@ export default function Register() {
           profileId,
           name: form.display_name || '',
           email: form.email || '',
+          password: form.password || crypto.randomUUID(), // auto-gen si no pidio password
+          phone: form.contact || '',
           phone: form.contact || '',
           whatsapp: form.contact || '',
           country: form.country || '',

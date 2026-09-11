@@ -102,23 +102,17 @@ export default function DashboardLogin() {
     setLoginLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: loginIdentifier,
-          password: loginPassword,
-        }),
+      // Auth real via PocketBase users collection
+      const user = await pbLogin(loginIdentifier, loginPassword);
+
+      // Find the linked profile (owner = user id)
+      const profiles = await pb.collection('profiles').getFullList({
+        filter: `owner = "${user.id}" && status = "approved"`,
+        perPage: 1,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setLoginError(data.error || t.errInvalidCredentials);
-        return;
-      }
-
-      localStorage.setItem('dashboard_user_id', data.profile.id);
+      const profileId = profiles.length > 0 ? profiles[0].id : user.id;
+      localStorage.setItem('dashboard_user_id', profileId);
+      localStorage.setItem('dashboard_user_name', user.name || user.email);
       navigate('/dashboard');
     } catch (err) {
       setLoginError(t.errConnection);
@@ -134,28 +128,36 @@ export default function DashboardLogin() {
     setClaimLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/api/claims`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name_on_site: claimNameOnSite,
-          email: claimEmail,
-          phone: claimPhone,
-          country: claimCountry,
-          city: claimCity,
-          contact_details: claimContact
-        })
+      // 1. Register the user (creates users record with auth)
+      const userId = crypto.randomUUID();
+      const password = crypto.randomUUID(); // temp password (she can change it)
+      const user = await pb.collection('users').create({
+        name: claimNameOnSite,
+        email: claimEmail,
+        password,
+        passwordConfirm: password,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit claim');
-      }
+      // 2. Find the matching profile (search by name)
+      const matchingProfiles = await pb.collection('profiles').getFullList({
+        filter: `name ~ "${claimNameOnSite}" && status = "approved"`,
+        perPage: 5,
+      });
+      // Use the first match, or create a placeholder if none found
+      const profileId = matchingProfiles.length > 0 ? matchingProfiles[0].id : null;
+
+      // 3. Create the claim
+      const claim = await pb.collection('claims').create({
+        profile: profileId,
+        claimant_user: user.id,
+        evidence: `Country: ${claimCountry || 'N/A'}, City: ${claimCity || 'N/A'}, Contact: ${claimContact || 'N/A'}, Phone: ${claimPhone || 'N/A'}`,
+        status: 'pending',
+      });
 
       setClaimSuccess(true);
     } catch (err) {
-      console.error(err);
-      setLoginError(t.errClaimSubmit);
+      console.error('Claim error:', err.message || err);
+      setLoginError(err.message || t.errClaimSubmit);
     } finally {
       setClaimLoading(false);
     }
