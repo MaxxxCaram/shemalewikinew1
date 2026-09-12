@@ -185,6 +185,7 @@ export default async function handler(req, res) {
       success: true,
       profileId: profileData.id,
       userId: userData.id,
+      pbToken: userData.token, // client uses this to upload photos (owner matches)
       message: 'Profile registered. Pending review.',
     });
 

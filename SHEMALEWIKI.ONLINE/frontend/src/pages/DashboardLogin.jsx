@@ -176,9 +176,9 @@ export default function DashboardLogin() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          profileId,
           name: createName,
           email: createEmail,
+          password: crypto.randomUUID(), // auto-generate (she can reset it later)
           phone: createPhone,
           whatsapp: createWhatsapp || createPhone,
           country: createCountry,
@@ -193,14 +193,14 @@ export default function DashboardLogin() {
         })
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create profile');
+        throw new Error(data.error || 'Failed to create profile');
       }
 
-      // Upload photos after profile created (FK satisfied)
+      // Upload photos using the PB token from the register response
       if (createPhotoFiles.length > 0) {
-        // Upload one at a time with compression (Vercel 4.5MB limit)
         (async () => {
           for (const file of createPhotoFiles) {
             try {
@@ -208,10 +208,15 @@ export default function DashboardLogin() {
               const formData = new FormData();
               formData.append('profile_id', profileId);
               formData.append('file', compressed);
-              await pb.collection('photos').create(formData);
-              {
-                const d = await r.json();
-                console.log('Photo uploaded:', d.count);
+              // upload via PB REST with the user token returned by /api/register
+              const uploadRes = await fetch('https://api.shemalewiki.online/api/collections/photos/records', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${data.pbToken}` },
+                body: formData,
+              });
+              if (!uploadRes.ok) {
+                const errText = await uploadRes.text();
+                throw new Error(`Photo upload: ${errText.slice(0,80)}`);
               }
             } catch (e) {
               console.error('Photo upload failed:', e);
