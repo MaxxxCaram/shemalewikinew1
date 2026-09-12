@@ -7,7 +7,8 @@
 
 const PB_URL = process.env.PB_URL || 'https://api.shemalewiki.online';
 const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
-const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS || 'Admin-PocketBase-2026!';
+const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS;
+if (!PB_ADMIN_PASS) return res.status(500).json({ error: 'PB_ADMIN_PASS not configured.' });
 
 const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
 

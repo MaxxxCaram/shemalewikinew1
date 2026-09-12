@@ -4,6 +4,7 @@ import { LogOut, Save, User, Camera, Settings, RefreshCw, Image as ImageIcon, Ba
 import { supabase } from '../supabase';
 import { getProxiedImageUrl } from '../utils';
 import AdSlot from '../components/AdSlot';
+import { pb } from '../lib/pb';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
 // Reduces 20MB+ photos to ~2-3MB while keeping excellent web quality
@@ -209,10 +210,6 @@ export default function Dashboard() {
   const handleDeleteMedia = async (photoId) => {
     try {
       await pb.collection('photos').delete(photoId);
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errData.error || 'Failed to remove');
-      }
       setUserMedia(prev => prev.filter(m => m.id !== photoId));
       setUploadMessage('🗑️ Media removed.');
       setTimeout(() => setUploadMessage(''), 3000);
@@ -224,14 +221,17 @@ export default function Dashboard() {
 
   const handleSetCover = async (photoId) => {
     try {
-      // Clear all covers, then set the new one (2 PB calls)
-      await pb.send('/api/collections/photos/records', {
-        method: 'POST', body: JSON.stringify({ filter: `profile_id='${profile.id}'` })
+      // 1. Clear all existing covers
+      const allPhotos = await pb.collection('photos').getFullList({
+        filter: `profile_id = "${profile.id}" && local_path = "cover"`,
       });
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errData.error || 'Failed to set cover');
+      for (const ph of allPhotos) {
+        if (ph.id !== photoId) {
+          await pb.collection('photos').update(ph.id, { local_path: '' });
+        }
       }
+      // 2. Set new cover
+      await pb.collection('photos').update(photoId, { local_path: 'cover' });
       // Update local state: clear all covers, set new one
       setUserMedia(prev => prev.map(m => ({
         ...m,

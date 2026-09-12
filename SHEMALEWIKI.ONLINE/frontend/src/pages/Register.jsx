@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import SEO from '../components/SEO';
+import { pb } from '../lib/pb';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
 function compressImage(file, maxDim = 2048, quality = 0.85) {
@@ -252,8 +253,8 @@ export default function Register() {
               const compressed = await compressImage(file);
               const formData = new FormData();
               formData.append('profile_id', profileId);
-              formData.append('files', compressed);
-              const r = await fetch('/api/upload-photos', { method: 'POST', body: formData });
+              formData.append('file', compressed);
+              await pb.collection('photos').create(formData);
               if (r.ok) {
                 const d = await r.json();
                 console.log('Photo uploaded:', d.count);

@@ -7,7 +7,8 @@ import nodemailer from 'nodemailer';
 
 const PB_URL = process.env.PB_URL || 'https://api.shemalewiki.online';
 const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
-const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS || 'Admin-PocketBase-2026!';
+const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS;
+if (!PB_ADMIN_PASS) throw new Error('PB_ADMIN_PASS env var required');
 
 // SMTP config — password ONLY from env, no fallback
 const SMTP_HOST = 'smtp.hostinger.com';

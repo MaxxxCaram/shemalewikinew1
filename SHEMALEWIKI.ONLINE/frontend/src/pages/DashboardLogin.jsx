@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { detectDashboardLang, getDashboardTranslations, SUPPORTED_LANGS } from '../i18n-dashboard';
 import AdSlot from '../components/AdSlot';
+import { pb, login as pbLogin } from '../lib/pb';
 
 // Compress professional photos to stay under Vercel's 4.5MB serverless limit
 function compressImage(file, maxDim = 2048, quality = 0.85) {
