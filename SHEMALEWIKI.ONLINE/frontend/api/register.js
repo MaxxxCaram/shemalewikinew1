@@ -22,7 +22,7 @@ const rateLimit = {};
 const RATE_LIMIT_WINDOW = 3600000; // 1 hour
 const RATE_LIMIT_MAX = 3;
 
-const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
+const ALLOWED_ORIGINS = ['https://www.shemalewiki.online', 'https://shemalewiki.online', 'https://buscatrans.com'];
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);

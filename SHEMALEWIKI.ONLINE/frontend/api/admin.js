@@ -8,9 +8,9 @@
 const PB_URL = process.env.PB_URL || 'https://api.shemalewiki.online';
 const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
 const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS;
-if (!PB_ADMIN_PASS) return res.status(500).json({ error: 'PB_ADMIN_PASS not configured.' });
+if (!PB_ADMIN_PASS) throw new Error('PB_ADMIN_PASS env var required.');
 
-const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
+const ALLOWED_ORIGINS = ['https://www.shemalewiki.online', 'https://shemalewiki.online', 'https://buscatrans.com'];
 
 export default async function handler(req, res) {
   const origin = req.headers.origin || '';

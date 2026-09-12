@@ -10,7 +10,7 @@ const SMTP_PASS = process.env.ADS_EMAIL_PASSWORD;
 const NOTIFY_EMAIL = 'ads@shemalewiki.online';
 
 // CORS: only allow official domains
-const ALLOWED_ORIGINS = ['https://shemalewiki.online', 'https://buscatrans.com'];
+const ALLOWED_ORIGINS = ['https://www.shemalewiki.online', 'https://shemalewiki.online', 'https://buscatrans.com'];
 
 // Rate limiting
 const rateLimit = {};

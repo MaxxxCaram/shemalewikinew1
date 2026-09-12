@@ -207,9 +207,9 @@ export default function DashboardLogin() {
               const compressed = await compressImage(file);
               const formData = new FormData();
               formData.append('profile_id', profileId);
-              formData.append('files', compressed);
-              const r = await fetch('/api/upload-photos', { method: 'POST', body: formData });
-              if (r.ok) {
+              formData.append('file', compressed);
+              await pb.collection('photos').create(formData);
+              {
                 const d = await r.json();
                 console.log('Photo uploaded:', d.count);
               }
