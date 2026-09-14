@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { X } from 'lucide-react';
 
 /**
  * PhotoCropModal — Recorta una foto en el navegador (canvas nativo, sin librerías).
- * Permite: arrastrar para encuadrar, slider de zoom, rotar 90°, y "Aplicar recorte".
- * Devuelve la imagen recortada como Blob via onApply(blob).
+ * Arrastrar para encuadrar, slider de zoom, rotar 90°, "Aplicar recorte".
+ * onApply(blob) entrega el recorte cuadrado (aspect) como JPEG.
  */
-export default function PhotoCropModal({ src, aspect = 3/4, onApply, onClose }) {
+export default function PhotoCropModal({ src, aspect = 3 / 4, onApply, onClose }) {
   const canvasRef = useRef(null);
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
@@ -14,7 +15,6 @@ export default function PhotoCropModal({ src, aspect = 3/4, onApply, onClose }) 
   const imgRef = useRef(null);
   const [loaded, setLoaded] = useState(false);
 
-  // draw on state change
   const draw = useCallback(() => {
     const img = imgRef.current;
     const canvas = canvasRef.current;
@@ -23,16 +23,13 @@ export default function PhotoCropModal({ src, aspect = 3/4, onApply, onClose }) 
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, W, H);
     ctx.save();
-    ctx.translate(W/2, H/2);
+    ctx.translate(W / 2, H / 2);
     ctx.rotate((rotation * Math.PI) / 180);
-    const rad = (Math.abs(rotation) % 180 === 90) ? Math.PI/2 : 0;
-    const scale = zoom;
-    // base size: fit image to canvas * zoom
     const iw = img.naturalWidth, ih = img.naturalHeight;
-    const coverScale = Math.max(W/iw, H/ih);
-    const dw = iw * coverScale * scale;
-    const dh = ih * coverScale * scale;
-    ctx.drawImage(img, -dw/2 + offset.x, -dh/2 + offset.y, dw, dh);
+    const coverScale = Math.max(W / iw, H / ih);
+    const dw = iw * coverScale * zoom;
+    const dh = ih * coverScale * zoom;
+    ctx.drawImage(img, -dw / 2 + offset.x, -dh / 2 + offset.y, dw, dh);
     ctx.restore();
   }, [zoom, rotation, offset]);
 
@@ -49,34 +46,32 @@ export default function PhotoCropModal({ src, aspect = 3/4, onApply, onClose }) 
   const onPointerUp = () => setDrag(null);
 
   const applyCrop = () => {
-    const canvas = canvasRef.current;
-    canvas.toBlob((blob) => { if (blob) onApply(blob); }, 'image/jpeg', 0.9);
+    canvasRef.current.toBlob((blob) => { if (blob) onApply(blob); }, 'image/jpeg', 0.9);
   };
 
   return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 10000,
-      background: 'rgba(5,3,15,0.94)', backdropFilter: 'blur(8px)',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem',
-    }}>
-      <div style={{ color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-        ✂️ Editar foto
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 10000,
+        background: 'rgba(5,3,15,0.94)', backdropFilter: 'blur(8px)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem',
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: 560, marginBottom: '0.75rem' }}>
+        <h3 style={{ margin: 0 }}>✂️ Recortar miniatura (3:4)</h3>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}><X /></button>
       </div>
-
       <canvas
         ref={canvasRef}
-        width={480} height={640}
+        width={420}
+        height={Math.round(420 / aspect)}
+        style={{ maxWidth: '100%', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '0.75rem', cursor: 'grab', touchAction: 'none' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        style={{
-          width: 'min(90vw, 420px)', aspectRatio: '3/4',
-          border: '2px dashed var(--accent-primary)',
-          borderRadius: '12px', touchAction: 'none', cursor: 'grab',
-          background: '#0a0620', maxHeight: '60vh',
-        }}
+        onPointerLeave={onPointerUp}
       />
-      {/* hidden source image */}
       <img
         ref={imgRef}
         src={src}
@@ -85,28 +80,22 @@ export default function PhotoCropModal({ src, aspect = 3/4, onApply, onClose }) 
         style={{ display: 'none' }}
         crossOrigin="anonymous"
       />
-
-      <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-        <label style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Zoom</label>
-        <input type="range" min="0.5" max="3" step="0.05" value={zoom}
-          onChange={e => setZoom(parseFloat(e.target.value))}
-          style={{ width: '140px' }} />
-        <button onClick={() => setRotation(r => (r + 90) % 360)}
-          style={{ padding: '0.5rem 0.9rem', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--text-primary)', cursor: 'pointer' }}>
-          🔄 Rotar
-        </button>
-        <button onClick={applyCrop}
-          style={{ padding: '0.55rem 1.2rem', borderRadius: '8px', border: 'none', background: 'linear-gradient(120deg,#00e5ff,#9d4dff,#ff5eb7)', color: '#fff', fontWeight: 700, cursor: 'pointer' }}>
-          ✅ Aplicar recorte
-        </button>
-        <button onClick={onClose}
-          style={{ padding: '0.55rem 1rem', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-          Cancelar
-        </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '1rem', width: '100%', maxWidth: 560 }}>
+        <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Zoom</span>
+        <input
+          type="range" min="1" max="3" step="0.05" value={zoom}
+          onChange={(e) => setZoom(parseFloat(e.target.value))}
+          style={{ flex: 1 }}
+        />
+        <button className="btn" onClick={() => setRotation((r) => (r + 90) % 360)}>↻ 90°</button>
       </div>
-      <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', marginTop: '0.5rem' }}>
-        Arrastrá para encuadrar · zoom para acercar · rotar para enderezar
+      <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+        <button className="btn" onClick={onClose}>Cancelar</button>
+        <button className="btn btn-primary" onClick={applyCrop}>✅ Aplicar recorte</button>
       </div>
+      <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.75rem', textAlign: 'center', maxWidth: 560 }}>
+        Arrastrá la imagen para elegir qué parte se ve en la miniatura. El recorte no modifica la foto original de la galería.
+      </p>
     </div>
   );
 }

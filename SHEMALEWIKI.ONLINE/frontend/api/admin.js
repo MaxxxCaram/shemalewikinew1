@@ -23,6 +23,61 @@ export default async function handler(req, res) {
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
 
+  // ── Multipart: upload cropped photo (reemplaza file de una foto existente) ──
+  const ctype = req.headers['content-type'] || '';
+  if (ctype.includes('multipart/form-data')) {
+    try {
+      const bb = (await import('@vercel/functions')).default;
+    } catch { /* fallback manual below */ }
+    try {
+      const formidable = null;
+      // parse manual del multipart con req.body ya buffered (Vercel lo bufferiza como stream)
+      const chunks = [];
+      for await (const ch of req) chunks.push(ch);
+      const buf = Buffer.concat(chunks);
+      const m = buf.toString('binary').match(/--(----H[0-9a-f]+)\r\n/);
+      const boundary = m ? m[1] : req.headers['content-type'].split('boundary=')[1];
+      // extraer campos y archivo del multipart
+      const parts = buf.toString('binary').split('--' + boundary);
+      let photo_id = null, token = null, fileBuf = null, filename = 'crop.jpg';
+      for (const part of parts) {
+        if (part.includes('name="photo_id"')) {
+          photo_id = part.split('\r\n\r\n')[1]?.split('\r\n')[0];
+        } else if (part.includes('name="token"')) {
+          token = part.split('\r\n\r\n')[1]?.split('\r\n')[0];
+        } else if (part.includes('filename="')) {
+          const hEnd = part.indexOf('\r\n\r\n');
+          filename = (part.match(/filename="([^"]+)"/) || [,'crop.jpg'])[1];
+          fileBuf = Buffer.from(part.slice(hEnd + 4).replace(/\r\n--$/, ''), 'binary');
+        }
+      }
+      if (!photo_id || !token || !fileBuf) {
+        return res.status(400).json({ error: 'photo_id, token y file requeridos.' });
+      }
+      // auth: validar token como superuser
+      const auth = await fetch(`${PB_URL}/api/admins/auth-refresh`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      });
+      if (!auth.ok) return res.status(401).json({ error: 'Token invalido.' });
+      // subir archivo reemplazando el file del record existente
+      const b2 = '----X' + Math.random().toString(16).slice(2);
+      const fd = `--${b2}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: image/jpeg\r\n\r\n`;
+      const body2 = Buffer.concat([Buffer.from(fd, 'binary'), fileBuf, Buffer.from(`\r\n--${b2}--\r\n`)]);
+      const up = await fetch(`${PB_URL}/api/collections/photos/records/${photo_id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': `multipart/form-data; boundary=${b2}`, Authorization: `Bearer ${token}` },
+        body: body2,
+      });
+      if (!up.ok) {
+        const t = await up.text();
+        return res.status(500).json({ error: 'Failed to replace photo: ' + t.slice(0, 120) });
+      }
+      return res.status(200).json({ ok: true });
+    } catch (e) {
+      return res.status(500).json({ error: 'upload-photo error: ' + e.message });
+    }
+  }
+
   const { action, password, token, claim_id } = req.body || {};
 
   try {
@@ -51,6 +106,73 @@ export default async function handler(req, res) {
       if (!r.ok) throw new Error('Failed to list claims.');
       const d = await r.json();
       return res.status(200).json({ claims: d.items || [] });
+    }
+
+
+    // ── Get one profile with photos (for editor) ──
+    if (action === 'get-profile') {
+      const pid = req.body.profile_id;
+      if (!pid) return res.status(400).json({ error: 'profile_id required.' });
+      const rP = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, { headers: authHeaders });
+      if (!rP.ok) return res.status(404).json({ error: 'Profile not found.' });
+      const profile = await rP.json();
+      const rF = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500&sort=-created`, { headers: authHeaders });
+      const photos = rF.ok ? (await rF.json()).items || [] : [];
+      return res.status(200).json({ profile, photos });
+    }
+
+    // ── Edit profile fields (admin edit) ──
+    if (action === 'edit-profile') {
+      const pid = req.body.profile_id;
+      const fields = req.body.fields || {};
+      if (!pid) return res.status(400).json({ error: 'profile_id required.' });
+      // whitelist de campos editables
+      const allowed = ['name','bio','description','location','phone','whatsapp','email','age','height','weight','nationality','languages','endowment','onlyfans','status','cam_chat'];
+      const body = {};
+      for (const k of allowed) if (k in fields) body[k] = fields[k];
+      const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, {
+        method: 'PATCH', headers: authHeaders, body: JSON.stringify(body),
+      });
+      if (!r.ok) return res.status(500).json({ error: 'Failed to update profile.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Delete one photo ──
+    if (action === 'delete-photo') {
+      const photo_id = req.body.photo_id;
+      if (!photo_id) return res.status(400).json({ error: 'photo_id required.' });
+      const r = await fetch(`${PB_URL}/api/collections/photos/records/${photo_id}`, {
+        method: 'DELETE', headers: authHeaders,
+      });
+      if (!r.ok && r.status !== 404) return res.status(500).json({ error: 'Failed to delete photo.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Set cover: quitar cover vieja del perfil, marcar esta ──
+    if (action === 'set-cover') {
+      const { photo_id, profile_id } = req.body;
+      if (!photo_id || !profile_id) return res.status(400).json({ error: 'photo_id + profile_id required.' });
+      // limpiar covers viejas
+      const rList = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${profile_id}'&&local_path='cover')&perPage=500`, { headers: authHeaders });
+      if (rList.ok) {
+        for (const ph of ((await rList.json()).items || [])) {
+          if (ph.id !== photo_id) {
+            await fetch(`${PB_URL}/api/collections/photos/records/${ph.id}`, {
+              method: 'PATCH', headers: authHeaders, body: JSON.stringify({ local_path: '' }),
+            });
+          }
+        }
+      }
+      const r = await fetch(`${PB_URL}/api/collections/photos/records/${photo_id}`, {
+        method: 'PATCH', headers: authHeaders, body: JSON.stringify({ local_path: 'cover' }),
+      });
+      if (!r.ok) return res.status(500).json({ error: 'Failed to set cover.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Upload cropped photo (reemplaza o crea) ──
+    if (action === 'upload-photo') {
+      // multipart: se maneja fuera de este branch JSON — ver handler multipart abajo
     }
 
     // ── Approve claim: set profiles.owner = claimant_user, mark approved ──

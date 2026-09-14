@@ -3,7 +3,8 @@
 // Subsequent requests use: Authorization: Bearer ***
 
 import { useState, useEffect, useCallback } from 'react';
-import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut } from 'lucide-react';
+import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil, ImageIcon, Star } from 'lucide-react';
+import PhotoCropModal from '../components/PhotoCropModal';
 
 const API_BASE = typeof window !== 'undefined' ? window.location.origin : 'https://shemalewiki.online';
 
@@ -17,6 +18,8 @@ export default function Admin() {
   const [msg, setMsg] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
   const [passInput, setPassInput] = useState('');
+  const [editing, setEditing] = useState(null); // {profile, photos}
+  const [cropSrc, setCropSrc] = useState(null); // foto siendo recortada
   const [token, setToken] = useState(getToken());
 
   const doFetchProfiles = useCallback(async (tok) => {
@@ -109,6 +112,82 @@ export default function Admin() {
     }
   };
 
+  const openEditor = async (pid) => {
+    setMsg('');
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ action: 'get-profile', profile_id: pid }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Error');
+      setEditing(data);
+    } catch (e) { setMsg('❌ ' + e.message); }
+  };
+
+  const saveField = async (pid, fields) => {
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ action: 'edit-profile', profile_id: pid, fields }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Error');
+      setMsg('✅ Guardado');
+      setTimeout(() => setMsg(''), 2500);
+      return true;
+    } catch (e) { setMsg('❌ ' + e.message); return false; }
+  };
+
+  const deletePhoto = async (photo_id) => {
+    if (!window.confirm('¿Borrar esta foto permanentemente?')) return;
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ action: 'delete-photo', photo_id }),
+      });
+      if (!r.ok) throw new Error('Error al borrar');
+      setEditing(e => ({ ...e, photos: e.photos.filter(p => p.id !== photo_id) }));
+      setMsg('✅ Foto borrada');
+      setTimeout(() => setMsg(''), 2500);
+    } catch (e) { setMsg('❌ ' + e.message); }
+  };
+
+  const setCover = async (photo_id, profile_id) => {
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ action: 'set-cover', photo_id, profile_id }),
+      });
+      if (!r.ok) throw new Error('Error al poner portada');
+      setEditing(e => ({ ...e, photos: e.photos.map(p => ({ ...p, local_path: p.id === photo_id ? 'cover' : '' })) }));
+      setMsg('✅ Portada actualizada');
+      setTimeout(() => setMsg(''), 2500);
+    } catch (e) { setMsg('❌ ' + e.message); }
+  };
+
+  const uploadCrop = async (photo_id, blob) => {
+    setCropSrc(null);
+    try {
+      const b = '----H' + Math.random().toString(16).slice(2);
+      const fd = (n, v) => `--${b}\r\nContent-Disposition: form-data; name="${n}"\r\n\r\n${v}\r\n`;
+      const head = fd('photo_id', photo_id) + fd('token', token);
+      const body = new Blob([head, blob, `\r\n--${b}--\r\n`]);
+      const r = await fetch(`${API_BASE}/api/admin?action=upload-photo`, {
+        method: 'POST',
+        headers: { 'Content-Type': `multipart/form-data; boundary=${b}` },
+        body,
+      });
+      if (!r.ok) throw new Error('Error al subir recorte');
+      setMsg('✅ Miniatura recortada y guardada');
+      setTimeout(() => setMsg(''), 3000);
+    } catch (e) { setMsg('❌ ' + e.message); }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
     setToken(null);
@@ -182,7 +261,7 @@ export default function Admin() {
           <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#f59e0b' }}>⏳ Pendientes ({pending.length})</h2>
           <div style={{ display: 'grid', gap: '0.75rem' }}>
             {pending.map(p => (
-              <ProfileCard key={p.id} profile={p} onAction={handleAction} />
+              <ProfileCard key={p.id} profile={p} onAction={handleAction} onEdit={openEditor} />
             ))}
           </div>
         </div>
@@ -194,7 +273,7 @@ export default function Admin() {
           <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#22c55e' }}>✅ Aprobados ({approved.length})</h2>
           <div style={{ display: 'grid', gap: '0.75rem' }}>
             {approved.map(p => (
-              <ProfileCard key={p.id} profile={p} onAction={handleAction} />
+              <ProfileCard key={p.id} profile={p} onAction={handleAction} onEdit={openEditor} />
             ))}
           </div>
         </div>
@@ -206,7 +285,7 @@ export default function Admin() {
           <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#ef4444' }}>❌ Rechazados ({rejected.length})</h2>
           <div style={{ display: 'grid', gap: '0.75rem', opacity: 0.7 }}>
             {rejected.map(p => (
-              <ProfileCard key={p.id} profile={p} onAction={handleAction} />
+              <ProfileCard key={p.id} profile={p} onAction={handleAction} onEdit={openEditor} />
             ))}
           </div>
         </div>
@@ -221,7 +300,7 @@ export default function Admin() {
   );
 }
 
-function ProfileCard({ profile, onAction }) {
+function ProfileCard({ profile, onAction, onEdit }) {
   const s = () => {
     if (profile.cam_chat === 'approved') return { label: '✅', color: '#22c55e' };
     if (profile.cam_chat === 'rejected') return { label: '❌', color: '#ef4444' };
@@ -232,6 +311,11 @@ function ProfileCard({ profile, onAction }) {
   return (
     <div className="glass-card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
       <span style={{ fontSize: '1.5rem' }}>{status.label}</span>
+      {onEdit && (
+        <button onClick={() => onEdit(profile.id)} className="btn" title="Editar perfil" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--glass-border)', padding: '0.4rem 0.6rem' }}>
+          <Pencil size={15} />
+        </button>
+      )}
       <div style={{ flex: 1, minWidth: '200px' }}>
         <strong style={{ fontSize: '1.1rem' }}>{profile.name}</strong>
         <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
@@ -269,6 +353,119 @@ function ProfileCard({ profile, onAction }) {
           <Trash2 size={14} />
         </button>
       </div>
+    
+      {/* ── Editor de perfil (modal) ── */}
+      {editing && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(5,3,15,0.92)', backdropFilter: 'blur(8px)', overflowY: 'auto', padding: '2rem 1rem' }}
+             onClick={(e) => { if (e.target === e.currentTarget) setEditing(null); }}>
+          <div className="glass-card" style={{ maxWidth: 820, margin: '0 auto', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ margin: 0 }}>✏️ Editar: {editing.profile.name}</h2>
+              <button className="btn" onClick={() => setEditing(null)}>Cerrar</button>
+            </div>
+            <ProfileEditor profile={editing.profile} photos={editing.photos} token={token} apiBase={API_BASE}
+              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onCrop={(src) => setCropSrc(src)} />
+          </div>
+        </div>
+      )}
+      {cropSrc && (
+        <PhotoCropModal
+          src={cropSrc.src}
+          onApply={(blob) => uploadCrop(cropSrc.photoId, blob)}
+          onClose={() => setCropSrc(null)}
+        />
+      )}
+</div>
+  );
+}
+
+
+function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onCrop }) {
+  const [form, setForm] = useState({
+    name: profile.name || '',
+    bio: profile.bio || '',
+    location: profile.location || '',
+    phone: profile.phone || '',
+    email: profile.email || '',
+    age: profile.age || '',
+    height: profile.height || '',
+    weight: profile.weight || '',
+    nationality: profile.nationality || '',
+  });
+  const [saving, setSaving] = useState(false);
+  const upd = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const guardar = async () => {
+    setSaving(true);
+    await saveField(profile.id, form);
+    setSaving(false);
+  };
+
+  const fileUrl = (ph) => {
+    if (ph.file && ph.profile_id) return `${window.location.origin.replace('www.','api.').replace('buscatrans.com','api.shemalewiki.online')}/api/files/photos/${ph.profile_id}/${ph.file}`;
+    return ph.photo_url;
+  };
+
+  return (
+    <div>
+      {/* Campos */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '1rem' }}>
+        <label style={{ fontSize: '0.85rem' }}>Nombre
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={form.name} onChange={upd('name')} />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>Ubicación (provincia)
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={form.location} onChange={upd('location')} />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>Teléfono
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={form.phone} onChange={upd('phone')} />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>Email
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={form.email} onChange={upd('email')} />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>Edad
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={form.age} onChange={upd('age')} />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>Nacionalidad
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={form.nationality} onChange={upd('nationality')} />
+        </label>
+      </div>
+      <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '1rem' }}>Bio
+        <textarea className="search-input" rows={4} style={{ width: '100%', marginTop: '0.25rem' }} value={form.bio} onChange={upd('bio')} />
+      </label>
+      <button className="btn btn-primary" onClick={guardar} disabled={saving} style={{ marginBottom: '1.5rem' }}>
+        {saving ? 'Guardando...' : '💾 Guardar cambios'}
+      </button>
+
+      {/* Fotos */}
+      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.75rem' }}>
+        📷 Fotos ({photos.length}) — la que tiene ⭐ es la miniatura del listado
+      </h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.75rem' }}>
+        {photos.map(ph => {
+          const isCover = ph.local_path === 'cover';
+          const url = fileUrl(ph);
+          return (
+            <div key={ph.id} style={{
+              border: isCover ? '2px solid #f59e0b' : '1px solid var(--glass-border)',
+              borderRadius: '0.6rem', overflow: 'hidden', background: 'rgba(255,255,255,0.03)',
+            }}>
+              <img src={url} alt="" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block' }} />
+              <div style={{ padding: '0.4rem', display: 'flex', gap: '0.3rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                {isCover && <span style={{ fontSize: '0.7rem', color: '#f59e0b', width: '100%', textAlign: 'center' }}>⭐ PORTADA</span>}
+                <button className="btn" title="Recortar miniatura" onClick={() => onCrop({ src: url, photoId: ph.id })}
+                        style={{ padding: '0.3rem 0.45rem', fontSize: '0.8rem' }}>✂️</button>
+                {!isCover && (
+                  <button className="btn" title="Poner como portada" onClick={() => setCover(ph.id, profile.id)}
+                          style={{ padding: '0.3rem 0.45rem', fontSize: '0.8rem' }}>⭐</button>
+                )}
+                <button className="btn" title="Borrar foto" onClick={() => deletePhoto(ph.id)}
+                        style={{ padding: '0.3rem 0.45rem', fontSize: '0.8rem', color: '#ef4444' }}>🗑️</button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {photos.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>Este perfil no tiene fotos.</p>}
     </div>
   );
 }
