@@ -139,8 +139,10 @@ function buildQuery(collection) {
             for (let i = 0; i < profIds.length; i += CHUNK) groups.push(profIds.slice(i, i + CHUNK));
             for (const grp of groups) {
               const idFilter = `(${grp.map(id => `profile_id='${id}'`).join('||')})`;
-              const phPath = `/api/collections/photos/records?perPage=2000&filter=${encodeURIComponent(idFilter)}`;
-              const { data: phData } = await pbRequest(phPath);
+              // Perfiles con 300+ fotos desbordan un perPage fijo y dejan perfiles
+              // sin fotos en el listado. pbFetchAll pagina hasta traer todas.
+              const phPath = `/api/collections/photos/records?filter=${encodeURIComponent(idFilter)}`;
+              const { data: phData } = await pbFetchAll(phPath, grp.length * 400 + 200);
               photos.push(...((phData && phData.items) || []));
             }
             // Covers: una foto marcada local_path='cover' por perfil. PocketBase
