@@ -15,10 +15,18 @@ dist-ssr
 # Data/backup/scratch — not part of the app bundle or Vercel deploy
 photos/
 shemalewiki_recovery/
+backend/
+scripts/
 *.json
+*.py
+recuperar_shemalewiki.py
 download_and_insert.py
 fix_and_insert.py
 insert_perfiles_supabase.py
+kinky_scraper.py
+kinky_url_extractor.py
+run_kinky_extractor.bat
+run_kinky_scraper.bat
 
 # Editor directories and files
 .vscode/*

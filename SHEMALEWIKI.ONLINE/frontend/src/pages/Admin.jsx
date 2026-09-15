@@ -291,6 +291,27 @@ export default function Admin() {
         </div>
       )}
 
+      {/* ── Editor de perfil (modal) ── */}
+      {editing && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(5,3,15,0.92)', backdropFilter: 'blur(8px)', overflowY: 'auto', padding: '2rem 1rem' }}
+             onClick={(e) => { if (e.target === e.currentTarget) setEditing(null); }}>
+          <div className="glass-card" style={{ maxWidth: 820, margin: '0 auto', padding: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ margin: 0 }}>✏️ Editar: {editing.profile.name}</h2>
+              <button className="btn" onClick={() => setEditing(null)}>Cerrar</button>
+            </div>
+            <ProfileEditor profile={editing.profile} photos={editing.photos} token={token} apiBase={API_BASE}
+              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onCrop={(src) => setCropSrc(src)} />
+          </div>
+        </div>
+      )}
+      {cropSrc && (
+        <PhotoCropModal
+          src={cropSrc.src}
+          onApply={(blob) => uploadCrop(cropSrc.photoId, blob)}
+          onClose={() => setCropSrc(null)}
+        />
+      )}
       {profiles.length === 0 && (
         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
           No hay perfiles todavía.
@@ -353,29 +374,7 @@ function ProfileCard({ profile, onAction, onEdit }) {
           <Trash2 size={14} />
         </button>
       </div>
-    
-      {/* ── Editor de perfil (modal) ── */}
-      {editing && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(5,3,15,0.92)', backdropFilter: 'blur(8px)', overflowY: 'auto', padding: '2rem 1rem' }}
-             onClick={(e) => { if (e.target === e.currentTarget) setEditing(null); }}>
-          <div className="glass-card" style={{ maxWidth: 820, margin: '0 auto', padding: '1.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h2 style={{ margin: 0 }}>✏️ Editar: {editing.profile.name}</h2>
-              <button className="btn" onClick={() => setEditing(null)}>Cerrar</button>
-            </div>
-            <ProfileEditor profile={editing.profile} photos={editing.photos} token={token} apiBase={API_BASE}
-              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onCrop={(src) => setCropSrc(src)} />
-          </div>
-        </div>
-      )}
-      {cropSrc && (
-        <PhotoCropModal
-          src={cropSrc.src}
-          onApply={(blob) => uploadCrop(cropSrc.photoId, blob)}
-          onClose={() => setCropSrc(null)}
-        />
-      )}
-</div>
+    </div>
   );
 }
 
@@ -402,7 +401,14 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onCr
   };
 
   const fileUrl = (ph) => {
-    if (ph.file && ph.profile_id) return `${window.location.origin.replace('www.','api.').replace('buscatrans.com','api.shemalewiki.online')}/api/files/photos/${ph.profile_id}/${ph.file}`;
+    if (ph.file && ph.profile_id) {
+      // Las fotos viven en el API de PocketBase (api.shemalewiki.online), no en el dominio del frontend
+      const h = window.location.hostname;
+      const apiBase = /shemalewiki\.online$/.test(h) ? 'https://api.shemalewiki.online'
+        : /buscatrans\.com$/.test(h) ? 'https://api.shemalewiki.online'
+        : `https://api.${h.replace(/^www\./, '')}`;
+      return `${apiBase}/api/files/photos/${ph.id}/${ph.file}`;
+    }
     return ph.photo_url;
   };
 

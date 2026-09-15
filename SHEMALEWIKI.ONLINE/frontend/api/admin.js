@@ -21,6 +21,29 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
+  if (req.method === 'GET') {
+    // Listar perfiles (token requerido) — compat con Admin.jsx que hace GET tras login
+    const authHeader2 = req.headers.authorization || '';
+    if (!authHeader2.startsWith('Bearer ')) return res.status(401).json({ error: 'Token required.' });
+    const vres = await fetch(`${PB_URL}/api/admins/auth-with-password`, { method: 'POST' });
+    // validar token contra PB: usar endpoint de PB /api/admins/auth-refresh no existe para tokens JWT genericos;
+    // en su lugar, decodificar payload y verificar expiracion (mismo esquema que PB: JWT HS256)
+    try {
+      const payload = JSON.parse(Buffer.from(authHeader2.split('.')[1], 'base64').toString());
+      if (!payload.id || !payload.exp || payload.exp * 1000 < Date.now()) {
+        return res.status(401).json({ error: 'Invalid token.' });
+      }
+    } catch (e) {
+      return res.status(401).json({ error: 'Invalid token.' });
+    }
+    const list = await fetch(`${PB_URL}/api/collections/profiles/records?perPage=200&sort=-created`, {
+      headers: { Authorization: `Bearer ${authHeader2.substring(7)}` },
+    });
+    if (!list.ok) return res.status(401).json({ error: 'Invalid token.' });
+    const data = await list.json();
+    return res.status(200).json({ profiles: data.items || [] });
+  }
+
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
 
   // ── Multipart: upload cropped photo (reemplaza file de una foto existente) ──
@@ -78,16 +101,21 @@ export default async function handler(req, res) {
     }
   }
 
-  const { action, password, token, claim_id } = req.body || {};
+  const { action, password, token: tokenBody, claim_id } = req.body || {};
+  // El Admin.jsx manda el token en el header Authorization; aceptar ambos
+  const token = tokenBody || (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  // Compat: el Admin.jsx envia {secret} en vez de {action:'login', password}
+  let _action = action, _password = password;
+  if (!action && req.body && typeof req.body.secret === 'string') { _action = 'login'; _password = req.body.secret; }
 
   try {
     // ── Login: authenticate as PB superuser, return token ──
-    if (action === 'login') {
-      if (!password) return res.status(400).json({ error: 'Password required.' });
+    if (_action === 'login') {
+      if (!_password) return res.status(400).json({ error: 'Password required.' });
       const res2 = await fetch(`${PB_URL}/api/admins/auth-with-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identity: PB_ADMIN_EMAIL, password: password || PB_ADMIN_PASS }),
+        body: JSON.stringify({ identity: PB_ADMIN_EMAIL, password: _password || PB_ADMIN_PASS }),
       });
       if (!res2.ok) return res.status(401).json({ error: 'Invalid admin password.' });
       const d = await res2.json();
