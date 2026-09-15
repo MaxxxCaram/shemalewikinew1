@@ -53,11 +53,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: cd SHEMALEWIKI.ONLINE/frontend && npm install
+      - run: cd SHEMALEWIKI.ONLINE/frontend && npx vite build
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          working-directory: SHEMALEWIKI.ONLINE/frontend
+        run: |
+          cd SHEMALEWIKI.ONLINE/frontend
+          npm install -g vercel@latest
+          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes --scope=${{ secrets.VERCEL_ORG_ID }} --project=${{ secrets.VERCEL_PROJECT_ID }}
