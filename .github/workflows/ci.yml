@@ -15,8 +15,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: cd frontend && npm install
-      - run: cd frontend && npx eslint src/ --max-warnings=50
+      - run: cd SHEMALEWIKI.ONLINE/frontend && npm install
+      - run: cd SHEMALEWIKI.ONLINE/frontend && npx eslint src/ --max-warnings=50
 
   test:
     name: Tests
@@ -26,8 +26,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: cd frontend && npm install
-      - run: cd frontend && npx vitest run
+      - run: cd SHEMALEWIKI.ONLINE/frontend && npm install
+      - run: cd SHEMALEWIKI.ONLINE/frontend && npx vitest run
 
   build:
     name: Build
@@ -38,8 +38,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: cd frontend && npm install
-      - run: cd frontend && npx vite build
+      - run: cd SHEMALEWIKI.ONLINE/frontend && npm install
+      - run: cd SHEMALEWIKI.ONLINE/frontend && npx vite build
 
   deploy:
     name: Deploy
@@ -48,9 +48,14 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v4
-      - run: curl -fsSL https://vercel.com/download | sh
-      - run: |
-          cd frontend
-          npm install
-          npx vite build
-          npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: SHEMALEWIKI.ONLINE/frontend
