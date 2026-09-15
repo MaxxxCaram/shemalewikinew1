@@ -3,7 +3,7 @@
 // Subsequent requests use: Authorization: Bearer ***
 
 import { useState, useEffect, useCallback } from 'react';
-import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil, ImageIcon, Star } from 'lucide-react';
+import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil } from 'lucide-react';
 import PhotoCropModal from '../components/PhotoCropModal';
 
 const API_BASE = typeof window !== 'undefined' ? window.location.origin : 'https://shemalewiki.online';

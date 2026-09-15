@@ -1,4 +1,7 @@
 // Test setup: polyfills y configuración global
+/**
+ * @vitest-environment jsdom
+ */
 import { vi } from 'vitest'
 import '@testing-library/jest-dom'
 

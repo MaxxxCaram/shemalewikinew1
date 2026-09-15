@@ -37,8 +37,6 @@ function compressImage(file, maxDim = 2048, quality = 0.85) {
   });
 }
 
-const API_BASE = typeof window !== 'undefined' ? window.location.origin : 'https://shemalewiki.online';
-
 export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -58,12 +56,6 @@ export default function Dashboard() {
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
 
-  useEffect(() => {
-    const userId = localStorage.getItem('dashboard_user_id');
-    if (!userId) { navigate('/dashboard/login'); return; }
-    fetchProfile(userId);
-  }, [navigate]);
-
   const fetchProfile = async (id) => {
     try {
       const { data, error } = await supabase.from('profiles').select('*').eq('id', id).single();
@@ -80,6 +72,12 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const userId = localStorage.getItem('dashboard_user_id');
+    if (!userId) { navigate('/dashboard/login'); return; }
+    fetchProfile(userId);
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('dashboard_user_id');
@@ -151,7 +149,7 @@ export default function Dashboard() {
         formData.append('file', compressed);
 
         try {
-          const created = await pb.collection('photos').create(formData);
+          await pb.collection('photos').create(formData);
           succeeded += 1;
         } catch (fileErr) {
           errors.push(`${file.name || 'photo'}: ${fileErr.message || 'upload failed'}`);
@@ -169,7 +167,10 @@ export default function Dashboard() {
           : ` (${errors.length} error(s))`;
       }
       setUploadMessage(msg);
-      const { data: mediaData } = await supabase.from('photos').select('*').eq('profile_id', profile.id);
+      const mediaData = await pb.collection('photos').getFullList({
+        filter: `profile_id = "${profile.id}"`,
+        sort: '-created',
+      });
       setUserMedia(Array.isArray(mediaData) ? mediaData : []);
       setTimeout(() => setUploadMessage(''), 3000);
     } catch (err) {

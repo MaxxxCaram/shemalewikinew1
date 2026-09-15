@@ -130,7 +130,6 @@ export default function DashboardLogin() {
 
     try {
       // 1. Register the user (creates users record with auth)
-      const userId = crypto.randomUUID();
       const password = crypto.randomUUID(); // temp password (she can change it)
       const user = await pb.collection('users').create({
         name: claimNameOnSite,
@@ -148,7 +147,7 @@ export default function DashboardLogin() {
       const profileId = matchingProfiles.length > 0 ? matchingProfiles[0].id : null;
 
       // 3. Create the claim
-      const claim = await pb.collection('claims').create({
+      await pb.collection('claims').create({
         profile: profileId,
         claimant_user: user.id,
         evidence: `Country: ${claimCountry || 'N/A'}, City: ${claimCity || 'N/A'}, Contact: ${claimContact || 'N/A'}, Phone: ${claimPhone || 'N/A'}`,
