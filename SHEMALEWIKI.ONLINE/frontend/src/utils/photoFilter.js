@@ -23,6 +23,7 @@ const BROKEN_HOSTS = [
 // either a PocketBase file URL or a known-good image CDN. Excludes dead hosts
 // AND video links.
 export const isLoadablePhoto = (url) => {
+  if (!url) return false;
   const u = (url || '').toLowerCase();
   if (BROKEN_HOSTS.some((h) => u.includes(h))) return false;
   // Exclude obvious video/embed URLs by extension not being an image
