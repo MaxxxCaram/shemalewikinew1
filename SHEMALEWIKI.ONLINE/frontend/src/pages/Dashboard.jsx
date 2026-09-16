@@ -62,7 +62,11 @@ export default function Dashboard() {
       if (error) throw error;
       setProfile(data || {});
 
-      const { data: mediaData } = await supabase.from('photos').select('*').eq('profile_id', id);
+      // Fetch photos via PocketBase SDK (handles relation filter)
+      const mediaData = await pb.collection('photos').getFullList({
+        filter: `profile_id = "${id}"`,
+        sort: '-created',
+      });
       setUserMedia(Array.isArray(mediaData) ? mediaData : []);
     } catch (error) {
       console.error("Error fetching profile", error);

@@ -106,9 +106,9 @@ export default function DashboardLogin() {
       // Auth real via PocketBase users collection
       const user = await pbLogin(loginIdentifier, loginPassword);
 
-      // Find the linked profile (owner = user id)
+      // Find the linked profile (owner = user id) — include pending so new users can access dashboard
       const profiles = await pb.collection('profiles').getFullList({
-        filter: `owner = "${user.id}" && status = "approved"`,
+        filter: `owner = "${user.id}"`,
         perPage: 1,
       });
       const profileId = profiles.length > 0 ? profiles[0].id : user.id;
@@ -205,18 +205,10 @@ export default function DashboardLogin() {
             try {
               const compressed = await compressImage(file);
               const formData = new FormData();
-              formData.append('profile_id', profileId);
+              formData.append('profile_id', data.profileId);
               formData.append('file', compressed);
-              // upload via PB REST with the user token returned by /api/register
-              const uploadRes = await fetch('https://api.shemalewiki.online/api/collections/photos/records', {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${data.pbToken}` },
-                body: formData,
-              });
-              if (!uploadRes.ok) {
-                const errText = await uploadRes.text();
-                throw new Error(`Photo upload: ${errText.slice(0,80)}`);
-              }
+              // Use PocketBase SDK (handles relation fields correctly)
+              await pb.collection('photos').create(formData);
             } catch (e) {
               console.error('Photo upload failed:', e);
             }
