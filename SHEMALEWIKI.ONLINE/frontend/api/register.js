@@ -181,11 +181,20 @@ export default async function handler(req, res) {
       } catch { /* notification is best-effort */ }
     }
 
+    // ── Authenticate new user to get their token ──
+    const userAuthRes = await fetch(`${PB_URL}/api/collections/users/auth-with-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identity: email, password }),
+    });
+    const userAuthData = await userAuthRes.json();
+    const pbToken = userAuthData.token;
+
     return res.status(200).json({
       success: true,
       profileId: profileData.id,
       userId: userData.id,
-      pbToken: userData.token, // client uses this to upload photos (owner matches)
+      pbToken: pbToken,
       message: 'Profile registered. Pending review.',
     });
 
