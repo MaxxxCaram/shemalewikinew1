@@ -35,9 +35,11 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}', '!covers/**'],
-        // Las portadas del libro (2-3 MB) quedan fuera del precache: no son
-        // críticas para el arranque offline y rompían el límite de 2 MiB.
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+        // Las portadas del libro (2-3 MB) NO van al precache: no son críticas
+        // para el arranque offline y sumaban ~5 MB a la instalación de la PWA.
+        // globIgnores funciona donde el patrón negativo '!covers/**' no matchea.
+        globIgnores: ['**/covers/**'],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         navigateFallback: '/index.html',
         // Las páginas de perfil NO se sirven del caché: pasan por el servidor
