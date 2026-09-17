@@ -55,7 +55,7 @@ export default function ProfilesList() {
       const list = await fetchProfilesWithCovers({
         country: displayCountryRaw,
         search: searchTerm || undefined,
-        limit: 300,
+        limit: 3000,
       });
       setProfiles(list);
       if (!searchTerm) setCityCounts(cityCountsFrom(list));

@@ -577,7 +577,7 @@ export default function CityGuide() {
         // Light path: profiles for this city + their covers only (see lib/listing.js).
         // The previous join+limit(2000) pulled photos for every id — very slow.
         const locationPattern = `% | ${displayCity}`;
-        const list = await fetchProfilesWithCovers({ city: displayCity, limit: 200 });
+        const list = await fetchProfilesWithCovers({ city: displayCity, limit: 1500 });
         setProfiles(list);
         const { count } = await supabase
           .from('profiles')
