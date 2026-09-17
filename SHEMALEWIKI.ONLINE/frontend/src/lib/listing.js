@@ -24,8 +24,8 @@ export function photoUrl(ph) {
 /** Fetch every profile matching the given filter (paginated). */
 async function fetchAllProfiles({ country, city, continent, search, max = 1200 }) {
   const out = [];
-  let page = 1;
-  while (out.length < max) {
+  const PER = 500;
+  for (let offset = 0; offset < max; offset += PER) {
     let qb = supabase
       .from('profiles')
       .select('id,name,location,created_at,age,description')
@@ -34,11 +34,10 @@ async function fetchAllProfiles({ country, city, continent, search, max = 1200 }
     if (city) qb = qb.ilike('location', `% | ${city}`);
     if (continent && !country) qb = qb.ilike('location', `${continent}%`);
     if (search) qb = qb.ilike('name', `%${search}%`);
-    const { data } = await qb.order('created_at', { ascending: false }).limit(500);
+    const { data } = await qb.order('created_at', { ascending: false }).range(offset, offset + PER - 1);
     const items = Array.isArray(data) ? data : [];
     out.push(...items);
-    if (items.length < 500) break;
-    page += 1;
+    if (items.length < PER) break;
   }
   return out.slice(0, max);
 }

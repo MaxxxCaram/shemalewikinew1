@@ -107,6 +107,15 @@ function buildQuery(collection) {
       return q;
     },
     limit(n) { limit = n; return q; },
+    // Pagination helper (supabase-style .range(from, to)). PocketBase paginates
+    // by page number with a fixed perPage, so translate the offset.
+    range(from, to) {
+      const per = Math.min(Math.max((to - from) + 1, 1), 500);
+      params.set('perPage', String(per));
+      params.set('page', String(Math.floor(from / per) + 1));
+      limit = per;
+      return q;
+    },
     async single() {
       params.set('perPage', '1');
       const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
@@ -123,6 +132,7 @@ function buildQuery(collection) {
         if (joinMatch) {
           // paginate if limit > 500 (PocketBase caps perPage at 500)
           const wantItems = limit || 500;
+          params.set('perPage', String(Math.min(wantItems, 500)));
           const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
           const { data, error } = wantItems > 500
             ? await pbFetchAll(path, wantItems)
@@ -177,6 +187,11 @@ function buildQuery(collection) {
         if (selectedFields && selectedFields !== '*' && !selectedFields.includes('(')) {
           params.set('fields', selectedFields.replace(/\s+/g, ''));
         }
+        // CRITICAL: PocketBase defaults to perPage=30 when it isn't sent, which
+        // silently capped every listing to 30 records (looked like "profiles
+        // without photos"). Always send an explicit perPage.
+        const perPage = Math.min(wantItems, 500);
+        params.set('perPage', String(isHead ? 1 : perPage));
         const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
         const { data, error } = wantItems > 500
           ? await pbFetchAll(path, wantItems)
