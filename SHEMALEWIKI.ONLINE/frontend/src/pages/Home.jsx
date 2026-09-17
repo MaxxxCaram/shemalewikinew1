@@ -6,6 +6,7 @@ import AdSlot from '../components/AdSlot';
 import WorldMap from '../components/WorldMap';
 import useScrollReveal from '../useScrollReveal';
 import { supabase } from '../supabase';
+import logoSw from '../assets/shemalewiki-blurred-limits.jpg';
 
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
 
@@ -55,7 +56,8 @@ export default function Home() {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [geoCountry, setGeoCountry] = useState(null);
-  const [photoMap, setPhotoMap] = useState({});
+  const [coverMap, setCoverMap] = useState({});
+  const [error, setError] = useState(null);
 
   useScrollReveal([profiles]);
 
@@ -66,7 +68,7 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
-        // 0. Detect visitor country client-side
+        // 0. Country detection (timezone + language)
         let geoCountryName = null;
         try {
           const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
@@ -87,72 +89,57 @@ export default function Home() {
             if (nlang.startsWith('nl')) geoCountryName = 'Netherlands';
             else if (nlang.startsWith('es-ar')) geoCountryName = 'Argentina';
           }
-        } catch {}
+        } catch { /* ignore */ }
         if (geoCountryName) setGeoCountry(geoCountryName);
 
-        // Fetch profiles WITHOUT expanding photos (much faster)
-        const fetchProfiles = async (filter = '', limit = 50) => {
-          const { data, error } = await supabase
+        // Query builder: only methods the PocketBase wrapper supports
+        // (select / not / ilike / order / limit). Do NOT use .filter().
+        const queryProfiles = async (countryName) => {
+          let qb = supabase
             .from('profiles')
             .select('id,name,location,created_at')
-            .not('cam_chat', 'eq', 'rejected')
-            .order('created_at', { ascending: false })
-            .filter(filter)
-            .limit(limit);
+            .not('cam_chat', 'eq', 'rejected');
+          if (countryName) qb = qb.ilike('location', `%| ${countryName}%`);
+          qb = qb.order('created_at', { ascending: false }).limit(40);
+          const { data } = await qb;
           return Array.isArray(data) ? data : [];
         };
 
         let featured = [];
-        
-        // 1. Geo-local profiles
         if (geoCountryName) {
-          const filter = `location~'${geoCountryName}'`;
-          const local = await fetchProfiles(filter, 50);
-          featured = local.slice(0, 12);
-          console.log('[Home] geo:', geoCountryName, '| found:', featured.length);
+          featured = await queryProfiles(geoCountryName);
         }
-
-        // 2. Fill with global recents
         if (featured.length < 12) {
-          const global = await fetchProfiles('', 50);
+          const global = await queryProfiles(null);
           const have = new Set(featured.map(p => p.id));
-          const rest = global.filter(p => !have.has(p.id));
-          featured = featured.concat(rest.slice(0, 12 - featured.length));
+          featured = featured.concat(global.filter(p => !have.has(p.id)));
         }
-
-        // Limit to 12
         featured = featured.slice(0, 12);
 
-        // 3. Fetch photos for these 12 profiles only (batch)
-        if (featured.length > 0) {
-          const ids = featured.map(p => `profile_id='${p.id}'`).join(' || ');
-          const { data: photos } = await supabase
+        // Covers: one photo per profile (prefer local_path='cover')
+        if (featured.length) {
+          const ids = featured.map(p => p.id);
+          const { data: phs } = await supabase
             .from('photos')
-            .select('id,profile_id,file,photo_url,local_path')
-            .filter(ids)
+            .select('id,profile_id,file,local_path')
+            .in('profile_id', ids)
             .limit(500);
-          
-          const pmap = {};
-          if (Array.isArray(photos)) {
-            for (const ph of photos) {
-              if (!pmap[ph.profile_id]) pmap[ph.profile_id] = [];
-              pmap[ph.profile_id].push(ph);
+          const cmap = {};
+          if (Array.isArray(phs)) {
+            for (const ph of phs) {
+              if (!ph || !ph.file) continue;
+              const cur = cmap[ph.profile_id];
+              const isCover = (ph.local_path || '') === 'cover';
+              if (!cur || (isCover && (cur.local_path || '') !== 'cover')) cmap[ph.profile_id] = ph;
             }
           }
-          setPhotoMap(pmap);
-
-          // Mark profiles with verified photo
-          for (const p of featured) {
-            const phs = pmap[p.id] || [];
-            const cover = phs.find(ph => ph.file) || phs[0];
-            p._verifiedPhoto = cover ? (brand === 'shemalewiki' ? cover.file : cover.photo_url) : null;
-          }
+          setCoverMap(cmap);
         }
 
-        console.log('[Home] featured final:', featured.length);
         setProfiles(featured);
       } catch (err) {
         console.error('Home fetch failed:', err);
+        setError(err?.message || 'fetch failed');
       } finally {
         setLoading(false);
       }
@@ -171,17 +158,7 @@ export default function Home() {
   };
 
   const getProfilePhoto = (p) => {
-    if (p._verifiedPhoto) {
-      // If it's a PB file, build the URL
-      if (!p._verifiedPhoto.startsWith('http')) {
-        const phs = photoMap[p.id] || [];
-        const cover = phs.find(ph => ph.file === p._verifiedPhoto);
-        if (cover) return `/api/files/photos/${cover.id}/${cover.file}`;
-      }
-      return p._verifiedPhoto;
-    }
-    const phs = photoMap[p.id] || [];
-    const cover = phs.find(ph => ph.file) || phs[0];
+    const cover = coverMap[p.id];
     if (cover && cover.file) return `/api/files/photos/${cover.id}/${cover.file}`;
     return null;
   };
@@ -195,6 +172,7 @@ export default function Home() {
         lang={lang}
       />
 
+      {/* ── HERO ── */}
       <section className="hero-section">
         {brand === 'shemalewiki' && (
           <div className="hero-logo-wrap">
@@ -262,17 +240,19 @@ export default function Home() {
 
       <AdSlot slot="home-top" audience="clients" width={728} height={90} className="ad-top" />
 
-      {/* Featured profiles */}
+      {/* ── FEATURED ── */}
       <section className="section">
         <div className="section-header">
           <h2>{content.featuredTitle}</h2>
           <Link to="/europe" className="section-link">{content.featuredLink} <ArrowRight size={14} /></Link>
         </div>
         {loading ? (
-          <div className="loading-grid">{[...Array(6)].map((_, i) => <div key={i} className="profile-card skeleton" />)}</div>
+          <div className="profiles-grid">
+            {[...Array(6)].map((_, i) => <div key={i} className="profile-card skeleton" />)}
+          </div>
         ) : profiles.length > 0 ? (
           <div className="profiles-grid">
-            {profiles.slice(0, 12).map((p) => {
+            {profiles.map((p) => {
               const photo = getProfilePhoto(p);
               return (
                 <Link key={p.id} to={getProfileLink(p)} className="profile-card">
@@ -285,18 +265,20 @@ export default function Home() {
                   </div>
                   <div className="profile-card-info">
                     <h3>{p.name}</h3>
-                    <p><MapPin size={12} /> {p.location?.split(' | ').slice(-1)[0] || 'Unknown'}</p>
+                    <p><MapPin size={12} /> {(p.location || '').split(' | ').slice(-1)[0] || 'Unknown'}</p>
                   </div>
                 </Link>
               );
             })}
           </div>
         ) : (
-          <p>No featured profiles available.</p>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            {error ? 'No se pudieron cargar los perfiles.' : 'No featured profiles available.'}
+          </p>
         )}
       </section>
 
-      {/* World Map */}
+      {/* ── MAP ── */}
       <section className="section">
         <h2>{content.citiesTitle}</h2>
         <WorldMap />
