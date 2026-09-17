@@ -2081,6 +2081,16 @@ h1, h2, h3, h4, h5, h6 {
   aspect-ratio: 3 / 4;
 }
 
+/* ── Directory perf: skip paint/layout for cards far off-screen ──
+   336+ cards with images make instant deep jumps freeze the compositor
+   (black frames). content-visibility lets the engine skip them entirely;
+   contain-intrinsic-size keeps the scrollbar stable while skipped. */
+.profile-card,
+.glass-card[class~="sw-reveal"] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 540px;
+}
+
 /* ── Lightbox (photo viewer) — overlay fullscreen ── */
 .lightbox-overlay {
   position: fixed;

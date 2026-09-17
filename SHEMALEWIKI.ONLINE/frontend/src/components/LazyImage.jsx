@@ -14,27 +14,27 @@ export default function LazyImage({ src, alt, className, style, fallback, eager 
   const imgRef = useRef(null);
 
   useEffect(() => {
-    // Fallback timer: if IntersectionObserver never fires (element already in
-    // view at mount, or observer unavailable), force-load after 500ms.
-    const forceTimer = setTimeout(() => setInView(true), 500);
-
+    // Load only when near the viewport. NO force-timer: a 500ms timeout that
+    // sets every card inView makes all N images download at once (336+ on a
+    // full country page) and freezes the compositor → black frames while
+    // scrolling. IntersectionObserver with a generous rootMargin covers the
+    // already-in-view-at-mount case (it fires immediately).
     if (typeof IntersectionObserver !== 'undefined') {
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
             setInView(true);
             observer.disconnect();
-            clearTimeout(forceTimer);
           }
         },
-        { rootMargin: '200px' }
+        { rootMargin: '400px' }
       );
       if (imgRef.current) observer.observe(imgRef.current);
-      return () => { observer.disconnect(); clearTimeout(forceTimer); };
+      return () => observer.disconnect();
     }
     // No IntersectionObserver — load immediately.
     setInView(true);
-    return () => clearTimeout(forceTimer);
+    return () => {};
   }, []);
 
   const displaySrc = error
