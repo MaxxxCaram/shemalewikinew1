@@ -29,7 +29,7 @@ const S = {
     findCompanion: () => 'Find the perfect companion · Verified profiles only',
     updatedDaily: () => 'Updated daily',
     profilesAvailable: (n) => `${n} Profile${n === 1 ? '' : 's'} available`,
-    citiesCount: (n) => `${n} city${n === 1 ? '' : 's'}`,
+    citiesCount: (n) => `${n} cit${n === 1 ? 'y' : 'ies'}`,
     profilesCount: (n) => `${n} profile${n === 1 ? '' : 's'}`,
     searchPlaceholder: () => 'Search by name, location, or keywords...',
     search: () => 'Search',

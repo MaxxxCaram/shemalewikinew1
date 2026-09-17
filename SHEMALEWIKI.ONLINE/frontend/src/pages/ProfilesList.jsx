@@ -9,6 +9,7 @@ import SEO from '../components/SEO';
 import AdSlot from '../components/AdSlot';
 import { t, getLang } from '../i18n';
 import { hasRealFile, isLoadablePhoto } from '../utils/photoFilter';
+import { profilePlaceholder } from '../utils';
 import { fetchProfilesWithCovers, cityCountsFrom } from '../lib/listing';
 
 // City → slug matching CityGuide.jsx routing
@@ -24,7 +25,7 @@ function pickCover(profile) {
   const real = list.find(p => hasRealFile(p));
   const loadable = list.find(p => p.photo_url && isLoadablePhoto(p.photo_url));
   const chosen = byCover || real || loadable || list[0];
-  return chosen ? chosen.photo_url : undefined;
+  return chosen ? chosen.photo_url : profilePlaceholder(profile && profile.name);
 }
 
 const PAGE_SIZE = 48;

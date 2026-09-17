@@ -6,6 +6,7 @@ import AdSlot from '../components/AdSlot';
 import WorldMap from '../components/WorldMap';
 import useScrollReveal from '../useScrollReveal';
 import { supabase } from '../supabase';
+import { profilePlaceholder } from '../utils';
 import logoSw from '../assets/shemalewiki-blurred-limits.jpg';
 
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
@@ -160,7 +161,7 @@ export default function Home() {
   const getProfilePhoto = (p) => {
     const cover = coverMap[p.id];
     if (cover && cover.file) return `https://api.shemalewiki.online/api/files/photos/${cover.id}/${cover.file}`;
-    return null;
+    return profilePlaceholder(p && p.name);
   };
 
   return (
