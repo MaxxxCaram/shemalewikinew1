@@ -9,22 +9,25 @@ import SEO from '../components/SEO';
 import AdSlot from '../components/AdSlot';
 import { t, getLang } from '../i18n';
 import { hasRealFile, isLoadablePhoto } from '../utils/photoFilter';
+import { fetchProfilesWithCovers, cityCountsFrom } from '../lib/listing';
 
 // City → slug matching CityGuide.jsx routing
 function cityToSlug(city) {
   return city.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-// Cover of a card: prefer a real PocketBase file, then any loadable image URL,
-// so the thumbnail is never a dead/blocked/1px placeholder.
-function pickCover(photos) {
-  const list = Array.isArray(photos) ? photos : [];
+// Cover of a card: prefer the pre-computed `_cover` (fast path), then legacy photos.
+function pickCover(profile) {
+  if (profile && profile._cover) return profile._cover;
+  const list = Array.isArray(profile && profile.photos) ? profile.photos : [];
   const byCover = list.find(p => p.local_path === 'cover' && (hasRealFile(p) || (p.photo_url && isLoadablePhoto(p.photo_url))));
   const real = list.find(p => hasRealFile(p));
   const loadable = list.find(p => p.photo_url && isLoadablePhoto(p.photo_url));
   const chosen = byCover || real || loadable || list[0];
   return chosen ? chosen.photo_url : undefined;
 }
+
+const PAGE_SIZE = 48;
 
 export default function ProfilesList() {
   const { continent, country } = useParams();
@@ -33,6 +36,7 @@ export default function ProfilesList() {
   const [cityCounts, setCityCounts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(PAGE_SIZE);
   const lang = getLang();
   const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
@@ -43,81 +47,29 @@ export default function ProfilesList() {
   useScrollReveal([profiles, cityCounts]);
 
   // Extract unique cities + profile counts (only profiles WITH photos)
-  const fetchCityCounts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('location, photos(id)')
-        .ilike('location', `% | ${displayCountryRaw} |%`)
-        .not('cam_chat', 'eq', 'rejected')
-        .limit(1000);
-
-      if (error) throw error;
-
-      const arr = Array.isArray(data) ? data : [];
-      // Only count profiles that have at least 1 photo
-      const withPhotos = arr.filter(p => p.photos && p.photos.length > 0);
-      if (!withPhotos.length) return;
-
-      const counts = {};
-      withPhotos.forEach(p => {
-        const parts = (p.location || '').split(' | ');
-        const city = parts[parts.length - 1];
-        if (city && city !== 'Unknown') {
-          counts[city] = (counts[city] || 0) + 1;
-        }
-      });
-
-      const sorted = Object.entries(counts)
-        .sort((a, b) => b[1] - a[1])
-        .map(([city, count]) => ({
-          city,
-          slug: cityToSlug(city),
-          count
-        }));
-
-      setCityCounts(sorted);
-    } catch (err) {
-      console.error('Error fetching city counts:', err);
-    }
-  };
-
-  const fetchProfiles = async (searchQuery = '') => {
+  // Fetch profiles + covers in 2 light queries (see lib/listing.js).
+  // City counts are derived from the same list — no extra round-trips.
+  const fetchProfiles = async (searchTerm = '') => {
     setLoading(true);
     try {
-      let queryBuilder = supabase
-        .from('profiles')
-        .select('*, photos(photo_url, local_path)')
-        .ilike('location', `% | ${displayCountryRaw} |%`)
-        .not('cam_chat', 'eq', 'rejected');
-        
-      if (searchQuery) {
-        queryBuilder = queryBuilder.ilike('name', `%${searchQuery}%`);
-      }
-      // Fetch a larger batch (no created_at ordering) so profiles WITH photos
-      // are not pushed out by newer photo-less duplicates.
-      const { data, error } = await queryBuilder.order('created_at', { ascending: false }).limit(2000);
-      
-      if (error) throw error;
-      if (data) {
-        // Show ONLY profiles with a real, loadable photo — no placeholders.
-        // A photo counts as real when it is a PocketBase file or a known-good
-        // image URL (utils/photoFilter); dead archive/proxy hosts and video
-        // links are excluded so no card renders a broken cover.
-        const withPhotos = data.map(p => ({ ...p, photos: p.photos || [] }))
-          .filter(p => p.photos.some(ph => hasRealFile(ph) || (ph.photo_url && isLoadablePhoto(ph.photo_url))));
-        setProfiles(withPhotos);
-      }
+      const list = await fetchProfilesWithCovers({
+        country: displayCountryRaw,
+        search: searchTerm || undefined,
+        limit: 300,
+      });
+      setProfiles(list);
+      if (!searchTerm) setCityCounts(cityCountsFrom(list));
     } catch (error) {
-      console.error("Error fetching profiles", error);
+      console.error('Error fetching profiles', error);
+      setProfiles([]);
     }
     setLoading(false);
   };
 
   // Load data once the country changes (functions declared above)
   useEffect(() => {
+    setVisible(PAGE_SIZE);
     fetchProfiles();
-    fetchCityCounts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
 
@@ -240,10 +192,10 @@ export default function ProfilesList() {
             </span>
           </div>
           <div className="profiles-grid">
-            {profiles.map((profile, i) => (
-              <Link to={`${langPrefix}/profile/${profile.id}`} key={profile.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${i * 0.05}s` }}>
+            {profiles.slice(0, visible).map((profile, i) => (
+              <Link to={`${langPrefix}/profile/${profile.id}`} key={profile.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${(i % PAGE_SIZE) * 0.05}s` }}>
                 <LazyImage
-                  src={pickCover(profile.photos)}
+                  src={pickCover(profile)}
                   alt={profile.name}
                   className="profile-card-img"
                 />
@@ -260,6 +212,17 @@ export default function ProfilesList() {
               </Link>
             ))}
           </div>
+          {visible < profiles.length && (
+            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => setVisible(v => v + PAGE_SIZE)}
+              >
+                {lang === 'es' ? 'Ver más' : lang === 'nl' ? 'Meer laden' : lang === 'fr' ? 'Voir plus' : 'Load more'}
+                {' '}({profiles.length - visible})
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

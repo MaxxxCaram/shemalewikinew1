@@ -159,7 +159,7 @@ export default function Home() {
 
   const getProfilePhoto = (p) => {
     const cover = coverMap[p.id];
-    if (cover && cover.file) return `/api/files/photos/${cover.id}/${cover.file}`;
+    if (cover && cover.file) return `https://api.shemalewiki.online/api/files/photos/${cover.id}/${cover.file}`;
     return null;
   };
 

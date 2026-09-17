@@ -5,6 +5,7 @@ import SEO from '../components/SEO';
 import AdSlot from '../components/AdSlot';
 import { supabase } from '../supabase';
 import { paisEs, continenteEs, esEspanol } from '../utils/paisesEs';
+import { fetchProfilesWithCovers } from '../lib/listing';
 import LazyImage from '../components/LazyImage';
 
 // City guide content data — rich SEO text for each supported city
@@ -573,33 +574,16 @@ export default function CityGuide() {
     const fetchProfiles = async () => {
       setLoading(true);
       try {
-        // Query profiles that match this city in location.
-        // Fetch a large batch then filter by photos: the 12 most recent are
-        // often photo-less UUID duplicates that would empty the city page.
+        // Light path: profiles for this city + their covers only (see lib/listing.js).
+        // The previous join+limit(2000) pulled photos for every id — very slow.
         const locationPattern = `% | ${displayCity}`;
-        const { data, error } = await supabase
+        const list = await fetchProfilesWithCovers({ city: displayCity, limit: 200 });
+        setProfiles(list);
+        const { count } = await supabase
           .from('profiles')
-          .select('*, photos(photo_url, local_path)')
-          .ilike('location', locationPattern)
-          .not('cam_chat', 'eq', 'rejected')
-          .order('created_at', { ascending: false })
-          .limit(2000);
-
-        if (error) throw error;
-        if (data) {
-          const arr = Array.isArray(data) ? data : [];
-          // Show ONLY profiles with a real, loadable photo — no placeholders.
-          const cleaned = arr
-            .map(p => ({ ...p, photos: p.photos || [] }))
-            .filter(p => p.photos.some(ph => ph.photo_url && !/web\.archive\.org|shemalewiki\.com/i.test(ph.photo_url)));
-          setProfiles(cleaned);
-          // Get total count separately
-          const { count } = await supabase
-            .from('profiles')
-            .select('*', { count: 'exact', head: true })
-            .ilike('location', locationPattern);
-          setProfileCount(count || data.length);
-        }
+          .select('id', { count: 'exact', head: true })
+          .ilike('location', locationPattern);
+        setProfileCount(count || list.length);
       } catch (error) {
         console.error('Error fetching city profiles:', error);
       } finally {
@@ -855,7 +839,7 @@ export default function CityGuide() {
               {profiles.map(profile => (
                 <Link to={`${langPrefix}/profile/${profile.id}`} key={profile.id} className="glass-card">
                   <LazyImage
-                    src={(profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
+                    src={profile._cover || (profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url}
                     alt={profile.name}
                     className="profile-card-img"
                   />

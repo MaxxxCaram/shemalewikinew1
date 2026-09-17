@@ -172,6 +172,11 @@ function buildQuery(collection) {
         }
         // plain select
         const wantItems = limit || (isHead ? 1 : 500);
+        // Send only the requested columns so PocketBase doesn't return full
+        // records (descriptions/bios) for big listings — huge payload saver.
+        if (selectedFields && selectedFields !== '*' && !selectedFields.includes('(')) {
+          params.set('fields', selectedFields.replace(/\s+/g, ''));
+        }
         const path = `/api/collections/${collection}/records?${params.toString()}` + (filters.length ? `&filter=${encodeURIComponent(filters.join('&&'))}` : '');
         const { data, error } = wantItems > 500
           ? await pbFetchAll(path, wantItems)

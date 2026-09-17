@@ -4,6 +4,7 @@ import { MapPin, ArrowLeft } from 'lucide-react';
 import SEO from '../components/SEO';
 import { supabase } from '../supabase';
 import { paisEs, continenteEs, esEspanol } from '../utils/paisesEs';
+import { fetchProfilesWithCovers } from '../lib/listing';
 import { t, getLang } from '../i18n';
 
 // City slug → country/continent mapping, used to resolve ?search= city pills
@@ -77,21 +78,14 @@ export default function Countries() {
 
         setCountries(Array.from(countrySet).sort());
 
-        // For "Other" continent: also load profiles WITHOUT photos-filtered list
-        // (they have no country, e.g. "Other | Unknown") so they stay reachable.
+        // For "Other" continent: profiles without a country (e.g. "Other | Unknown")
+        // reachable via the light helper (2 queries, covers only).
         if (continent === 'other') {
-          const { data: unkData, error: unkErr } = await supabase
-            .from('profiles')
-            .select('id, name, location, photos(photo_url, local_path)')
-            .ilike('location', 'Other |%')
-            .not('cam_chat', 'eq', 'rejected')
-            .limit(500);
-          if (!unkErr && unkData) {
-            setUnknownProfiles(unkData.map(p => ({
-              ...p,
-              photos: p.photos || [],
-            })).filter(p => p.photos.length > 0));
-          }
+          const list = await fetchProfilesWithCovers({ continent: 'Other', limit: 200 });
+          setUnknownProfiles(list.map(p => ({
+            ...p,
+            photos: [{ photo_url: p._cover, local_path: 'cover' }],
+          })));
         }
       } catch (error) {
         console.error("Error fetching countries", error);
