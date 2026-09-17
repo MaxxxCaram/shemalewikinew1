@@ -8,17 +8,18 @@
 // locally with the profiles of the current listing. Spain: 786 profiles scanned
 // in ~0.5s instead of ~7s, and every profile with a photo is returned.
 import { supabase } from '../supabase';
+import { withThumb } from '../utils';
 
 const PB_BASE = 'https://api.shemalewiki.online';
 const COVER_TTL_MS = 5 * 60 * 1000;
 
 let coverCache = { at: 0, map: null };
 
-/** Public URL of a PocketBase photo record. */
+/** Public URL of a PocketBase photo record (servida por el proxy con caché). */
 export function photoUrl(ph) {
   if (!ph) return null;
-  if (ph.id && ph.file) return `${PB_BASE}/api/files/photos/${ph.id}/${ph.file}?thumb=300x400`;
-  return ph.photo_url || null;
+  if (ph.id && ph.file) return withThumb(`${PB_BASE}/api/files/photos/${ph.id}/${ph.file}`, '300x400');
+  return ph.photo_url ? withThumb(ph.photo_url, '300x400') : null;
 }
 
 /** profile_id -> cover URL, for every profile that has a marked cover with a file. */

@@ -50,7 +50,18 @@ export default defineConfig({
         skipWaiting: true,
         runtimeCaching: [
           {
-            // Fotos de PocketBase → caché agresiva (segunda visita instantánea)
+            // Fotos vía el proxy con caché del edge (mismo dominio) → el
+            // navegador también las guarda: segunda visita instantánea.
+            urlPattern: /\/api\/img\?/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'sw-photos-proxy',
+              expiration: { maxEntries: 800, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // Fallback: fotos servidas directo por PocketBase
             urlPattern: /^https:\/\/api\.shemalewiki\.online\/api\/files\/.*/i,
             handler: 'CacheFirst',
             options: {

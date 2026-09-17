@@ -3,12 +3,14 @@ import { Download, X } from 'lucide-react';
 
 /**
  * Banner "Instalar app" (PWA).
- * - Android/Chrome: usa el evento beforeinstallprompt (instalación de un toque).
- * - iOS/Safari: no existe ese evento → se muestra la instrucción manual
- *   (Compartir → Añadir a pantalla de inicio).
+ * - variant="inline": bloque dentro del CTA "If you are trans, click here"
+ *   (para que las chicas instalen la app y gestionen su perfil desde el tel).
+ * - variant="floating" (default): aviso flotante abajo de la pantalla.
+ * - Android/Chrome: usa beforeinstallprompt (instalación de un toque).
+ * - iOS/Safari: no existe ese evento → instrucción manual (Compartir → Añadir).
  * Se oculta si ya está instalada (display-mode: standalone) o si la cerraron.
  */
-export default function InstallPrompt() {
+export default function InstallPrompt({ variant = 'floating' }) {
   const [deferred, setDeferred] = useState(null);
   const [visible, setVisible] = useState(false);
   const [iosHint, setIosHint] = useState(false);
@@ -35,14 +37,20 @@ export default function InstallPrompt() {
         setIosHint(true);
         setVisible(true);
       }
+
+      // En el bloque integrado mostramos siempre la propuesta (aunque el
+      // navegador no dispare beforeinstallprompt todavía): si el usuario toca
+      // "Instalar" sin evento, se explica el paso manual.
+      if (variant === 'inline') setVisible(true);
+
       return () => window.removeEventListener('beforeinstallprompt', onPrompt);
     } catch {
       return undefined;
     }
-  }, []);
+  }, [variant]);
 
   const install = async () => {
-    if (!deferred) { setVisible(false); return; }
+    if (!deferred) { setIosHint(true); return; }
     deferred.prompt();
     try {
       const choice = await deferred.userChoice;
@@ -57,6 +65,25 @@ export default function InstallPrompt() {
   };
 
   if (!visible) return null;
+
+  if (variant === 'inline') {
+    return (
+      <div className="app-install-inline">
+        <Download className="app-install-icon" size={20} />
+        <div className="app-install-text">
+          {iosHint
+            ? <>Instalá la app en tu teléfono: <b>Compartir</b> → <b>Añadir a pantalla de inicio</b></>
+            : <>Bajá la app y gestioná tu perfil, fotos y videos desde el teléfono</>}
+        </div>
+        <button type="button" onClick={install} className="app-install-btn">
+          {iosHint ? 'Ver cómo' : 'Instalar app'}
+        </button>
+        <button type="button" onClick={dismiss} aria-label="Cerrar" className="app-install-close">
+          <X size={15} />
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-md">

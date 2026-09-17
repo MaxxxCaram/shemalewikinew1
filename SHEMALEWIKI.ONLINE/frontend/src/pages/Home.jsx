@@ -3,10 +3,11 @@ import { Search, MapPin, ArrowRight, Sparkles, Globe2, ShieldCheck } from 'lucid
 import { useState, useEffect } from 'react';
 import SEO from '../components/SEO';
 import AdSlot from '../components/AdSlot';
+import InstallPrompt from '../components/InstallPrompt';
 import WorldMap from '../components/WorldMap';
 import useScrollReveal from '../useScrollReveal';
 import { supabase } from '../supabase';
-import { profilePlaceholder } from '../utils';
+import { profilePlaceholder, withThumb } from '../utils';
 import logoSw from '../assets/shemalewiki-blurred-limits.jpg';
 
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
@@ -160,7 +161,9 @@ export default function Home() {
 
   const getProfilePhoto = (p) => {
     const cover = coverMap[p.id];
-    if (cover && cover.file) return `https://api.shemalewiki.online/api/files/photos/${cover.id}/${cover.file}?thumb=300x400`;
+    if (cover && cover.file) {
+      return withThumb(`https://api.shemalewiki.online/api/files/photos/${cover.id}/${cover.file}`, '300x400');
+    }
     return profilePlaceholder(p && p.name);
   };
 
@@ -187,9 +190,14 @@ export default function Home() {
         <p className="hero-subtitle">{content.subtitle}</p>
 
         {brand === 'shemalewiki' && (
-          <Link to="/dashboard/login" className="btn btn-trans-dashboard">
-            🏳️‍⚧️ If you are trans, click here
-          </Link>
+          <>
+            <Link to="/dashboard/login" className="btn btn-trans-dashboard">
+              🏳️‍⚧️ If you are trans, click here
+            </Link>
+            {/* La app se instala desde acá: las chicas gestionan perfil,
+                fotos, videos y servicios desde el teléfono. */}
+            <InstallPrompt variant="inline" />
+          </>
         )}
 
         <div className="search-container">

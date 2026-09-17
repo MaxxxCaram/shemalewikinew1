@@ -21,6 +21,7 @@
     { "source": "/api/profiles(.*)", "destination": "/api/profiles.js" },
     { "source": "/api/profiles/(.*)", "destination": "/api/profiles.js" },
     { "source": "/api/og", "destination": "/api/og.js" },
+    { "source": "/api/img(.*)", "destination": "/api/img.js" },
     { "source": "/((?:[a-z]{2}/)?profile/[A-Za-z0-9]+/?)", "destination": "/api/og?path=$1" },
     { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|llms|logosw|icons|city-guides|downloads|mision|manifest|index).*)", "destination": "/index.html" }
   ],

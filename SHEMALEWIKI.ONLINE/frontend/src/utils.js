@@ -35,8 +35,10 @@ export const profilePlaceholder = (name) => {
 export const withThumb = (url, size = '300x400') => {
   if (!url || typeof url !== 'string') return url;
   if (!url.includes('/api/files/') || url.startsWith('data:')) return url;
-  if (/[?&]thumb=/.test(url)) return url;
-  return `${url}${url.includes('?') ? '&' : '?'}thumb=${size}`;
+  const withSize = /[?&]thumb=/.test(url) ? url : `${url}${url.includes('?') ? '&' : '?'}thumb=${size}`;
+  // Proxy con caché en el edge de Vercel: mismo dominio (sin CORS), el VPS
+  // sólo atiende el primer MISS y el resto sale del CDN.
+  return `/api/img?u=${encodeURIComponent(withSize)}`;
 };
 
 export const getProxiedImageUrl = (url) => {
