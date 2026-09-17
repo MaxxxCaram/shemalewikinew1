@@ -66,8 +66,9 @@ async function fetchAllProfiles({ country, city, continent, search, max = 3000 }
 }
 
 /**
- * Profiles for a country/city, each with `_cover`. Only profiles with a real
- * cover photo are returned, so cards never show a broken image.
+ * EVERY profile for a country/city (geo directory), each with `_cover` when
+ * one exists. No filtering by photo: the listing must show ALL profiles of
+ * the location — featured/photo-only placement is a paid slot later.
  */
 export async function fetchProfilesWithCovers({ country, city, continent, search, limit = 3000 } = {}) {
   const [profiles, covers] = await Promise.all([
@@ -76,9 +77,10 @@ export async function fetchProfilesWithCovers({ country, city, continent, search
   ]);
   if (!profiles.length) return [];
 
-  return profiles
-    .filter(p => covers[p.id])
-    .map(p => ({ ...p, _cover: covers[p.id] }));
+  return profiles.map(p => ({
+    ...p,
+    ...(covers[p.id] ? { _cover: covers[p.id] } : {}),
+  }));
 }
 
 /** Drop the cached covers (call after a photo/cover change). */
