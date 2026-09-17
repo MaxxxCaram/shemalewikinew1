@@ -66,14 +66,11 @@ export default function Profile() {
       const { data: profileData, error: profileError } = await supabase.from('profiles').select('*').eq('id', id).not('cam_chat', 'eq', 'rejected').single();
       if (profileError) throw profileError;
       
-      const { data: photos } = await supabase.from('photos').select('*').eq('profile_id', id);
-      const { data: services } = await supabase.from('services').select('*').eq('profile_id', id);
+      const { data: photos } = await supabase.from('photos').select('id,profile_id,file,photo_url,local_path').eq('profile_id', id).limit(20);
+      const { data: services } = await supabase.from('services').select('*').eq('profile_id', id).limit(10);
       
       const cleanPhotos = (photos || [])
         .filter(p => isLoadablePhoto(p.photo_url) && hasRealFile(p));
-      // HD-first: si hay fotos webp HD (batch kinky/distintas), van primero.
-      // Los thumbs 60x60 / 248px del scrape viejo (patron 80966_*.jpg) quedan al final;
-      // si el perfil SOLO tiene thumbs, igual se muestran (mejor que nada).
       const hd = cleanPhotos.filter(p => /\.webp$/i.test(p.file || ''));
       const rest = cleanPhotos.filter(p => !/\.webp$/i.test(p.file || ''));
       const ordered = [...hd, ...rest];
