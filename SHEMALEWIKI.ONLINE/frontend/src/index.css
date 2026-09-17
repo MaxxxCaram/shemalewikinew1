@@ -2081,15 +2081,12 @@ h1, h2, h3, h4, h5, h6 {
   aspect-ratio: 3 / 4;
 }
 
-/* ── Directory perf: skip paint/layout for cards far off-screen ──
-   336+ cards with images make instant deep jumps freeze the compositor
-   (black frames). content-visibility lets the engine skip them entirely;
-   contain-intrinsic-size keeps the scrollbar stable while skipped. */
-.profile-card,
-.glass-card[class~="sw-reveal"] {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 540px;
-}
+/* ── PERF: content-visibility DESACTIVADO en tarjetas ──
+   Probado en producción y ROMPE el render: una tarjeta "skipped" (fuera de
+   pantalla) no intersecta, así que ni el scroll-reveal (.sw-in) ni el
+   IntersectionObserver de LazyImage disparan nunca → tarjetas con opacity 0
+   y skeletons eternos (lista aparentemente vacía). El rendimiento se sostiene
+   con lazy-loading de imágenes + paginación de 48 en 48. */
 
 /* ── Lightbox (photo viewer) — overlay fullscreen ── */
 .lightbox-overlay {

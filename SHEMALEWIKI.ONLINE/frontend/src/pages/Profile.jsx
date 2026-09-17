@@ -6,6 +6,7 @@ import AdSlot from '../components/AdSlot';
 import Lightbox from '../components/Lightbox';
 import LazyImage from '../components/LazyImage';
 import { isLoadablePhoto, hasRealFile } from '../utils/photoFilter';
+import { withThumb } from '../utils';
 import { supabase } from '../supabase';
 import { t, getLang } from '../i18n';
 
@@ -432,7 +433,7 @@ export default function Profile() {
                   onClick={() => openLightbox(index)}
                 >
                   <LazyImage 
-                    src={photo.photo_url}
+                    src={withThumb(photo.photo_url, '600x800')}
                     alt={`${profile.name} photo ${index + 1}`}
                     className="gallery-img"
                   />

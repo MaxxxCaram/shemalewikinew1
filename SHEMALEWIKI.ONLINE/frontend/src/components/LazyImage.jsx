@@ -30,7 +30,16 @@ export default function LazyImage({ src, alt, className, style, fallback, eager 
         { rootMargin: '400px' }
       );
       if (imgRef.current) observer.observe(imgRef.current);
-      return () => observer.disconnect();
+
+      // Red de seguridad: si el observer no disparó y el elemento está dentro
+      // del viewport, cargamos igual (evita skeletons eternos).
+      const safety = setTimeout(() => {
+        const el = imgRef.current;
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight + 400 && r.bottom > -400) setInView(true);
+      }, 1200);
+      return () => { observer.disconnect(); clearTimeout(safety); };
     }
     // No IntersectionObserver — load immediately.
     setInView(true);

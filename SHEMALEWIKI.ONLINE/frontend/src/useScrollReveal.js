@@ -31,7 +31,16 @@ export default function useScrollReveal(deps = []) {
     );
 
     els.forEach(el => observer.observe(el));
-    return () => observer.disconnect();
+
+    // Red de seguridad: si el IntersectionObserver no dispara (elemento
+    // "skipped", observer roto, navegador raro), forzamos la visibilidad a
+    // los 1500 ms. Sin esto, una tarjeta no revelada queda con opacity 0
+    // PARA SIEMPRE y la lista parece vacía.
+    const safety = setTimeout(() => {
+      els.forEach(el => el.classList.add('sw-in'));
+    }, 1500);
+
+    return () => { observer.disconnect(); clearTimeout(safety); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }

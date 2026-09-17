@@ -17,7 +17,7 @@ let coverCache = { at: 0, map: null };
 /** Public URL of a PocketBase photo record. */
 export function photoUrl(ph) {
   if (!ph) return null;
-  if (ph.id && ph.file) return `${PB_BASE}/api/files/photos/${ph.id}/${ph.file}`;
+  if (ph.id && ph.file) return `${PB_BASE}/api/files/photos/${ph.id}/${ph.file}?thumb=300x400`;
   return ph.photo_url || null;
 }
 

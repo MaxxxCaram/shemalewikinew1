@@ -1,0 +1,14 @@
+/**
+ * Tailwind CSS v4 — utilities ONLY (no preflight/reset).
+ *
+ * The project has its own design system (Velvet Noir) in index.css with
+ * global element styles and custom classes (.glass-card, .btn-primary…).
+ * Tailwind's preflight would reset those and break the site, so we import
+ * only `theme` + `utilities`: every `flex`, `grid`, `p-4`, `text-sm`, etc.
+ * is available without touching existing styles.
+ *
+ * Imported AFTER index.css in main.jsx so utilities win on ties.
+ */
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);

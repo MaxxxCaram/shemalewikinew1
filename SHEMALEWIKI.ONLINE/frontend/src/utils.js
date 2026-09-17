@@ -26,9 +26,21 @@ export const profilePlaceholder = (name) => {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 };
 
+/**
+ * Adds PocketBase's server-side thumbnail param to a file URL.
+ * PB generates on the fly from the `thumbs` config of the collection field:
+ * 300x400 for cards (~3x fewer bytes) and 600x800 for profile galleries.
+ * Non-PB URLs and data URIs pass through untouched.
+ */
+export const withThumb = (url, size = '300x400') => {
+  if (!url || typeof url !== 'string') return url;
+  if (!url.includes('/api/files/') || url.startsWith('data:')) return url;
+  if (/[?&]thumb=/.test(url)) return url;
+  return `${url}${url.includes('?') ? '&' : '?'}thumb=${size}`;
+};
+
 export const getProxiedImageUrl = (url) => {
   if (!url) return NO_PHOTO_SVG;
-
   // If it is already a relative path, local resource, or base64 data URI, return it directly
   if (url.startsWith('/') || url.startsWith('data:') || url.startsWith('blob:')) {
     return url;

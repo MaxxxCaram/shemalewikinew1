@@ -1,9 +1,86 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // ── PWA: instalable en el teléfono (chicas + clientes), arranque offline
+    //    y caché de fotos para que la segunda visita sea instantánea. ──
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'favicon.ico', 'logosw.png', 'robots.txt'],
+      manifest: {
+        name: 'ShemaleWiki Online — Trans Companion Directory',
+        short_name: 'ShemaleWiki',
+        description: "The world's premier multilingual directory of trans companions. Browse verified profiles by country and city.",
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        orientation: 'portrait',
+        background_color: '#0a0a0f',
+        theme_color: '#e83e8c',
+        lang: 'en',
+        categories: ['social', 'lifestyle'],
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/icons/maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: '/icons/maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+        shortcuts: [
+          { name: 'Buscar perfiles', short_name: 'Buscar', url: '/europe' },
+          { name: 'Publicar mi perfil', short_name: 'Publicar', url: '/register' },
+        ],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}', '!covers/**'],
+        // Las portadas del libro (2-3 MB) quedan fuera del precache: no son
+        // críticas para el arranque offline y rompían el límite de 2 MiB.
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+        navigateFallback: '/index.html',
+        // Las páginas de perfil NO se sirven del caché: pasan por el servidor
+        // porque ahí se inyectan las etiquetas OpenGraph (preview con la foto).
+        navigateFallbackDenylist: [/^\/api\//, /^\/_/, /\/(?:[a-z]{2}\/)?profile\//],
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
+        runtimeCaching: [
+          {
+            // Fotos de PocketBase → caché agresiva (segunda visita instantánea)
+            urlPattern: /^https:\/\/api\.shemalewiki\.online\/api\/files\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'pb-photos',
+              expiration: { maxEntries: 800, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // API de PocketBase → red primero, caché de respaldo (semi-offline)
+            urlPattern: /^https:\/\/api\.shemalewiki\.online\/api\/collections\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pb-api',
+              networkTimeoutSeconds: 6,
+              expiration: { maxEntries: 400, maxAgeSeconds: 60 * 60 * 24 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts',
+              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
+      },
+    }),
+  ],
   // Genera chunks de vendor separados para mejor cacheo del navegador
   // y reducción del bundle inicial (lazy-load de páginas ya está en App.jsx).
   build: {

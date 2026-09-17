@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Search, MapPin, ArrowLeft, Building2 } from 'lucide-react';
-import { supabase } from '../supabase';
 import { paisEs, continenteEs, esEspanol } from '../utils/paisesEs';
 import LazyImage from '../components/LazyImage';
 import useScrollReveal from '../useScrollReveal';
@@ -11,11 +10,6 @@ import { t, getLang } from '../i18n';
 import { hasRealFile, isLoadablePhoto } from '../utils/photoFilter';
 import { profilePlaceholder } from '../utils';
 import { fetchProfilesWithCovers, cityCountsFrom } from '../lib/listing';
-
-// City → slug matching CityGuide.jsx routing
-function cityToSlug(city) {
-  return city.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-}
 
 // Cover of a card: prefer the pre-computed `_cover` (fast path), then legacy photos.
 function pickCover(profile) {

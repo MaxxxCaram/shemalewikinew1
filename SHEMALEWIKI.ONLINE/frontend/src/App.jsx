@@ -4,6 +4,7 @@ import { Component, lazy, Suspense } from 'react';
 import Home from './pages/Home';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import Footer from './components/Footer';
+import InstallPrompt from './components/InstallPrompt';
 import './index.css';
 import logoSw from './assets/shemalewiki-blurred-limits.jpg';
 import logoBT from './assets/buscatrans-logo.png';
@@ -247,6 +248,7 @@ function AppContent() {
         </Suspense>
       </main>
       <Footer />
+      <InstallPrompt />
     </Router>
   );
 }
