@@ -1,19 +1,18 @@
-// Fast listings helper: profiles + their cover photo in a handful of light queries.
+// Fast listings helper: profiles + covers in a handful of quick queries.
 //
-// History / why this shape:
-//  - The old code used `.select('*, photos(...)')` with limit(1000-4000): the
-//    PocketBase wrapper expanded that join per profile id (dozens of requests).
-//  - Then a profile-first + "any photo with a file" pass turned out unreliable:
-//    a chunk of 200 ids matched ~10k photo rows, and PocketBase pages that at
-//    500 rows/page in a default order, so only a handful of profiles surfaced.
-//
-// Working shape (verified against production counts):
-//  1. profiles for the country/city — paginated, fields limited to keep rows tiny
-//  2. covers only: one row per profile (local_path='cover' + has a file).
-//     ES: 786 profiles -> 124 with a cover, all of them returned.
+// Perf history (measured against production):
+//  - `.select('*, photos(...)')` join: dozens of requests per page (removed).
+//  - photos filtered by an OR of 200 profile ids: ~1.5s PER CHUNK (slow).
+//  - Global cover query (no id filter, sorted by -created): ~0.05s per 500 rows.
+// So we fetch ALL covers once (≈3k rows, cached for a few minutes) and intersect
+// locally with the profiles of the current listing. Spain: 786 profiles scanned
+// in ~0.5s instead of ~7s, and every profile with a photo is returned.
 import { supabase } from '../supabase';
 
 const PB_BASE = 'https://api.shemalewiki.online';
+const COVER_TTL_MS = 5 * 60 * 1000;
+
+let coverCache = { at: 0, map: null };
 
 /** Public URL of a PocketBase photo record. */
 export function photoUrl(ph) {
@@ -22,7 +21,30 @@ export function photoUrl(ph) {
   return ph.photo_url || null;
 }
 
-/** Fetch every profile matching the given filter (paginated, light fields). */
+/** profile_id -> cover URL, for every profile that has a marked cover with a file. */
+async function loadCovers() {
+  const now = Date.now();
+  if (coverCache.map && (now - coverCache.at) < COVER_TTL_MS) return coverCache.map;
+
+  const map = {};
+  const { data } = await supabase
+    .from('photos')
+    .select('id,profile_id,file,local_path')
+    .eq('local_path', 'cover')
+    .not('file', 'eq', '')
+    .order('created_at', { ascending: false })
+    .limit(5000); // wrapper paginates internally (>500) until exhausted
+
+  for (const ph of (Array.isArray(data) ? data : [])) {
+    if (!map[ph.profile_id] && (ph.file || ph.photo_url)) {
+      map[ph.profile_id] = photoUrl(ph);
+    }
+  }
+  coverCache = { at: now, map };
+  return map;
+}
+
+/** Every profile matching the filter (paginated, light fields). */
 async function fetchAllProfiles({ country, city, continent, search, max = 3000 }) {
   const out = [];
   const PER = 500;
@@ -44,35 +66,24 @@ async function fetchAllProfiles({ country, city, continent, search, max = 3000 }
 }
 
 /**
- * Profiles for a country/city, each with `_cover` (photo URL).
- * Only profiles that actually have a cover photo are returned, so a card never
- * renders a broken/empty image.
+ * Profiles for a country/city, each with `_cover`. Only profiles with a real
+ * cover photo are returned, so cards never show a broken image.
  */
 export async function fetchProfilesWithCovers({ country, city, continent, search, limit = 3000 } = {}) {
-  const profiles = await fetchAllProfiles({ country, city, continent, search, max: limit });
+  const [profiles, covers] = await Promise.all([
+    fetchAllProfiles({ country, city, continent, search, max: limit }),
+    loadCovers(),
+  ]);
   if (!profiles.length) return [];
 
-  const ids = profiles.map(p => p.id);
-  const coverMap = {};
-  const CHUNK = 200;
-  for (let i = 0; i < ids.length; i += CHUNK) {
-    const grp = ids.slice(i, i + CHUNK);
-    // One row per profile: the marked cover that has a real file.
-    const { data } = await supabase
-      .from('photos')
-      .select('id,profile_id,file,photo_url,local_path')
-      .in('profile_id', grp)
-      .eq('local_path', 'cover')
-      .not('file', 'eq', '')
-      .limit(500);
-    for (const ph of (Array.isArray(data) ? data : [])) {
-      if (ph.file || ph.photo_url) coverMap[ph.profile_id] = photoUrl(ph);
-    }
-  }
-
   return profiles
-    .filter(p => coverMap[p.id])
-    .map(p => ({ ...p, _cover: coverMap[p.id] }));
+    .filter(p => covers[p.id])
+    .map(p => ({ ...p, _cover: covers[p.id] }));
+}
+
+/** Drop the cached covers (call after a photo/cover change). */
+export function invalidateCovers() {
+  coverCache = { at: 0, map: null };
 }
 
 /** City → slug (matches CityGuide routing) */
