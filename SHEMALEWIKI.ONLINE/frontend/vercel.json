@@ -2,6 +2,9 @@
   "framework": "vite",
   "buildCommand": "npm install && npx vite build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/og.js": { "includeFiles": "dist/index.html" }
+  },
   "rewrites": [
     { "source": "/api/image(.*)", "destination": "/api/image.js" },
     { "source": "/api/admin(.*)", "destination": "/api/admin.js" },
@@ -17,7 +20,9 @@
     { "source": "/api/auth/login(.*)", "destination": "/api/auth/login.js" },
     { "source": "/api/profiles(.*)", "destination": "/api/profiles.js" },
     { "source": "/api/profiles/(.*)", "destination": "/api/profiles.js" },
-    { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|llms|logosw|icons|city-guides|downloads|mision|manifest).*)", "destination": "/index.html" }
+    { "source": "/api/og", "destination": "/api/og.js" },
+    { "source": "/((?:[a-z]{2}/)?profile/[A-Za-z0-9]+/?)", "destination": "/api/og?path=$1" },
+    { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|llms|logosw|icons|city-guides|downloads|mision|manifest|index).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
