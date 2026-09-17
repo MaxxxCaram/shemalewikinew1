@@ -66,7 +66,7 @@ export default function Profile() {
       const { data: profileData, error: profileError } = await supabase.from('profiles').select('*').eq('id', id).not('cam_chat', 'eq', 'rejected').single();
       if (profileError) throw profileError;
       
-      const { data: photos } = await supabase.from('photos').select('id,profile_id,file,photo_url,local_path').eq('profile_id', id).limit(20);
+      const { data: photos } = await supabase.from('photos').select('id,profile_id,file,photo_url,local_path,collectionId').eq('profile_id', id).limit(20);
       const { data: services } = await supabase.from('services').select('*').eq('profile_id', id).limit(10);
       
       const cleanPhotos = (photos || [])
