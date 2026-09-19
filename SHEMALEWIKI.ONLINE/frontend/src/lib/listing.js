@@ -78,7 +78,13 @@ export async function fetchProfilesWithCovers({ country, city, continent, search
   ]);
   if (!profiles.length) return [];
 
-  return profiles.map(p => ({
+  return profiles
+    // FASE 1 (decisión de Maxima 2026-09-18): solo perfiles con foto real.
+    // Los que no tienen foto NO aparecen en el directorio (ni placeholder).
+    // El cruce foto+contacto crece por el flujo de reclamo y el pipeline
+    // inverso (fotos de las chicas contactadas), no filtrando aquí.
+    .filter(p => covers[p.id])
+    .map(p => ({
     ...p,
     ...(covers[p.id] ? { _cover: covers[p.id] } : {}),
   }));
