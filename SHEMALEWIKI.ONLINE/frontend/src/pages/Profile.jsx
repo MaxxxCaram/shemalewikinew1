@@ -324,6 +324,14 @@ export default function Profile() {
                   <h3 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
                     {lang === 'fr' ? `Contacter ${profile.name}` : `Contact ${profile.name}`}
                   </h3>
+                  {contactData && !contactData.phone && !contactData.whatsapp && !contactData.email && (
+                    <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius-md)', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                      <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Este perfil todavía no muestra contacto. ¿Sos la anfitriona que aparece?</span>
+                      <Link to={`/reclama?pid=${profile.id}`} className="btn btn-outline" style={{ width: '100%', padding: '0.85rem', fontSize: '0.95rem' }}>
+                        🏳️‍⚧️ Reclamalo y cargá tu contacto
+                      </Link>
+                    </div>
+                  )}
                   {contactData?.phone && (
                     <ContactRow icon={<Phone size={18} />} color="#4ade80" label="Phone" value={contactData.phone} href={`tel:${contactData.phone.replace(/\s/g, '')}`} />
                   )}

@@ -3,6 +3,7 @@ import SEO from '../components/SEO';
 import './Reclama.css';
 
 export default function Reclama() {
+  const pid = new URLSearchParams(window.location.search).get('pid');
   return (
     <div className="reclama-page">
       <SEO
@@ -51,9 +52,14 @@ export default function Reclama() {
         </div>
 
         <div className="reclama-cta">
-          <Link to="/register" className="btn btn-primary btn-lg">
+          <Link to={`/register${pid ? `?pid=${pid}` : ''}`} className="btn btn-primary btn-lg">
             Reclamar mi perfil ahora
           </Link>
+          {pid && (
+            <p className="reclama-note">
+              Vas a vincular tu cuenta y cargar tu contacto en un perfil que ya está publicado con tus fotos.
+            </p>
+          )}
           <p className="reclama-note">
             Ya no lucran más con nosotras. Nosotras construimos lo nuestro.
           </p>

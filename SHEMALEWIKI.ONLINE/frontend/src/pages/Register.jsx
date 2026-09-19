@@ -208,6 +208,8 @@ export default function Register() {
     setSubmitError('');
 
     try {
+      // pid de reclamo (o flujo normal sin pid)
+      const profileId = new URLSearchParams(window.location.search).get('pid') || '';
       // 1. Register profile FIRST (creates the row needed for photo FK)
       const response = await fetch('/api/register', {
         method: 'POST',

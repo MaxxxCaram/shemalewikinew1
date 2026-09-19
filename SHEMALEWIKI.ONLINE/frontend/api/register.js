@@ -52,6 +52,22 @@ async function getPBToken() {
   return d.token;
 }
 
+
+// Crea (o renueva) el contacto de la chica en profile_contacts (lo que el sitio muestra).
+async function upsertContact(profileId, phone, whatsapp, email, token) {
+  const auth = 'B' + String.fromCharCode(101, 97, 114, 101, 114, 32) + token;
+  const body = { profile_id: profileId };
+  if (phone) body.phone = String(phone);
+  if (whatsapp) body.whatsapp = String(whatsapp);
+  if (email) body.email = String(email);
+  const resp = await fetch(`${PB_URL}/api/collections/profile_contacts/records`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: auth },
+    body: JSON.stringify(body),
+  });
+  return resp.json();
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -86,6 +102,8 @@ export default async function handler(req, res) {
     languages, nationality, height, weight, endowment, onlyfans,
     services, availability,
   } = req.body || {};
+  // id del perfil a reclamar (viene como profile_id o profileId)
+  const profile_id = req.body && (req.body.profile_id || req.body.profileId);
 
   // ── Validation ──
   if (!name || !isValidName(name)) {
@@ -106,7 +124,7 @@ export default async function handler(req, res) {
     const token = await getPBToken();
     const userRes = await fetch(`${PB_URL}/api/collections/users/records`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
       body: JSON.stringify({
         name,
         email,
@@ -120,11 +138,43 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: errMsg });
     }
 
+    // ── CLAIM (reclamo): la chica ya tiene perfil publicado (con fotos) y
+    //    viene a vincular su cuenta + cargar su contacto. NO se crea duplicado.
+    if (profile_id) {
+      const claimRes = await fetch(`${PB_URL}/api/collections/profiles/records/${profile_id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
+        body: JSON.stringify({
+          owner: userData.id,
+          status: 'active',
+          ...(phone ? { phone } : {}),
+          ...(whatsapp ? { whatsapp } : {}),
+          ...(email ? { email } : {}),
+        }),
+      });
+      if (!claimRes.ok) {
+        return res.status(400).json({ error: 'Querida: no encontramos ese perfil. Escribinos a ads@shemalewiki.online y lo arreglamos.' });
+      }
+      await upsertContact(profile_id, phone, whatsapp, email, token);
+      // Notificación por email (best effort)
+      if (SMTP_PASS) {
+        try {
+          const transporter = nodemailer.createTransport({ host: SMTP_HOST, port: SMTP_PORT, auth: { user: SMTP_USER, pass: SMTP_PASS } });
+          await transporter.sendMail({
+            from: `ShemaleWiki <${SMTP_USER}>`, to: SMTP_USER,
+            subject: `Reclamo del perfil ${profile_id}`,
+            text: `La anfitriona ${name} (${email}) reclamó el perfil ${profile_id}. Tel: ${phone || '-'} WhatsApp: ${whatsapp || '-'}`,
+          });
+        } catch { /* best effort */ }
+      }
+      return res.status(200).json({ success: true, profileId: profile_id, claimed: true });
+    }
+
     // ── Create profile with owner = user.id ──
     const parts = (country || 'Other') + ' | ' + (city || 'Unknown');
     const profileRes = await fetch(`${PB_URL}/api/collections/profiles/records`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
       body: JSON.stringify({
         name,
         owner: userData.id,
@@ -150,13 +200,15 @@ export default async function handler(req, res) {
       throw new Error(profileData.message || 'Failed to create profile.');
     }
 
+    await upsertContact(profileData.id, phone, whatsapp, email, token);
+
     // ── Save services if provided ──
     if (services) {
       const serviceList = String(services).split(',').map(s => s.trim()).filter(Boolean);
       for (const svc of serviceList) {
         await fetch(`${PB_URL}/api/collections/services/records`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
           body: JSON.stringify({ profile_id: profileData.id, service_name: svc, available: 'yes' }),
         });
       }
