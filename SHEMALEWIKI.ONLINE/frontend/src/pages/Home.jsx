@@ -6,8 +6,8 @@ import AdSlot from '../components/AdSlot';
 import InstallPrompt from '../components/InstallPrompt';
 import WorldMap from '../components/WorldMap';
 import useScrollReveal from '../useScrollReveal';
-import { supabase } from '../supabase';
-import { profilePlaceholder, withThumb } from '../utils';
+import { fetchProfilesWithCovers } from '../lib/listing';
+import { profilePlaceholder } from '../utils';
 import logoSw from '../assets/shemalewiki-blurred-limits.jpg';
 
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
@@ -58,8 +58,8 @@ export default function Home() {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [geoCountry, setGeoCountry] = useState(null);
-  const [coverMap, setCoverMap] = useState({});
   const [error, setError] = useState(null);
+  const [visible, setVisible] = useState(48);
 
   useScrollReveal([profiles]);
 
@@ -94,51 +94,14 @@ export default function Home() {
         } catch { /* ignore */ }
         if (geoCountryName) setGeoCountry(geoCountryName);
 
-        // Query builder: only methods the PocketBase wrapper supports
-        // (select / not / ilike / order / limit). Do NOT use .filter().
-        const queryProfiles = async (countryName) => {
-          let qb = supabase
-            .from('profiles')
-            .select('id,name,location,created_at')
-            .not('cam_chat', 'eq', 'rejected');
-          if (countryName) qb = qb.ilike('location', `%| ${countryName}%`);
-          qb = qb.order('created_at', { ascending: false }).limit(40);
-          const { data } = await qb;
-          return Array.isArray(data) ? data : [];
-        };
-
-        let featured = [];
-        if (geoCountryName) {
-          featured = await queryProfiles(geoCountryName);
-        }
-        if (featured.length < 12) {
-          const global = await queryProfiles(null);
-          const have = new Set(featured.map(p => p.id));
-          featured = featured.concat(global.filter(p => !have.has(p.id)));
-        }
-        featured = featured.slice(0, 12);
-
-        // Covers: one photo per profile (prefer local_path='cover')
-        if (featured.length) {
-          const ids = featured.map(p => p.id);
-          const { data: phs } = await supabase
-            .from('photos')
-            .select('id,profile_id,file,local_path')
-            .in('profile_id', ids)
-            .limit(500);
-          const cmap = {};
-          if (Array.isArray(phs)) {
-            for (const ph of phs) {
-              if (!ph || !ph.file) continue;
-              const cur = cmap[ph.profile_id];
-              const isCover = (ph.local_path || '') === 'cover';
-              if (!cur || (isCover && (cur.local_path || '') !== 'cover')) cmap[ph.profile_id] = ph;
-            }
-          }
-          setCoverMap(cmap);
-        }
-
-        setProfiles(featured);
+        // La home muestra TODOS los perfiles del país del visitante (geo),
+        // con foto real. Los destacados/banners son monetización futura.
+        const list = await fetchProfilesWithCovers({
+          country: geoCountryName || undefined,
+          limit: 3000,
+        });
+        setProfiles(list);
+        setVisible(48);
       } catch (err) {
         console.error('Home fetch failed:', err);
         setError(err?.message || 'fetch failed');
@@ -160,10 +123,7 @@ export default function Home() {
   };
 
   const getProfilePhoto = (p) => {
-    const cover = coverMap[p.id];
-    if (cover && cover.file) {
-      return withThumb(`https://api.shemalewiki.online/api/files/photos/${cover.id}/${cover.file}`, '300x400');
-    }
+    if (p && p._cover) return p._cover;
     return profilePlaceholder(p && p.name);
   };
 
@@ -249,40 +209,51 @@ export default function Home() {
 
       <AdSlot slot="home-top" audience="clients" width={728} height={90} className="ad-top" />
 
-      {/* ── FEATURED ── */}
+      {/* ── PERFILES DEL PAÍS (geo) — todos, con foto ── */}
       <section className="section">
         <div className="section-header">
-          <h2>{content.featuredTitle}</h2>
-          <Link to="/europe" className="section-link">{content.featuredLink} <ArrowRight size={14} /></Link>
+          <h2>{geoCountry ? `Perfiles en ${geoCountry}` : 'Perfiles'}</h2>
+          <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+            {profiles.length} {profiles.length === 1 ? 'perfil' : 'perfiles'}
+          </span>
         </div>
         {loading ? (
           <div className="profiles-grid">
             {[...Array(6)].map((_, i) => <div key={i} className="profile-card skeleton" />)}
           </div>
         ) : profiles.length > 0 ? (
-          <div className="profiles-grid">
-            {profiles.map((p) => {
-              const photo = getProfilePhoto(p);
-              return (
-                <Link key={p.id} to={getProfileLink(p)} className="profile-card">
-                  <div className="profile-card-img">
-                    {photo ? (
-                      <img src={photo} alt={p.name} loading="lazy" />
-                    ) : (
-                      <div className="no-photo">📷</div>
-                    )}
-                  </div>
-                  <div className="profile-card-info">
-                    <h3>{p.name}</h3>
-                    <p><MapPin size={12} /> {(p.location || '').split(' | ').slice(-1)[0] || 'Unknown'}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <>
+            <div className="profiles-grid">
+              {profiles.slice(0, visible).map((p) => {
+                const photo = getProfilePhoto(p);
+                return (
+                  <Link key={p.id} to={getProfileLink(p)} className="profile-card">
+                    <div className="profile-card-img">
+                      {photo ? (
+                        <img src={photo} alt={p.name} loading="lazy" />
+                      ) : (
+                        <div className="no-photo">📷</div>
+                      )}
+                    </div>
+                    <div className="profile-card-info">
+                      <h3>{p.name}</h3>
+                      <p><MapPin size={12} /> {(p.location || '').split(' | ').slice(-1)[0] || 'Unknown'}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            {visible < profiles.length && (
+              <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                <button className="btn btn-primary" onClick={() => setVisible(v => v + 48)}>
+                  Ver más ({profiles.length - visible})
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <p style={{ color: 'var(--text-secondary)' }}>
-            {error ? 'No se pudieron cargar los perfiles.' : 'No featured profiles available.'}
+            {error ? 'No se pudieron cargar los perfiles.' : 'No hay perfiles con foto en este país todavía.'}
           </p>
         )}
       </section>
