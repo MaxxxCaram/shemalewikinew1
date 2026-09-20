@@ -220,7 +220,6 @@ export default function Register() {
           email: form.email || '',
           password: form.password || crypto.randomUUID(), // auto-gen si no pidio password
           phone: form.contact || '',
-          phone: form.contact || '',
           whatsapp: form.contact || '',
           country: form.country || '',
           city: form.city || '',
@@ -256,11 +255,8 @@ export default function Register() {
               const formData = new FormData();
               formData.append('profile_id', profileId);
               formData.append('file', compressed);
-              await pb.collection('photos').create(formData);
-              if (r.ok) {
-                const d = await r.json();
-                console.log('Photo uploaded:', d.count);
-              }
+              const created = await pb.collection('photos').create(formData);
+              console.log('Photo uploaded:', created.id);
             } catch (e) {
               console.error('Photo upload failed:', e);
             }

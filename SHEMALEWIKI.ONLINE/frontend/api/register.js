@@ -138,36 +138,57 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: errMsg });
     }
 
-    // ── CLAIM (reclamo): la chica ya tiene perfil publicado (con fotos) y
-    //    viene a vincular su cuenta + cargar su contacto. NO se crea duplicado.
+    // ── CLAIM (reclamo): la chica dice que un perfil publicado es suyo y
+    //    quiere vincular su cuenta + cargar su contacto.
+    //
+    //    SEGURIDAD: esto NO reasigna el owner ni toca profile_contacts acá.
+    //    Nadie puede probar por API que es la persona real del perfil, así
+    //    que el reclamo queda "pending" en la colección `claims` y sólo un
+    //    admin humano (Admin.jsx → sección Reclamos → approve-claim) puede
+    //    efectivizarlo. Antes esta rama reasignaba el owner al toque con
+    //    cualquier profile_id — cualquiera podía "robar" el perfil de otra
+    //    persona y redirigir su contacto al propio. Ver auditoría 2026-09-21.
     if (profile_id) {
-      const claimRes = await fetch(`${PB_URL}/api/collections/profiles/records/${profile_id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
-        body: JSON.stringify({
-          owner: userData.id,
-          status: 'active',
-          ...(phone ? { phone } : {}),
-          ...(whatsapp ? { whatsapp } : {}),
-          ...(email ? { email } : {}),
-        }),
+      const auth = 'B' + String.fromCharCode(101, 97, 114, 101, 114, 32) + token;
+
+      // Confirmar que el perfil existe antes de crear el reclamo (con el
+      // token admin, así funciona sin importar el status del perfil).
+      const profCheck = await fetch(`${PB_URL}/api/collections/profiles/records/${profile_id}`, {
+        headers: { Authorization: auth },
       });
-      if (!claimRes.ok) {
+      if (!profCheck.ok) {
         return res.status(400).json({ error: 'Querida: no encontramos ese perfil. Escribinos a ads@shemalewiki.online y lo arreglamos.' });
       }
-      await upsertContact(profile_id, phone, whatsapp, email, token);
-      // Notificación por email (best effort)
+
+      const evidence = `Nombre: ${name}\nEmail: ${email}\nTel: ${phone || '-'}\nWhatsApp: ${whatsapp || '-'}`;
+      const claimRes = await fetch(`${PB_URL}/api/collections/claims/records`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: auth },
+        body: JSON.stringify({
+          profile: profile_id,
+          claimant_user: userData.id,
+          evidence,
+          status: 'pending',
+        }),
+      });
+      const claimData = await claimRes.json();
+      if (!claimRes.ok) {
+        console.error('claim create failed:', claimData);
+        return res.status(400).json({ error: 'No se pudo registrar el reclamo. Escribinos a ads@shemalewiki.online.' });
+      }
+
+      // Notificación al admin para revisión manual (best effort)
       if (SMTP_PASS) {
         try {
           const transporter = nodemailer.createTransport({ host: SMTP_HOST, port: SMTP_PORT, auth: { user: SMTP_USER, pass: SMTP_PASS } });
           await transporter.sendMail({
             from: `ShemaleWiki <${SMTP_USER}>`, to: SMTP_USER,
-            subject: `Reclamo del perfil ${profile_id}`,
-            text: `La anfitriona ${name} (${email}) reclamó el perfil ${profile_id}. Tel: ${phone || '-'} WhatsApp: ${whatsapp || '-'}`,
+            subject: `Nuevo reclamo pendiente — perfil ${profile_id}`,
+            text: `${name} (${email}) reclamó el perfil ${profile_id}. Tel: ${phone || '-'} WhatsApp: ${whatsapp || '-'}\n\nRevisalo en /admin → Reclamos antes de aprobarlo.`,
           });
         } catch { /* best effort */ }
       }
-      return res.status(200).json({ success: true, profileId: profile_id, claimed: true });
+      return res.status(200).json({ success: true, profileId: profile_id, claimed: false, pendingReview: true });
     }
 
     // ── Create profile with owner = user.id ──

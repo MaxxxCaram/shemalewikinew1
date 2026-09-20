@@ -14,6 +14,7 @@ function getToken() {
 
 export default function Admin() {
   const [profiles, setProfiles] = useState([]);
+  const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
@@ -52,12 +53,49 @@ export default function Admin() {
     }
   }, []);
 
-  // On mount: if already have token, fetch profiles
+  // Reclamos pendientes de revisión (colección `claims`, ver api/register.js).
+  // No tocan el perfil hasta que un admin aprueba acá.
+  const doFetchClaims = useCallback(async (tok) => {
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
+        body: JSON.stringify({ action: 'list-claims' }),
+      });
+      if (!r.ok) return;
+      const data = await r.json();
+      setClaims(Array.isArray(data.claims) ? data.claims : []);
+    } catch (err) {
+      console.error('list-claims error:', err);
+    }
+  }, []);
+
+  const handleClaimAction = async (claim_id, action) => {
+    setMsg('');
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ action, claim_id }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Failed');
+      setMsg(action === 'approve-claim' ? '✅ Reclamo aprobado — owner vinculado' : '❌ Reclamo rechazado');
+      doFetchClaims(token);
+      if (action === 'approve-claim') doFetchProfiles(token); // el perfil ahora tiene owner
+      setTimeout(() => setMsg(''), 3000);
+    } catch (err) {
+      setMsg('❌ ' + err.message);
+    }
+  };
+
+  // On mount: if already have token, fetch profiles + claims
   useEffect(() => {
     const t = getToken();
     if (t) {
       setIsAuthenticated(true);
       doFetchProfiles(t);
+      doFetchClaims(t);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -76,8 +114,9 @@ export default function Admin() {
         setToken(data.token);
         setIsAuthenticated(true);
         setMsg('✅ Acceso concedido');
-        // Fetch profiles with the new token
+        // Fetch profiles + claims with the new token
         await doFetchProfiles(data.token);
+        doFetchClaims(data.token);
       } else {
         setMsg('❌ Secret incorrecto');
         setLoading(false);
@@ -193,6 +232,7 @@ export default function Admin() {
     setToken(null);
     setIsAuthenticated(false);
     setProfiles([]);
+    setClaims([]);
     setPassInput('');
     setMsg('Sesión cerrada');
   };
@@ -229,6 +269,8 @@ export default function Admin() {
   const pending = profiles.filter(p => p.cam_chat !== 'approved' && p.cam_chat !== 'rejected');
   const approved = profiles.filter(p => p.cam_chat === 'approved');
   const rejected = profiles.filter(p => p.cam_chat === 'rejected');
+  const pendingClaims = claims.filter(c => c.status === 'pending');
+  const resolvedClaims = claims.filter(c => c.status !== 'pending');
 
   return (
     <div className="container" style={{ padding: '2rem 0' }}>
@@ -237,10 +279,11 @@ export default function Admin() {
           <h1 className="page-title" style={{ textAlign: 'left' }}>🔧 Admin Panel</h1>
           <p style={{ color: 'var(--text-secondary)' }}>
             {profiles.length} perfiles · {pending.length} pendientes · {approved.length} aprobados
+            {pendingClaims.length > 0 && <> · <strong style={{ color: '#f59e0b' }}>{pendingClaims.length} reclamos sin revisar</strong></>}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button onClick={() => doFetchProfiles(token)} className="btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)' }}>
+          <button onClick={() => { doFetchProfiles(token); doFetchClaims(token); }} className="btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)' }}>
             <RefreshCw size={16} style={{ marginRight: '0.5rem' }} /> Refrescar
           </button>
           <button onClick={handleLogout} className="btn" style={{ background: 'transparent', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}>
@@ -253,6 +296,31 @@ export default function Admin() {
         <div style={{ background: msg.startsWith('✅') ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: msg.startsWith('✅') ? '#22c55e' : '#ef4444', padding: '0.75rem 1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
           {msg}
         </div>
+      )}
+
+      {/* Reclamos — alguien dice que un perfil ya publicado es suyo. Nadie
+          queda vinculada como owner hasta que se apruebe acá. */}
+      {pendingClaims.length > 0 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#f59e0b' }}>🏳️‍⚧️ Reclamos pendientes ({pendingClaims.length})</h2>
+          <div style={{ display: 'grid', gap: '0.75rem' }}>
+            {pendingClaims.map(c => (
+              <ClaimCard key={c.id} claim={c} onAction={handleClaimAction} />
+            ))}
+          </div>
+        </div>
+      )}
+      {resolvedClaims.length > 0 && (
+        <details style={{ marginBottom: '2rem' }}>
+          <summary style={{ cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.75rem' }}>
+            Reclamos resueltos ({resolvedClaims.length})
+          </summary>
+          <div style={{ display: 'grid', gap: '0.75rem', marginTop: '0.75rem', opacity: 0.7 }}>
+            {resolvedClaims.map(c => (
+              <ClaimCard key={c.id} claim={c} onAction={handleClaimAction} />
+            ))}
+          </div>
+        </details>
       )}
 
       {/* Pending */}
@@ -373,6 +441,60 @@ function ProfileCard({ profile, onAction, onEdit }) {
           title="Delete profile">
           <Trash2 size={14} />
         </button>
+      </div>
+    </div>
+  );
+}
+
+// Un reclamo: alguien dice que un perfil ya publicado es suyo. Mostramos el
+// perfil reclamado (expand.profile), quién lo reclama (expand.claimant_user)
+// y la evidencia que cargó (nombre/email/tel/whatsapp del form). Aprobar
+// vincula owner=claimant_user en el perfil (api/admin.js → approve-claim);
+// nada se toca hasta ese click.
+function ClaimCard({ claim, onAction }) {
+  const profile = claim.expand?.profile;
+  const claimant = claim.expand?.claimant_user;
+  const isPending = claim.status === 'pending';
+  const statusLabel = { pending: '⏳ pendiente', approved: '✅ aprobado', rejected: '❌ rechazado' }[claim.status] || claim.status;
+
+  return (
+    <div className="glass-card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
+      <div style={{ flex: 1, minWidth: '240px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+          <strong style={{ fontSize: '1.05rem' }}>
+            Reclama: {profile?.name || `perfil ${claim.profile}`}
+          </strong>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>({statusLabel})</span>
+        </div>
+        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          {profile?.location || ''}{profile ? ' · ' : ''}
+          Cuenta nueva: {claimant?.email || claim.claimant_user}
+        </div>
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.4rem', whiteSpace: 'pre-wrap', background: 'rgba(255,255,255,0.03)', padding: '0.5rem 0.6rem', borderRadius: '0.4rem' }}>
+          {claim.evidence || 'Sin datos adicionales.'}
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        {claim.profile && (
+          <a href={`/profile/${claim.profile}`} target="_blank" rel="noopener noreferrer"
+            className="btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '0.4rem 0.8rem', fontSize: '0.85rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+            <ExternalLink size={14} /> Ver perfil
+          </a>
+        )}
+        {isPending && (
+          <>
+            <button onClick={() => onAction(claim.id, 'approve-claim')} className="btn"
+              style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', color: '#22c55e', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
+              <CheckCircle2 size={14} style={{ marginRight: '0.25rem' }} /> Aprobar
+            </button>
+            <button onClick={() => {
+              if (confirm('¿Rechazar este reclamo?')) onAction(claim.id, 'reject-claim');
+            }} className="btn"
+              style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
+              <XCircle size={14} style={{ marginRight: '0.25rem' }} /> Rechazar
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
