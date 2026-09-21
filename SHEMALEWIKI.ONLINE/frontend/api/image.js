@@ -1,5 +1,25 @@
 import axios from 'axios';
-import https from 'https';
+
+// This used to be an open proxy: any URL, TLS verification disabled, no limits.
+// It only needs to serve the legacy external photo_url hosts that exist in the
+// photos collection (sampled 2026-09-21: web.archive.org, www.kinky.nl,
+// static2.eros.bz, plus a few duckduckgo image-proxy links). Everything else is
+// refused, redirects are re-checked against the same list, and size/time are
+// capped. Add a host here only if a real photo_url needs it.
+const ALLOWED_HOST_SUFFIXES = ['archive.org', 'kinky.nl', 'eros.bz', 'duckduckgo.com'];
+const MAX_BYTES = 8 * 1024 * 1024;
+
+const isAllowedHost = (host) =>
+  ALLOWED_HOST_SUFFIXES.some(sfx => host === sfx || host.endsWith('.' + sfx));
+
+function parseAllowedUrl(raw) {
+  let u;
+  try { u = new URL(raw); } catch { return null; }
+  if (u.protocol !== 'https:') return null;
+  if (u.port && u.port !== '443') return null;
+  if (u.username || u.password) return null;
+  return isAllowedHost(u.hostname.toLowerCase()) ? u : null;
+}
 
 const FALLBACK_URL = 'https://placehold.co/300x400.png?text=No+Photo';
 
@@ -15,34 +35,36 @@ export default async function handler(req, res) {
 
   const { url } = req.query;
 
-  if (!url || url.trim() === '') {
+  if (!url || typeof url !== 'string' || url.trim() === '') {
     return serveFallback(res);
   }
 
-  try {
-    const httpsAgent = new https.Agent({
-      rejectUnauthorized: false
-    });
+  const allowed = parseAllowedUrl(url.trim());
+  if (!allowed) {
+    return res.status(403).json({ error: 'Host not allowed' });
+  }
 
+  try {
     // Set request headers to look like a real browser and bypass hotlink protection
     const headers = {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+      'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+      'Referer': allowed.origin,
     };
 
-    // If it's a specific domain, add a matching Referer header
-    try {
-      const parsedUrl = new URL(url);
-      headers['Referer'] = parsedUrl.origin;
-    } catch {
-      // ignore malformed URLs — fall through to plain request
-    }
-
-    const response = await axios.get(url, {
+    const response = await axios.get(allowed.toString(), {
       responseType: 'arraybuffer',
-      httpsAgent,
       headers,
-      timeout: 8000
+      timeout: 8000,
+      maxContentLength: MAX_BYTES,
+      maxBodyLength: MAX_BYTES,
+      maxRedirects: 3,
+      // archive.org answers with redirects; make sure none of them leaves the allowlist.
+      beforeRedirect: (options) => {
+        if (!isAllowedHost(String(options.hostname || '').toLowerCase())) {
+          throw new Error('redirect to a host that is not allowed');
+        }
+      },
     });
 
     const contentType = response.headers['content-type'] || 'image/jpeg';
