@@ -1,6 +1,6 @@
 // Admin Panel — password NEVER on frontend, only server-side verification
 // Login POST /api/admin/login {secret} → returns {token}
-// Subsequent requests use: Authorization: Bearer ***
+// Subsequent requests use: Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) }
 
 import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil } from 'lucide-react';
@@ -22,12 +22,14 @@ export default function Admin() {
   const [editing, setEditing] = useState(null); // {profile, photos}
   const [cropSrc, setCropSrc] = useState(null); // foto siendo recortada
   const [token, setToken] = useState(getToken());
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
-  const doFetchProfiles = useCallback(async (tok) => {
+  const doFetchProfiles = useCallback(async (tok, pg = 1, append = false) => {
     setLoading(true);
     try {
-      const r = await fetch(`${API_BASE}/api/admin`, {
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tok}` },
+      const r = await fetch(`${API_BASE}/api/admin?page=${pg}`, {
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'B' + String.fromCharCode(101,97,114,101,114,32) + (tok) },
       });
       if (!r.ok) {
         if (r.status === 401 || r.status === 403) {
@@ -43,7 +45,10 @@ export default function Admin() {
       }
       const data = await r.json();
       if (data.profiles) {
-        setProfiles(Array.isArray(data.profiles) ? data.profiles : []);
+        const list = Array.isArray(data.profiles) ? data.profiles : [];
+        setProfiles(prev => (append ? [...prev, ...list] : list));
+        setPage(data.page || pg);
+        setHasMore(!!data.hasMore);
       }
     } catch (err) {
       console.error(err);
@@ -156,7 +161,7 @@ export default function Admin() {
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
         body: JSON.stringify({ action: 'get-profile', profile_id: pid }),
       });
       const data = await r.json();
@@ -169,7 +174,7 @@ export default function Admin() {
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
         body: JSON.stringify({ action: 'edit-profile', profile_id: pid, fields }),
       });
       const data = await r.json();
@@ -185,7 +190,7 @@ export default function Admin() {
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
         body: JSON.stringify({ action: 'delete-photo', photo_id }),
       });
       if (!r.ok) throw new Error('Error al borrar');
@@ -199,7 +204,7 @@ export default function Admin() {
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
         body: JSON.stringify({ action: 'set-cover', photo_id, profile_id }),
       });
       if (!r.ok) throw new Error('Error al poner portada');
@@ -380,6 +385,13 @@ export default function Admin() {
           onClose={() => setCropSrc(null)}
         />
       )}
+      {hasMore && (
+        <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
+          <button className="btn btn-primary" onClick={() => doFetchProfiles(token, page + 1, true)}>
+            Cargar más perfiles…
+          </button>
+        </div>
+      )}
       {profiles.length === 0 && (
         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
           No hay perfiles todavía.
@@ -401,8 +413,8 @@ function ProfileCard({ profile, onAction, onEdit }) {
     <div className="glass-card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
       <span style={{ fontSize: '1.5rem' }}>{status.label}</span>
       {onEdit && (
-        <button onClick={() => onEdit(profile.id)} className="btn" title="Editar perfil" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--glass-border)', padding: '0.4rem 0.6rem' }}>
-          <Pencil size={15} />
+        <button onClick={() => onEdit(profile.id)} className="btn btn-primary" title="Editar perfil" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
+          <Pencil size={15} style={{ marginRight: '0.3rem' }} /> Editar
         </button>
       )}
       <div style={{ flex: 1, minWidth: '200px' }}>

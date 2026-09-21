@@ -36,12 +36,18 @@ export default async function handler(req, res) {
     } catch (e) {
       return res.status(401).json({ error: 'Invalid token.' });
     }
-    const list = await fetch(`${PB_URL}/api/collections/profiles/records?perPage=200&sort=-created`, {
+    const page = Math.max(1, parseInt((req.query && req.query.page) || '1', 10));
+    const list = await fetch(`${PB_URL}/api/collections/profiles/records?perPage=200&page=${page}&sort=-created&fields=id,name,location,status,is_verified,cam_chat,phone,email,bio,created`, {
       headers: { Authorization: `Bearer ${authHeader2.substring(7)}` },
     });
     if (!list.ok) return res.status(401).json({ error: 'Invalid token.' });
     const data = await list.json();
-    return res.status(200).json({ profiles: data.items || [] });
+    return res.status(200).json({
+      profiles: data.items || [],
+      page,
+      hasMore: page < (data.totalPages || 1),
+      totalItems: data.totalItems || (data.items || []).length,
+    });
   }
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
