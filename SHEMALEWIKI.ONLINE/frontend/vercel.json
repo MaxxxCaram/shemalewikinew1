@@ -3,27 +3,115 @@
   "buildCommand": "npm install && npx vite build",
   "outputDirectory": "dist",
   "functions": {
-    "api/og.js": { "includeFiles": "dist/index.html" }
+    "api/og.js": {
+      "includeFiles": "dist/index*.html"
+    }
   },
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?buscatrans\\.com"
+        }
+      ],
+      "destination": "/es/",
+      "permanent": false
+    },
+    {
+      "source": "/sitemap-main.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/api/image(.*)", "destination": "/api/image.js" },
-    { "source": "/api/admin(.*)", "destination": "/api/admin.js" },
-    { "source": "/api/admin/login(.*)", "destination": "/api/admin.js" },
-    { "source": "/api/register(.*)", "destination": "/api/register.js" },
-    { "source": "/api/claims(.*)", "destination": "/api/claims.js" },
-    { "source": "/api/contact(.*)", "destination": "/api/contact.js" },
-    { "source": "/api/upload-photos(.*)", "destination": "/api/upload-photos.js" },
-    { "source": "/api/manage-photos(.*)", "destination": "/api/manage-photos.js" },
-    { "source": "/api/update-profile(.*)", "destination": "/api/update-profile.js" },
-    { "source": "/api/drafts(.*)", "destination": "/api/profiles.js" },
-    { "source": "/api/vivas/chat(.*)", "destination": "/api/vivas/chat.js" },
-    { "source": "/api/auth/login(.*)", "destination": "/api/auth/login.js" },
-    { "source": "/api/profiles(.*)", "destination": "/api/profiles.js" },
-    { "source": "/api/profiles/(.*)", "destination": "/api/profiles.js" },
-    { "source": "/api/og", "destination": "/api/og.js" },
-    { "source": "/api/img(.*)", "destination": "/api/img.js" },
-    { "source": "/((?:[a-z]{2}/)?profile/[A-Za-z0-9]+/?)", "destination": "/api/og?path=$1" },
-    { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|llms|logosw|icons|city-guides|downloads|mision|manifest|index).*)", "destination": "/index.html" }
+    {
+      "source": "/api/image(.*)",
+      "destination": "/api/image.js"
+    },
+    {
+      "source": "/api/admin(.*)",
+      "destination": "/api/admin.js"
+    },
+    {
+      "source": "/api/admin/login(.*)",
+      "destination": "/api/admin.js"
+    },
+    {
+      "source": "/api/register(.*)",
+      "destination": "/api/register.js"
+    },
+    {
+      "source": "/api/claims(.*)",
+      "destination": "/api/claims.js"
+    },
+    {
+      "source": "/api/contact(.*)",
+      "destination": "/api/contact.js"
+    },
+    {
+      "source": "/api/upload-photos(.*)",
+      "destination": "/api/upload-photos.js"
+    },
+    {
+      "source": "/api/manage-photos(.*)",
+      "destination": "/api/manage-photos.js"
+    },
+    {
+      "source": "/api/update-profile(.*)",
+      "destination": "/api/update-profile.js"
+    },
+    {
+      "source": "/api/drafts(.*)",
+      "destination": "/api/profiles.js"
+    },
+    {
+      "source": "/api/vivas/chat(.*)",
+      "destination": "/api/vivas/chat.js"
+    },
+    {
+      "source": "/api/auth/login(.*)",
+      "destination": "/api/auth/login.js"
+    },
+    {
+      "source": "/api/profiles(.*)",
+      "destination": "/api/profiles.js"
+    },
+    {
+      "source": "/api/profiles/(.*)",
+      "destination": "/api/profiles.js"
+    },
+    {
+      "source": "/api/og",
+      "destination": "/api/og.js"
+    },
+    {
+      "source": "/api/img(.*)",
+      "destination": "/api/img.js"
+    },
+    {
+      "source": "/((?:[a-z]{2}/)?profile/[A-Za-z0-9-]+/?)",
+      "destination": "/api/og?path=$1"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
+      "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|llms|logosw|icons|city-guides|downloads|mision|manifest|index).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(www\\.)?buscatrans\\.com"
+        }
+      ],
+      "destination": "/index-bt.html"
+    },
+    {
+      "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|llms|logosw|icons|city-guides|downloads|mision|manifest|index).*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
@@ -37,11 +125,26 @@
           "key": "Cache-Control",
           "value": "no-store, must-revalidate"
         },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "x-vercel-skip-toolbar", "value": "1" }
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "x-vercel-skip-toolbar",
+          "value": "1"
+        }
       ]
     },
     {
@@ -77,6 +180,15 @@
         {
           "key": "Cache-Control",
           "value": "no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400"
         }
       ]
     }

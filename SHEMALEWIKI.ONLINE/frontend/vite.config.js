@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { fileURLToPath } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -107,6 +108,13 @@ export default defineConfig({
     // Limpiar dist antes de cada build
     emptyOutDir: true,
     rollupOptions: {
+      // Two HTML shells share the same app bundle: index.html (ShemaleWiki) and
+      // index-bt.html (BuscaTrans, served by vercel.json on buscatrans.com so the
+      // no-JS HTML carries the right brand/canonical instead of shemalewiki's).
+      input: {
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        bt: fileURLToPath(new URL('./index-bt.html', import.meta.url)),
+      },
       output: {
         // Hash por contenido: cada build genera un nombre UNICO.
         entryFileNames: 'assets/index-[hash].js',
