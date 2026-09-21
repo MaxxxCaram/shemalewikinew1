@@ -126,9 +126,9 @@ export default async function handler(req, res) {
     if (!token) return res.status(401).json({ error: 'Token required.' });
     const authHeaders = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
 
-    // ── List pending claims ──
+    // ── List claims (expand profile + claimant_user so the panel has names/contact without extra calls) ──
     if (action === 'list-claims') {
-      const r = await fetch(`${PB_URL}/api/collections/claims/records?perPage=100&sort=-created`, {
+      const r = await fetch(`${PB_URL}/api/collections/claims/records?perPage=100&sort=-created&expand=profile,claimant_user`, {
         headers: authHeaders,
       });
       if (!r.ok) throw new Error('Failed to list claims.');
@@ -218,6 +218,31 @@ export default async function handler(req, res) {
         body: JSON.stringify({ owner: claim.claimant_user, status: 'approved' }),
       });
       if (!rUpdate.ok) throw new Error('Failed to update profile owner.');
+
+      // El contacto que la chica cargó al reclamar vive como texto libre en
+      // claim.evidence (api/register.js lo arma como "Nombre: ..\nEmail: ..
+      // \nTel: ..\nWhatsApp: .."). Lo parseamos y lo volcamos a
+      // profile_contacts recién ahora que un admin aprobó — antes de esto
+      // el perfil público no debe mostrar ningún contacto nuevo.
+      const pick = (label) => {
+        const m = String(claim.evidence || '').match(new RegExp(`${label}:\\s*(.+)`));
+        const v = m ? m[1].trim() : '';
+        return v && v !== '-' ? v : '';
+      };
+      const contactBody = { profile_id: claim.profile };
+      const phone = pick('Tel');
+      const whatsapp = pick('WhatsApp');
+      const email = pick('Email');
+      if (phone) contactBody.phone = phone;
+      if (whatsapp) contactBody.whatsapp = whatsapp;
+      if (email) contactBody.email = email;
+      if (phone || whatsapp || email) {
+        try {
+          await fetch(`${PB_URL}/api/collections/profile_contacts/records`, {
+            method: 'POST', headers: authHeaders, body: JSON.stringify(contactBody),
+          });
+        } catch (e) { console.error('approve-claim: profile_contacts upsert failed', e.message); }
+      }
 
       // mark claim approved (need superuser to bypass the lock — we ARE superuser)
       const rClaimUpdate = await fetch(`${PB_URL}/api/collections/claims/records/${claim_id}`, {

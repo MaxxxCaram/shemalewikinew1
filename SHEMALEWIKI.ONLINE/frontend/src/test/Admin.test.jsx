@@ -15,6 +15,14 @@ vi.mock('../components/PhotoCropModal', () => ({
 
 const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test'
 
+// Admin now also fetches claims (POST /api/admin {action:'list-claims'}) right
+// after the profiles list, so every successful-login flow needs this in the
+// mock queue between the profiles response and any later call.
+const claimsResponse = (claims = []) => ({
+  ok: true,
+  json: async () => ({ claims }),
+})
+
 describe('Admin Panel', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -59,6 +67,8 @@ describe('Admin Panel', () => {
         ],
       }),
     })
+    // Claims list (empty)
+    fetch.mockResolvedValueOnce(claimsResponse([]))
 
     render(<Admin />)
     const input = screen.getByPlaceholderText('Secret de admin')
@@ -73,6 +83,12 @@ describe('Admin Panel', () => {
 
   it('redirects to login when token is invalid on mount', async () => {
     localStorage.setItem('admin_token', 'invalid-token')
+    fetch.mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      json: async () => ({ error: 'Invalid token.' }),
+    })
+    // Claims fetch fires on mount too (fails the same way)
     fetch.mockResolvedValueOnce({
       ok: false,
       status: 401,
@@ -102,6 +118,8 @@ describe('Admin Panel', () => {
         ],
       }),
     })
+    // Claims list (empty)
+    fetch.mockResolvedValueOnce(claimsResponse([]))
     // get-profile
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -136,6 +154,54 @@ describe('Admin Panel', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/editar: test profile/i)).toBeInTheDocument()
+    })
+  })
+
+  it('shows pending claims and approves one via approve-claim', async () => {
+    // Login
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => ({ token: mockToken }) })
+    // Profiles list
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        profiles: [
+          { id: 'p1', name: 'Test Profile', cam_chat: 'approved', location: 'Test City', phone: '', email: '', bio: '' },
+        ],
+      }),
+    })
+    // Claims list: one pending claim with expanded profile + claimant
+    fetch.mockResolvedValueOnce(claimsResponse([
+      {
+        id: 'c1',
+        profile: 'p1',
+        claimant_user: 'u1',
+        status: 'pending',
+        evidence: ['Nombre: Ana', 'Email: ana@test.com', 'Tel: 123', 'WhatsApp: -'].join('\n'),
+        expand: { profile: { id: 'p1', name: 'Test Profile', location: 'Test City' }, claimant_user: { id: 'u1', email: 'ana@test.com' } },
+      },
+    ]))
+
+    render(<Admin />)
+    fireEvent.change(screen.getByPlaceholderText('Secret de admin'), { target: { value: 'x' } })
+    fireEvent.click(screen.getByRole('button', { name: /entrar/i }))
+
+    await waitFor(() => {
+      expect(screen.getByText(/reclamos pendientes \(1\)/i)).toBeInTheDocument()
+    })
+    expect(screen.getByText(/reclama: test profile/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/ana@test.com/).length).toBeGreaterThan(0) // shown in the account line and in the evidence block
+
+    // approve-claim response, then refetches (claims, profiles)
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => ({ profile_id: 'p1', owner: 'u1' }) })
+    fetch.mockResolvedValueOnce(claimsResponse([]))
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => ({ profiles: [] }) })
+
+    // The claim card's Aprobar is the only 'Aprobar' button (profile is already approved)
+    fireEvent.click(screen.getByRole('button', { name: /aprobar/i }))
+
+    await waitFor(() => {
+      const calls = fetch.mock.calls.map(c => c[1]?.body).filter(Boolean)
+      expect(calls.some(b => b.includes('"action":"approve-claim"') && b.includes('"claim_id":"c1"'))).toBe(true)
     })
   })
 })
