@@ -52,13 +52,32 @@ SUBSTANCE KNOWLEDGE (factual harm reduction info):
 
 Tone: warm, direct, natural conversational English. Brief responses (max 150 words). Always respond in English.`;
 
+const ALLOWED_ORIGINS = ['https://www.shemalewiki.online', 'https://shemalewiki.online', 'https://buscatrans.com'];
+const rate = {};          // ip -> {n, at}
+const RATE_WINDOW = 3600000; // 1h
+const RATE_MAX = 30;        // 30 chats/h por IP (gasta OpenRouter)
+
 export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    const origin = req.headers.origin || '';
+    if (ALLOWED_ORIGINS.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+    // rate-limit: endpoint que consume OpenRouter (plata real) → por IP
+    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0] || '?';
+    const now = Date.now();
+    const slot = rate[ip];
+    if (!slot || (now - slot.at) > RATE_WINDOW) {
+        rate[ip] = { n: 1, at: now };
+    } else {
+        slot.n += 1;
+        if (slot.n > RATE_MAX) return res.status(429).json({ error: 'Too many requests. Try again later.' });
+    }
 
     try {
         const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
