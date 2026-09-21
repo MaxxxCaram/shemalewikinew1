@@ -52,13 +52,65 @@ SUBSTANCE KNOWLEDGE (factual harm reduction info):
 
 Tone: warm, direct, natural conversational English. Brief responses (max 150 words). Always respond in English.`;
 
+// ── Abuse controls ───────────────────────────────────────────────────────────
+// This endpoint costs real money per call (OpenRouter). It used to be open to any
+// origin with no rate limit and no input caps. Browsers are limited to our own
+// origins; the native Vivas app sends no Origin header, so requests without one
+// are still allowed (CORS is not an auth mechanism — the rate limit + caps are
+// what actually protect the budget).
+const ALLOWED_ORIGINS = ['https://www.shemalewiki.online', 'https://shemalewiki.online', 'https://buscatrans.com', 'https://www.buscatrans.com'];
+const MAX_MESSAGE_CHARS = 1000;
+const MAX_HISTORY = 10;
+const MAX_HISTORY_CHARS = 1000;
+
+// In-memory, per lambda instance (same trade-off as the other endpoints):
+// it throttles bursts but is not a global limit.
+const rateLimit = {};
+const RATE_WINDOW = 60 * 1000;      // 1 minute
+const RATE_MAX = 12;                // 12 messages / minute / IP
+const DAILY_WINDOW = 24 * 60 * 60 * 1000;
+const DAILY_MAX = 150;              // 150 messages / day / IP
+
+function checkRateLimit(ip) {
+    const now = Date.now();
+    const hits = (rateLimit[ip] || []).filter(t => now - t < DAILY_WINDOW);
+    const lastMinute = hits.filter(t => now - t < RATE_WINDOW).length;
+    if (lastMinute >= RATE_MAX || hits.length >= DAILY_MAX) {
+        rateLimit[ip] = hits;
+        return false;
+    }
+    hits.push(now);
+    rateLimit[ip] = hits;
+    return true;
+}
+
+// Only user/assistant turns, only strings, capped. The client used to be able to
+// inject its own `system` messages through `history`.
+function sanitizeHistory(history) {
+    if (!Array.isArray(history)) return [];
+    return history
+        .filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string' && m.content.trim())
+        .slice(-MAX_HISTORY)
+        .map(m => ({ role: m.role, content: m.content.slice(0, MAX_HISTORY_CHARS) }));
+}
+
 export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    const origin = req.headers.origin || '';
+    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+        return res.status(403).json({ error: 'Origin not allowed' });
+    }
+    if (origin) res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+    if (!checkRateLimit(ip)) {
+        return res.status(429).json({ error: 'Too many messages. Please wait a moment.' });
+    }
 
     try {
         const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
@@ -66,14 +118,15 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'OpenRouter API key not configured' });
         }
 
-        const { message, history = [], lang = 'es' } = req.body;
-        if (!message) return res.status(400).json({ error: 'Message required' });
+        const { message, history, lang = 'es' } = req.body || {};
+        if (typeof message !== 'string' || !message.trim()) return res.status(400).json({ error: 'Message required' });
+        if (message.length > MAX_MESSAGE_CHARS) return res.status(413).json({ error: `Message too long (max ${MAX_MESSAGE_CHARS} characters)` });
 
         const systemPrompt = lang === 'en' ? VIVAS_SYSTEM_EN : VIVAS_SYSTEM_ES;
 
         const messages = [
             { role: 'system', content: systemPrompt },
-            ...history.slice(-10),
+            ...sanitizeHistory(history),
             { role: 'user', content: message }
         ];
 
