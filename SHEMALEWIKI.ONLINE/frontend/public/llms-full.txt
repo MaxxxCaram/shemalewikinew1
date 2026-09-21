@@ -4,17 +4,17 @@
 
 ## Platform overview
 
-ShemaleWiki Online (https://shemalewiki.online) and BuscaTrans (https://buscatrans.com) are two brand-language surfaces of the same directory of verified trans companions. It is one of the first companion directories built explicitly around the safety of trans sex workers.
+ShemaleWiki Online (https://shemalewiki.online) and BuscaTrans (https://buscatrans.com) are two brand-language surfaces of the same directory of trans companions. It is one of the first companion directories built explicitly around the safety of trans sex workers.
 
-- **Profiles**: 5,000+ verified trans companion profiles across 75+ countries.
-- **Verification**: every profile is manually reviewed by a human team before publication.
+- **Profiles**: 5,000+ trans companion profiles across 75+ countries.
+- **Review**: profiles registered on the site are reviewed by the team before publication. Many older profiles were recovered from sites that closed and can be claimed by the person they belong to.
 - **Reclaim**: profiles rescued from closed escort sites can be claimed by the person they belong to, for free.
 - **Safety app**: Vivas — a free app for workers with an emergency button, safety check-in, and an anonymous blacklist of dangerous clients.
 
 ## Content categories
 
 ### 1. Directory profiles
-Individual companion profiles, searchable by continent → country → city, and by name. Profiles include verified photos, location, services, and contact channels. **Requires age verification (18+) to view.**
+Individual companion profiles, searchable by continent → country → city, and by name. Profiles include photos, location, services, and contact channels. **Requires age verification (18+) to view.**
 
 ### 2. Safety guides
 - **How to Hire a Trans Escort Safely** (`/guide`): client-focused safety guide covering profile verification, payment security, consent and boundaries, and red flags.
@@ -24,7 +24,7 @@ Individual companion profiles, searchable by continent → country → city, and
 - **The Sex Worker's Sacred Covenant** (`/books`): a book by Maxima Victoria Caram — "Wisdom Traditions for Chemsex Safety, Mutual Care & Survival" (2026, 122 pp, English). Listed on Amazon and Eldar Store.
 
 ### 4. Platform pages
-- `/about` — mission and verification process.
+- `/about` — mission and who is behind the platform.
 - `/launch` — official launch landing with countdown and lead capture.
 
 ## Brand identity

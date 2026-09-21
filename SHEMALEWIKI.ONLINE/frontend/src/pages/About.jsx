@@ -5,10 +5,10 @@ const isBT = () => typeof window !== 'undefined' && window.location.hostname.inc
 const content = {
   en: {
     seoTitle: 'About Us — Who We Are',
-    seoDesc: 'Learn about ShemaleWiki Online: our mission, how profiles are verified, and how to contact us. Free trans companion directory with manually reviewed profiles.',
+    seoDesc: 'Learn about ShemaleWiki Online: our mission, how profiles get published, and how to contact us. Free trans companion directory.',
     title: 'About ShemaleWiki Online',
     updated: 'Last updated: August 2026',
-    intro: 'ShemaleWiki Online is a free, independently-run directory of trans companions, escorts and TS models. We rebuilt the directory from the ground up to give verified companions a place to be found — and to give visitors a trustworthy place to look.',
+    intro: 'ShemaleWiki Online is a free, independently-run directory of trans companions, escorts and TS models. We rebuilt the directory from the ground up to give companions a place to be found — and to give visitors a trustworthy place to look.',
     sections: [
       {
         h: 'Our mission',
@@ -33,7 +33,7 @@ const content = {
     seoDesc: 'Conocé BuscaTrans: nuestra misión, cómo verificamos los perfiles y cómo contactarnos. Directorio gratuito de acompañantes trans con perfiles revisados manualmente.',
     title: 'Sobre BuscaTrans',
     updated: 'Última actualización: agosto 2026',
-    intro: 'BuscaTrans es un directorio gratuito e independiente de acompañantes trans, escorts y modelos TS. Reconstruimos el directorio desde cero para que las acompañantes verificadas tengan un lugar donde ser encontradas — y para que los visitantes tengan un lugar confiable donde buscar.',
+    intro: 'BuscaTrans es un directorio gratuito e independiente de acompañantes trans, escorts y modelos TS. Reconstruimos el directorio desde cero para que las acompañantes tengan un lugar donde ser encontradas — y para que los visitantes tengan un lugar confiable donde buscar.',
     sections: [
       {
         h: 'Nuestra misión',

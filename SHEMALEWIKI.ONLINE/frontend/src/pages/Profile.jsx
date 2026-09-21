@@ -9,6 +9,7 @@ import { isLoadablePhoto, hasRealFile } from '../utils/photoFilter';
 import { withThumb } from '../utils';
 import { supabase } from '../supabase';
 import { t, getLang } from '../i18n';
+import { paisEs, continenteEs } from '../utils/paisesEs';
 
 // Per-page labels — language-aware (nl / fr / es / en)
 const L = {
@@ -154,10 +155,10 @@ export default function Profile() {
   const seoDesc = profile.bio 
     ? profile.bio.substring(0, 150).replace(/<[^>]*>/g, '').replace(/"/g, "'").trim() + '...'
     : nl
-    ? `${profile.name} — onafhankelijke trans metgezel in ${city}, ${country}. ${profile.age ? `Leeftijd ${profile.age}. ` : ''}Bekijk foto\u2019s, services en geverifieerde contactgegevens.`
+    ? `${profile.name} — onafhankelijke trans metgezel in ${city}, ${country}. ${profile.age ? `Leeftijd ${profile.age}. ` : ''}Bekijk foto\u2019s, services en contactgegevens.`
     : lang === 'fr'
-      ? `${profile.name} — accompagnante trans indépendante à ${city}, ${country}. ${profile.age ? `Âge ${profile.age}. ` : ''}Consultez les photos, les services et les coordonnées vérifiées.`
-      : `${profile.name} — independent trans companion in ${city}, ${country}. ${profile.age ? `Age ${profile.age}. ` : ''}View photos, services, and verified contact info.`;
+      ? `${profile.name} — accompagnante trans indépendante à ${city}, ${country}. ${profile.age ? `Âge ${profile.age}. ` : ''}Consultez les photos, les services et les coordonnées.`
+      : `${profile.name} — independent trans companion in ${city}, ${country}. ${profile.age ? `Age ${profile.age}. ` : ''}View photos, services, and contact info.`;
 
   const seoKeywords = [
     profile.name, `trans companion ${city}`, `ts ${city}`, `shemale ${city}`,
@@ -191,16 +192,16 @@ export default function Profile() {
         
         {/* Breadcrumb */}
         <nav className="city-breadcrumb" style={{ marginBottom: '1.5rem' }}>
-          <Link to={langPrefix + '/'} className="breadcrumb-link">{lang === 'fr' ? 'Accueil' : 'Home'}</Link>
+          <Link to={langPrefix + '/'} className="breadcrumb-link">{lang === 'fr' ? 'Accueil' : lang === 'es' ? 'Inicio' : 'Home'}</Link>
           <span className="breadcrumb-sep">›</span>
           {continent && country && (
             <>
-              <Link to={`/${contSlug}`} className="breadcrumb-link">
-                {continent.charAt(0).toUpperCase() + continent.slice(1)}
+              <Link to={`${langPrefix}/${contSlug}`} className="breadcrumb-link">
+                {lang === 'es' ? continenteEs(continent) : continent.charAt(0).toUpperCase() + continent.slice(1)}
               </Link>
               <span className="breadcrumb-sep">›</span>
-              <Link to={`/${contSlug}/${countrySlug}`} className="breadcrumb-link">
-                {country}
+              <Link to={`${langPrefix}/${contSlug}/${countrySlug}`} className="breadcrumb-link">
+                {lang === 'es' ? paisEs(country) : country}
               </Link>
             </>
           )}
@@ -237,7 +238,7 @@ export default function Profile() {
             )}
             {!heroPhoto && (
               <div className="hero-img-overlay" style={{ opacity: 1 }}>
-                <span>{nl ? '📷 Nog geen foto\u2019s' : lang === 'fr' ? '📷 Pas encore de photos' : '📷 No photos yet'}</span>
+                <span>{nl ? '📷 Nog geen foto\u2019s' : lang === 'fr' ? '📷 Pas encore de photos' : lang === 'es' ? '📷 Aún sin fotos' : '📷 No photos yet'}</span>
               </div>
             )}
           </div>
@@ -250,7 +251,7 @@ export default function Profile() {
               </h1>
               {profile.location && (
                 <p className="model-location">
-                  <MapPin size={16} /> {profile.location}
+                  <MapPin size={16} /> {locationParts.length >= 3 && city && country && city !== 'Unknown' && country !== 'Unknown' ? `${city}, ${lang === 'es' ? paisEs(country) : country}` : profile.location}
                 </p>
               )}
             </div>

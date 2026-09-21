@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Globe, Search } from 'lucide-react';
 import SEO from '../components/SEO';
+import { continenteEs } from '../utils/paisesEs';
 import logo from '../assets/logosw.png';
 
 const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
@@ -27,9 +28,9 @@ const continents = [
 const content = {
   en: {
     title: 'Trans Companion Directory — ShemaleWiki',
-    desc: "Browse the world's largest multilingual directory of trans companions and profiles. Search by continent and country to find verified members near you.",
+    desc: "Browse the world's largest multilingual directory of trans companions and profiles. Search by continent and country to find members near you.",
     heroEyebrow: 'INTERNATIONAL TS DIRECTORY',
-    heroHeading: 'Discover verified trans profiles worldwide.',
+    heroHeading: 'Discover trans profiles worldwide.',
     heroSub: '10,000+ profiles · 80+ countries · Updated daily',
     searchPlaceholder: 'City, country or continent...',
     featuredTitle: 'Browse by Continent',
@@ -39,10 +40,10 @@ const content = {
   },
   es: {
     title: 'Directorio de Perfiles Trans — BuscaTrans',
-    desc: 'Explorá el directorio multilingüe más grande de perfiles trans verificados. Buscá por continente y país para encontrar miembros verificados cerca tuyo.',
+    desc: 'Explorá el directorio multilingüe más grande de perfiles trans. Buscá por continente y país para encontrar miembros cerca tuyo.',
     heroEyebrow: 'EL DIRECTORIO QUE TE VE COMO SOS',
     heroHeading: 'Encontrá tu conexión perfecta.',
-    heroSub: 'Perfiles verificados · Discreto · Seguro',
+    heroSub: 'Miles de perfiles · Discreto · Seguro',
     searchPlaceholder: 'Ciudad, país o continente...',
     featuredTitle: 'Explorá por Continente',
     featuredLink: 'Ver todos →',
@@ -51,9 +52,9 @@ const content = {
   },
   pt: {
     title: 'Diretório de Perfis Trans — ShemaleWiki',
-    desc: 'Explore o maior diretório multilíngue de perfis trans verificados. Pesquise por continente e país para encontrar membros verificados perto de você.',
+    desc: 'Explore o maior diretório multilíngue de perfis trans. Pesquise por continente e país para encontrar membros perto de você.',
     heroEyebrow: 'DIRETÓRIO INTERNACIONAL TS',
-    heroHeading: 'Encontre perfis trans verificados no mundo todo.',
+    heroHeading: 'Encontre perfis trans no mundo todo.',
     heroSub: '10.000+ perfis · 80+ países · Atualizado diariamente',
     searchPlaceholder: 'Cidade, país ou continente...',
     featuredTitle: 'Explorar por Continente',
@@ -63,9 +64,9 @@ const content = {
   },
   nl: {
     title: 'Trans Adressengids — ShemaleWiki',
-    desc: 'Blader door \u2019s werelds grootste meertalige gids met geverifieerde trans metgezellen en profielen. Zoek per continent en land om geverifieerde leden bij jou in de buurt te vinden.',
+    desc: 'Blader door \u2019s werelds grootste meertalige gids met trans metgezellen en profielen. Zoek per continent en land om leden bij jou in de buurt te vinden.',
     heroEyebrow: 'INTERNATIONALE TS GIDS',
-    heroHeading: 'Ontdek geverifieerde trans profielen wereldwijd.',
+    heroHeading: 'Ontdek trans profielen wereldwijd.',
     heroSub: '10.000+ profielen · 80+ landen · Dagelijks bijgewerkt',
     searchPlaceholder: 'Stad, land of continent...',
     featuredTitle: 'Blader per Continent',
@@ -75,9 +76,9 @@ const content = {
   },
   fr: {
     title: 'Annuaire d\'accompagnantes trans — ShemaleWiki',
-    desc: 'Parcourez le plus grand annuaire multilingue de profils trans vérifiés. Recherchez par continent et par pays pour trouver des membres vérifiés près de chez vous.',
+    desc: 'Parcourez le plus grand annuaire multilingue de profils trans. Recherchez par continent et par pays pour trouver des membres près de chez vous.',
     heroEyebrow: 'ANNUAIRE INTERNATIONAL TS',
-    heroHeading: 'Découvrez des profils trans vérifiés dans le monde entier.',
+    heroHeading: 'Découvrez des profils trans dans le monde entier.',
     heroSub: '10 000+ profils · 80+ pays · Mis à jour chaque jour',
     searchPlaceholder: 'Ville, pays ou continent...',
     featuredTitle: 'Parcourir par continent',
@@ -292,7 +293,7 @@ export default function Continents() {
                 color: 'var(--text-primary)',
                 margin: 0,
               }}>
-                {continent.name}
+                {lang === 'es' ? (continent.name === 'Other' ? 'Otros' : continenteEs(continent.name)) : continent.name}
               </h2>
               <div className="continent-explore" style={{
                 display: 'flex',

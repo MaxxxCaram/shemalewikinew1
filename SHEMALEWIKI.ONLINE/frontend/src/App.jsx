@@ -1,6 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { Component, lazy, Suspense } from 'react';
+import { Component, lazy, Suspense, useState, useEffect } from 'react';
 import Home from './pages/Home';
 import AgeVerification, { useAgeVerified } from './components/AgeVerification';
 import Footer from './components/Footer';
@@ -82,6 +82,12 @@ if (typeof document !== 'undefined') {
 /* ── Navbar ── */
 function Navbar() {
   const bt = isBuscaTrans();
+  // Phones: the 4 links + logo + "Descargar App" + "Registrarse" were laid out in one row
+  // (~660px), so the logo and both CTAs sat off-screen at 375px. Below 820px the links now
+  // collapse behind a toggle (see .nav-toggle in index.css).
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { pathname } = useLocation();
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
   // Resolve language from URL path so /fr /nl /es /pt /he get localized labels.
   const pathLang = () => {
     if (typeof window === 'undefined') return bt ? 'es' : 'en';
@@ -108,7 +114,7 @@ function Navbar() {
     lang === 'fr' ? 'Déposer mon profil' : lang === 'nl' ? 'Profiel aanmelden' : bt ? 'Registrarse' : 'List your profile';
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar${menuOpen ? ' nav-open' : ''}`}>
       <div className="container">
         <div className="nav-links nav-left">
           <Link to={homeTo}>{navHome}</Link>
@@ -123,6 +129,15 @@ function Navbar() {
             <img src={logoSw} alt="ShemaleWiki Online" className="nav-brand-logo nav-brand-logo-sw" />
           )}
         </Link>
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-label={bt || lang === 'es' ? 'Menú' : lang === 'fr' ? 'Menu' : 'Menu'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span className="nav-toggle-bars" aria-hidden="true" />
+        </button>
         <div className="nav-links nav-right">
           {bt ? (
             <>

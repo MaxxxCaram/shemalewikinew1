@@ -23,7 +23,7 @@ const cityContent = {
     faq: [
       { q: 'Is companionship work legal in Amsterdam?', a: 'Yes, companionship services between consenting adults are legal in the Netherlands. Independent companions operate legally throughout Amsterdam and the country.' },
       { q: 'What areas of Amsterdam have the most trans companions?', a: 'The Centrum (city center), De Pijp, Oud-Zuid, and areas near the Red Light District have the highest concentration of trans companions, though many operate throughout greater Amsterdam.' },
-      { q: 'How do I verify a trans companion profile in Amsterdam?', a: 'Look for profiles with multiple verified photos, detailed service descriptions, and positive reviews. ShemaleWiki profiles include verification indicators and real photos.' },
+      { q: 'How do I verify a trans companion profile in Amsterdam?', a: 'Look for profiles with multiple verified photos, detailed service descriptions, and positive reviews. Always check that the photos look real and consistent before you meet anyone.' },
     ]
   },
   barcelona: {
@@ -143,7 +143,7 @@ const cityContent = {
     faq: [
       { q: 'Is companionship work legal in London?', a: 'Yes, sex work between consenting adults is legal in the UK. Independent companions operate legally, though certain activities like street solicitation and brothel-keeping are restricted.' },
       { q: 'What is the best area in London for trans companions?', a: 'Mayfair and Knightsbridge offer luxury and discretion. Soho is the historic entertainment hub. The City and Canary Wharf are ideal for business travelers.' },
-      { q: 'How do I verify a trans companion in London?', a: 'Look for profiles with verified photos, consistent reviews across platforms, and professional communication. ShemaleWiki profiles provide a trusted starting point.' },
+      { q: 'How do I verify a trans companion in London?', a: 'Look for profiles with verified photos, consistent reviews across platforms, and professional communication. Ask for extra confirmation before you meet.' },
     ]
   },
   'rio-de-janeiro': {
@@ -298,7 +298,7 @@ const cityContentEs = {
     faq: [
       { q: '¿Es legal el acompañamiento en Ámsterdam?', a: 'Sí, los servicios de compañía entre adultos que consienten son legales en los Países Bajos. Las trabajadoras independientes operan legalmente en toda la ciudad.' },
       { q: '¿Qué zonas de Ámsterdam tienen más acompañantes trans?', a: 'El Centrum (centro), De Pijp, Oud-Zuid y las áreas cercanas al Barrio Rojo tienen la mayor concentración, aunque muchas operan en todo el Gran Ámsterdam.' },
-      { q: '¿Cómo verifico un perfil en Ámsterdam?', a: 'Busca perfiles con múltiples fotos verificadas, descripciones detalladas de servicios y reseñas positivas. Los perfiles de ShemaleWiki incluyen indicadores de verificación y fotos reales.' },
+      { q: '¿Cómo verifico un perfil en Ámsterdam?', a: 'Busca perfiles con múltiples fotos verificadas, descripciones detalladas de servicios y reseñas positivas. Comprobá siempre que las fotos parezcan reales y coherentes antes de quedar con nadie.' },
     ]
   },
   barcelona: {
@@ -403,7 +403,7 @@ const cityContentEs = {
     faq: [
       { q: '¿Es legal el acompañamiento en Londres?', a: 'Sí, la actividad profesional entre adultos que consienten es legal en el Reino Unido. Las acompañantes independientes operan legalmente.' },
       { q: '¿Cuál es la mejor zona para acompañantes trans en Londres?', a: 'Mayfair y Knightsbridge ofrecen lujo y discreción. Soho es el centro histórico de entretenimiento. La City y Canary Wharf son ideales para viajeros de negocios.' },
-      { q: '¿Cómo verifico un perfil en Londres?', a: 'Busca perfiles con fotos verificadas, reseñas consistentes en plataformas y comunicación profesional. Los perfiles de ShemaleWiki proporcionan un punto de partida confiable.' },
+      { q: '¿Cómo verifico un perfil en Londres?', a: 'Busca perfiles con fotos verificadas, reseñas consistentes en plataformas y comunicación profesional. Pedí una confirmación extra antes de quedar.' },
     ]
   },
   berlin: {
@@ -598,14 +598,14 @@ export default function CityGuide() {
   // i18n helpers — lookup by language
   const i18n = {
     en: {
-      seoTitle: `Trans Companions in ${displayCity} — Verified Profiles`,
+      seoTitle: `Trans Companions in ${displayCity}`,
       seoDesc: (content
-        ? `Find ${profileCount} verified trans companions in ${displayCity}, ${displayCountry}. Browse profiles with photos and contact info. ${(content.keywords || []).slice(0, 3).join(', ')}.`
-        : `Find verified trans companions in ${displayCity}, ${displayCountry}. Browse ${profileCount} active profiles with photos and contact info.`),
+        ? `Find ${profileCount} trans companions in ${displayCity}, ${displayCountry}. Browse profiles with photos and contact info. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `Find trans companions in ${displayCity}, ${displayCountry}. Browse ${profileCount} active profiles with photos and contact info.`),
       home: 'Home',
       backTo: `Back to ${displayCountry}`,
       community: `Trans Community in ${displayCity}`,
-      guideTagline: `Your guide to trans companions and verified profiles in ${displayCity}, ${displayCountry}`,
+      guideTagline: `Your guide to trans companions and profiles in ${displayCity}, ${displayCountry}`,
       about: `About Trans Community in ${displayCity}`,
       theScene: 'The Trans Community',
       districts: 'Popular Districts & Areas',
@@ -617,14 +617,14 @@ export default function CityGuide() {
       viewAllBtn: `View All ${displayCountry} Members`,
     },
     es: {
-      seoTitle: `Acompañantes Trans en ${displayCity} — Perfiles Verificados`,
+      seoTitle: `Acompañantes Trans en ${displayCity}`,
       seoDesc: (content
-        ? `Encuentra ${profileCount} acompañantes trans verificadas en ${displayCity}, ${displayCountry}. Perfiles con fotos e información de contacto. ${(content.keywords || []).slice(0, 3).join(', ')}.`
-        : `Encuentra acompañantes trans verificadas en ${displayCity}, ${displayCountry}. ${profileCount} perfiles activos con fotos e información de contacto.`),
+        ? `Encuentra ${profileCount} acompañantes trans en ${displayCity}, ${displayCountry}. Perfiles con fotos e información de contacto. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `Encuentra acompañantes trans en ${displayCity}, ${displayCountry}. ${profileCount} perfiles activos con fotos e información de contacto.`),
       home: 'Inicio',
       backTo: `Volver a ${displayCountry}`,
       community: `Comunidad Trans en ${displayCity}`,
-      guideTagline: `Tu guía de acompañantes trans y perfiles verificados en ${displayCity}, ${displayCountry}`,
+      guideTagline: `Tu guía de acompañantes trans y perfiles en ${displayCity}, ${displayCountry}`,
       about: `Sobre la Comunidad Trans en ${displayCity}`,
       theScene: 'La Comunidad Trans',
       districts: 'Barrios y Zonas Populares',
@@ -636,14 +636,14 @@ export default function CityGuide() {
       viewAllBtn: `Ver Todos los Miembros de ${displayCountry}`,
     },
     he: {
-      seoTitle: `חוויות פרימיום ב${displayCity} — פרופילים מאומתים`,
+      seoTitle: `חוויות פרימיום ב${displayCity}`,
       seoDesc: (content
-        ? `גלו ${profileCount} פרופילים מאומתים ב${displayCity}, ${displayCountry}. דפדפו בפרופילים עם תמונות ופרטי קשר. ${(content.keywords || []).slice(0, 3).join(', ')}.`
-        : `גלו פרופילים מאומתים ב${displayCity}, ${displayCountry}. ${profileCount} פרופילים פעילים עם תמונות ופרטי קשר.`),
+        ? `גלו ${profileCount} פרופילים ב${displayCity}, ${displayCountry}. דפדפו בפרופילים עם תמונות ופרטי קשר. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `גלו פרופילים ב${displayCity}, ${displayCountry}. ${profileCount} פרופילים פעילים עם תמונות ופרטי קשר.`),
       home: 'דף הבית',
       backTo: `חזרה ל${displayCountry}`,
       community: `הקהילה הטרנסית ב${displayCity}`,
-      guideTagline: `המדריך שלכם לחוויות פרימיום ופרופילים מאומתים ב${displayCity}, ${displayCountry}`,
+      guideTagline: `המדריך שלכם לחוויות פרימיום ופרופילים ב${displayCity}, ${displayCountry}`,
       about: `על הקהילה הטרנסית ב${displayCity}`,
       theScene: 'הקהילה הטרנסית',
       districts: 'אזורים פופולריים',
@@ -655,14 +655,14 @@ export default function CityGuide() {
       viewAllBtn: `צפו בכל החברים מ${displayCountry}`,
     },
     nl: {
-      seoTitle: `Trans Metgezellen in ${displayCity} — Geverifieerde Profielen`,
+      seoTitle: `Trans Metgezellen in ${displayCity}`,
       seoDesc: (content
-        ? `Vind ${profileCount} geverifieerde trans metgezellen in ${displayCity}, ${displayCountry}. Blader door profielen met foto\u2019s en contactgegevens. ${(content.keywords || []).slice(0, 3).join(', ')}.`
-        : `Vind geverifieerde trans metgezellen in ${displayCity}, ${displayCountry}. Blader door ${profileCount} actieve profielen met foto\u2019s en contactgegevens.`),
+        ? `Vind ${profileCount} trans metgezellen in ${displayCity}, ${displayCountry}. Blader door profielen met foto\u2019s en contactgegevens. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `Vind trans metgezellen in ${displayCity}, ${displayCountry}. Blader door ${profileCount} actieve profielen met foto\u2019s en contactgegevens.`),
       home: 'Home',
       backTo: `Terug naar ${displayCountry}`,
       community: `Transgemeenschap in ${displayCity}`,
-      guideTagline: `Jouw gids voor trans metgezellen en geverifieerde profielen in ${displayCity}, ${displayCountry}`,
+      guideTagline: `Jouw gids voor trans metgezellen en profielen in ${displayCity}, ${displayCountry}`,
       about: `Over de Transgemeenschap in ${displayCity}`,
       theScene: 'De Transgemeenschap',
       districts: 'Populaire wijken en gebieden',
@@ -674,14 +674,14 @@ export default function CityGuide() {
       viewAllBtn: `Bekijk alle leden van ${displayCountry}`,
     },
     fr: {
-      seoTitle: `Accompagnantes trans à ${displayCity} — Profils vérifiés`,
+      seoTitle: `Accompagnantes trans à ${displayCity}`,
       seoDesc: (content
-        ? `Trouvez ${profileCount} accompagnantes trans vérifiées à ${displayCity}, ${displayCountry}. Parcourez des profils avec photos et coordonnées. ${(content.keywords || []).slice(0, 3).join(', ')}.`
-        : `Trouvez des accompagnantes trans vérifiées à ${displayCity}, ${displayCountry}. Parcourez ${profileCount} profils actifs avec photos et coordonnées.`),
+        ? `Trouvez ${profileCount} accompagnantes trans à ${displayCity}, ${displayCountry}. Parcourez des profils avec photos et coordonnées. ${(content.keywords || []).slice(0, 3).join(', ')}.`
+        : `Trouvez des accompagnantes trans à ${displayCity}, ${displayCountry}. Parcourez ${profileCount} profils actifs avec photos et coordonnées.`),
       home: 'Accueil',
       backTo: `Retour à ${displayCountry}`,
       community: `Communauté trans à ${displayCity}`,
-      guideTagline: `Votre guide des accompagnantes trans et des profils vérifiés à ${displayCity}, ${displayCountry}`,
+      guideTagline: `Votre guide des accompagnantes trans et des profils à ${displayCity}, ${displayCountry}`,
       about: `À propos de la communauté trans à ${displayCity}`,
       theScene: 'La communauté trans',
       districts: 'Quartiers et zones populaires',

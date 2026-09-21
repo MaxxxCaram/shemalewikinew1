@@ -32,6 +32,12 @@ export default function Footer() {
     { href: bt ? '/guia-reduccion-danos' : '/harm-reduction', label: bt ? 'Guía de Reducción de Daños' : fr ? 'Guide de réduction des risques' : nl ? 'Schadebeperkingsgids' : 'Harm Reduction Guide', internal: true },
   ];
 
+  // Terms + Privacy existed but were not linked from anywhere (footer or registration).
+  const legal = [
+    { to: '/terms', label: bt ? 'Términos y Condiciones' : fr ? 'Conditions générales' : nl ? 'Algemene voorwaarden' : 'Terms & Conditions' },
+    { to: '/privacy', label: bt ? 'Política de Privacidad' : fr ? 'Politique de confidentialité' : nl ? 'Privacybeleid' : 'Privacy Policy' },
+  ];
+
   const year = new Date().getFullYear();
 
   return (
@@ -49,12 +55,12 @@ export default function Footer() {
           </h4>
           <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.85rem' }}>
             {bt
-              ? 'Directorio gratuito de acompañantes trans verificadas. Cada perfil es revisado manualmente antes de publicarse.'
+              ? 'Directorio gratuito de acompañantes trans. Los perfiles nuevos se revisan antes de publicarse.'
               : fr
-              ? 'Annuaire gratuit d\'accompagnantes trans vérifiées. Chaque profil est relu manuellement avant publication.'
+              ? 'Annuaire gratuit d\'accompagnantes trans. Les nouveaux profils sont relus avant publication.'
               : nl
-              ? 'Gratis gids met geverifieerde trans metgezellen. Elk profiel wordt handmatig gecontroleerd voordat het wordt gepubliceerd.'
-              : 'Free directory of verified trans companions. Every profile is manually reviewed before publication.'}
+              ? 'Gratis gids met trans metgezellen. Nieuwe profielen worden gecontroleerd voordat ze worden gepubliceerd.'
+              : 'Free directory of trans companions. New profiles are reviewed before publication.'}
           </p>
         </div>
         <div>
@@ -93,6 +99,13 @@ export default function Footer() {
                 ) : (
                   <a href={l.href} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>{l.label}</a>
                 )}
+              </li>
+            ))}
+          </ul>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '0.75rem 0 0' }}>
+            {legal.map(l => (
+              <li key={l.to} style={{ marginBottom: '0.5rem' }}>
+                <Link to={l.to} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>{l.label}</Link>
               </li>
             ))}
           </ul>
