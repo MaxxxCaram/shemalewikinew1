@@ -50,6 +50,16 @@ export default function AgeVerification({ onVerify }) {
   const [phase, setPhase] = useState('gate');
   const videoRef = useRef(null);
   const bt = isBT();
+  // El intro es un mp4 de ~2.6MB: en tablet/móvil se muestra el póster estático
+  // (no se descarga el video) — la home queda ~2.5MB más liviana y el LCP no se bloquea.
+  const [isDesktop, setDesktop] = useState(() => typeof window === 'undefined' || window.innerWidth >= 1024);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const upd = () => setDesktop(mq.matches);
+    upd();
+    if (mq.addEventListener) { mq.addEventListener('change', upd); return () => mq.removeEventListener('change', upd); }
+    return () => {};
+  }, []);
 
   let lang = 'en';
   if (typeof window !== 'undefined') {
@@ -101,11 +111,19 @@ export default function AgeVerification({ onVerify }) {
             : 'radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 60%)',
           filter: 'blur(30px)', animation: 'sw-door-pulse 1.8s ease-in-out infinite',
         }} />
-        {bt ? (
+        {!isDesktop ? (
+          <img
+            src={bt ? '/logos/buscatrans-new-logo.jpg' : '/logos/shemalewiki-blurred-limits.jpg'}
+            alt=""
+            style={{ width: bt ? '440px' : '620px', maxWidth: '92vw', height: 'auto', borderRadius: '12px',
+              boxShadow: bt ? '0 0 50px rgba(212,175,55,0.45)' : '0 0 60px rgba(212,175,55,0.4)',
+              animation: (bt ? 'sw-phoenix-flight' : 'sw-blurred-rise') + ' 10s cubic-bezier(0.35, 0.1, 0.25, 1) forwards', zIndex: 2 }}
+          />
+        ) : bt ? (
           <video
             ref={videoRef}
             src="/logos/buscatrans-logo-intro-web.mp4"
-            autoPlay loop playsInline
+            autoPlay loop playsInline preload="auto"
             style={{ width: '440px', maxWidth: '90vw', height: 'auto', borderRadius: '12px',
               boxShadow: '0 0 50px rgba(212,175,55,0.45)',
               animation: 'sw-phoenix-flight 10s cubic-bezier(0.35, 0.1, 0.25, 1) forwards', zIndex: 2 }}
@@ -114,7 +132,7 @@ export default function AgeVerification({ onVerify }) {
           <video
             ref={videoRef}
             src="/logos/shemalewiki-intro.mp4"
-            autoPlay loop playsInline
+            autoPlay loop playsInline preload="auto"
             style={{ width: '620px', maxWidth: '92vw', height: 'auto', borderRadius: '12px',
               boxShadow: '0 0 60px rgba(212,175,55,0.4)',
               animation: 'sw-blurred-rise 10s cubic-bezier(0.35, 0.1, 0.25, 1) forwards', zIndex: 2 }}
