@@ -24,9 +24,24 @@ function pickCover(profile) {
 
 const PAGE_SIZE = 48;
 
+// Tablet (641-1024px): fuerza columnas cómodas en la grilla de ciudades
+// (inline, no depende de que la clase CSS llegue al bundle minificado).
+function useTabletGridCols() {
+  const [cols, setCols] = useState(null);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 641px) and (max-width: 1024px)');
+    const upd = () => setCols(mq.matches ? 'repeat(auto-fill, minmax(230px, 1fr))' : null);
+    upd();
+    if (mq.addEventListener) { mq.addEventListener('change', upd); return () => mq.removeEventListener('change', upd); }
+    return () => {};
+  }, []);
+  return cols;
+}
+
 export default function ProfilesList() {
   const { continent, country } = useParams();
   const navigate = useNavigate();
+  const tabletCols = useTabletGridCols();
   const [profiles, setProfiles] = useState([]);
   const [cityCounts, setCityCounts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -108,7 +123,7 @@ export default function ProfilesList() {
               {t.citiesCount(cityCounts.length)}
             </span>
           </div>
-          <div className="countries-grid">
+          <div className="countries-grid" style={tabletCols ? { display: 'grid', gap: '1rem', gridTemplateColumns: tabletCols } : undefined}>
             {cityCounts.map(({ city, slug, count }) => (
               <Link
                 key={city}
