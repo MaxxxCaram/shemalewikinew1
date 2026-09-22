@@ -1798,6 +1798,14 @@ h1, h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1rem;
 }
+
+/* ── Tablet (641-1024px): grids cómodos, sin nombres cortados ── */
+@media (max-width: 1024px) and (min-width: 641px) {
+  [data-brand="shemalewiki"] .countries-grid,
+  [data-brand="buscatrans"] .countries-grid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+}
 [data-brand="shemalewiki"] .country-card {
   padding: 1.75rem 1.5rem;
   border-radius: var(--radius-lg);

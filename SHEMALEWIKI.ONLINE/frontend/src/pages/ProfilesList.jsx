@@ -137,9 +137,7 @@ export default function ProfilesList() {
                   <Building2 size={18} color="#1a0f0a" />
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontSize: '1rem', letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {city}
-                  </div>
+                  <div style={{ fontWeight: 600, fontSize: '1rem', letterSpacing: '-0.02em', lineHeight: 1.25 }}>{city}</div>
                   <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}>
                     {t.profilesCount(count)}
                   </div>
