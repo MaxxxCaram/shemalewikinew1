@@ -26,10 +26,9 @@ const content = {
       { step: '3', title: 'Go live', desc: 'Your profile goes live on ShemaleWiki and BuscaTrans — visible to thousands of potential clients.' },
     ],
     stats: [
-      { number: '3,700+', label: 'Active members' },
+      { number: '5,000+', label: 'Profiles' },
       { number: '50+', label: 'Cities covered' },
-      { number: '3', label: 'Languages' },
-      { number: '10K+', label: 'Monthly visitors' },
+      { number: '6', label: 'Languages' },
     ],
     faq: [
       { q: 'How do I get the verification badge?', a: 'Submit your profile with real photos and accurate information. Our team manually reviews each submission to ensure quality and authenticity.' },
@@ -64,10 +63,9 @@ const content = {
       { step: '3', title: 'Publicá', desc: 'Tu perfil se publica en BuscaTrans y ShemaleWiki — visible para miles de clientes potenciales.' },
     ],
     stats: [
-      { number: '3.700+', label: 'Perfiles activos' },
+      { number: '5.000+', label: 'Perfiles' },
       { number: '50+', label: 'Ciudades' },
-      { number: '3', label: 'Idiomas' },
-      { number: '10K+', label: 'Visitas mensuales' },
+      { number: '6', label: 'Idiomas' },
     ],
     faq: [
       { q: '¿Cómo obtengo la insignia de verificación?', a: 'Enviá tu perfil con fotos reales e información precisa. Nuestro equipo revisa manualmente cada perfil para garantizar calidad y autenticidad.' },

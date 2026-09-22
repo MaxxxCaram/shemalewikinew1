@@ -1,0 +1,22 @@
+{
+  "name": "BuscaTrans — Comunidad de Acompañantes Trans",
+  "short_name": "BuscaTrans",
+  "description": "Directorio gratuito de acompañantes trans en español.",
+  "start_url": "/es/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0f",
+  "theme_color": "#e83e8c",
+  "lang": "es",
+  "categories": ["social", "lifestyle"],
+  "icons": [
+    { "src": "/logos/buscatrans-new-logo.jpg", "sizes": "1024x1024", "type": "image/jpeg", "purpose": "any" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Buscar perfiles", "short_name": "Buscar", "url": "/es/europe" },
+    { "name": "Publicar mi perfil", "short_name": "Publicar", "url": "/registro" }
+  ]
+}

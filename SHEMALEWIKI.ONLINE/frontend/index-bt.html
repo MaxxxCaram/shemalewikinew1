@@ -1,0 +1,128 @@
+<!doctype html>
+<!-- BuscaTrans shell. vercel.json serves it for buscatrans.com (see rewrites). Keep in sync with
+     index.html (fonts, scripts); only the brand-specific head + static fallback differ. -->
+<html lang="es" dir="ltr" data-brand="buscatrans">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" sizes="1024x1024" href="/logos/buscatrans-new-logo.jpg" />
+    <link rel="apple-touch-icon" href="/logos/buscatrans-new-logo.jpg" />
+    <link rel="manifest" href="/manifest-bt.webmanifest" />
+    <!-- PWA (instalable): iOS no lee el manifest para el modo app -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BuscaTrans" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="BuscaTrans — directorio gratuito de acompañantes trans en español. Explorá perfiles por continente, país y ciudad." data-static-seo />
+    <meta name="keywords" content="acompañantes trans, escorts trans, directorio trans, perfiles trans, buscatrans, TS" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="BuscaTrans" />
+    <meta name="application-name" content="BuscaTrans" />
+    <meta name="theme-color" content="#e83e8c" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="build-version" content="v2-photos-2026-07-13" />
+    <meta name="rating" content="adult" />
+    <meta name="RATING" content="RTA-5042-1996-1400-1577-RTA" />
+    <link rel="llms.txt" href="https://buscatrans.com/llms.txt" />
+    <title>BuscaTrans — Comunidad de Acompañantes Trans</title>
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="BuscaTrans — Comunidad de Acompañantes Trans" data-static-seo />
+    <meta property="og:description" content="BuscaTrans — directorio gratuito de acompañantes trans en español. Explorá perfiles por continente, país y ciudad." data-static-seo />
+    <meta property="og:image" content="https://buscatrans.com/logos/buscatrans-new-logo.jpg" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="Logo de BuscaTrans" />
+    <meta property="og:site_name" content="BuscaTrans" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BuscaTrans — Comunidad de Acompañantes Trans" data-static-seo />
+    <meta name="twitter:description" content="BuscaTrans — directorio gratuito de acompañantes trans en español. Explorá perfiles por continente, país y ciudad." data-static-seo />
+    <meta name="twitter:image" content="https://buscatrans.com/logos/buscatrans-new-logo.jpg" />
+    <meta name="twitter:image:alt" content="Logo de BuscaTrans" />
+
+    <!-- DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="https://qtuzpswxzengqoqqwtpt.supabase.co" />
+    <link rel="preconnect" href="https://qtuzpswxzengqoqqwtpt.supabase.co" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Google Fonts: preload critical weights only (reduces LCP) -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600&family=Bebas+Neue&family=Cormorant+Garamond:wght@600&family=DM+Sans:wght@400;600&family=Frank+Ruhl+Libre:wght@700&family=Heebo:wght@400;500&family=Playfair+Display:wght@700&family=Space+Grotesk:wght@400;500&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700&family=Bebas+Neue&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" />
+    </noscript>
+
+    <!-- Structured Data: WebSite + Organization (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://buscatrans.com/#website",
+            "url": "https://buscatrans.com/",
+            "name": "BuscaTrans",
+            "description": "Directorio gratuito de acompañantes trans en español.",
+            "inLanguage": ["es", "en", "pt", "nl", "fr"]
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://buscatrans.com/#organization",
+            "name": "BuscaTrans",
+            "url": "https://buscatrans.com/",
+            "logo": "https://buscatrans.com/logos/buscatrans-new-logo.jpg",
+            "email": "ads@shemalewiki.online",
+            "sameAs": ["https://shemalewiki.online"]
+          }
+        ]
+      }
+    </script>
+
+    
+  </head>
+  <body>
+    
+    <div id="root">
+      <!-- Static fallback for search engine / AI crawlers that don't execute JS.
+           React replaces this content on mount. Kept answer-first per GEO checklist. -->
+      <div id="bt-fallback" style="max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; font-family: system-ui, sans-serif; color: #1a1a2e; line-height: 1.6;">
+        <h1>BuscaTrans — Directorio de Acompañantes Trans</h1>
+        <p><strong>BuscaTrans</strong> es un directorio gratuito de acompañantes trans, escorts y modelos TS en todo el mundo. Explorá por continente y país y buscá por ciudad para encontrar acompañantes cerca tuyo.</p>
+        <h2>Explorá acompañantes por región</h2>
+        <ul>
+          <li><a href="/es/europe">Europa — Países Bajos, España, Alemania, Bélgica, Francia, Reino Unido, Suiza</a></li>
+          <li><a href="/es/americas">Américas — Brasil, Argentina, Colombia, México, Estados Unidos, Chile, Uruguay</a></li>
+          <li><a href="/es/asia">Asia — Tailandia, Japón, China, India, Singapur, Filipinas</a></li>
+          <li><a href="/es/africa">África — Egipto, Sudáfrica, Marruecos, Nigeria</a></li>
+          <li><a href="/es/oceania">Oceanía — Australia, Nueva Zelanda</a></li>
+        </ul>
+        <h2>Destinos populares</h2>
+        <ul>
+          <li><a href="/es/europe/spain">Acompañantes trans en España</a> — Madrid, Barcelona, Marbella, Ibiza</li>
+          <li><a href="/es/europe/netherlands">Acompañantes trans en Países Bajos</a> — Ámsterdam, Róterdam, La Haya, Utrecht</li>
+          <li><a href="/es/americas/brazil">Acompañantes trans en Brasil</a> — São Paulo, Río de Janeiro</li>
+          <li><a href="/es/americas/argentina">Acompañantes trans en Argentina</a> — Buenos Aires</li>
+        </ul>
+        <h2>Preguntas frecuentes</h2>
+        <h3>¿Cómo encuentro acompañantes trans cerca mío?</h3>
+        <p>Usá el buscador de la portada o navegá por continente → país → ciudad.</p>
+        <h3>¿Es gratis usar BuscaTrans?</h3>
+        <p>Sí. Navegar el directorio y ver perfiles es completamente gratis. Las acompañantes pueden publicar su perfil con el formulario de registro.</p>
+        <h3>¿Cómo publico mi perfil?</h3>
+        <p>Hacé clic en "Registrarse" en el menú superior, completá el formulario con tus datos y fotos, y enviá. Los perfiles nuevos son revisados por nuestro equipo antes de publicarse.</p>
+        <h2>Guía de seguridad</h2>
+        <p>Aprendé cómo contratar una acompañante trans de forma segura: <a href="/guia">Leé la guía completa de seguridad</a>.</p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

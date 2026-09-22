@@ -2254,3 +2254,57 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 640px) {
   .worldmap-hint { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
 }
+/* ===== NAVBAR — mobile menu =====
+   Before this the header was a single 660px-wide row: at 375px the logo, "Descargar App" and
+   "Registrarse" were off-screen and there was no way to reach them. */
+.nav-toggle { display: none; }
+@media (max-width: 820px) {
+  .navbar .container {
+    grid-template-columns: 1fr auto;
+    row-gap: 0.25rem;
+  }
+  .navbar .nav-brand { grid-column: 1; grid-row: 1; justify-content: flex-start; }
+  .navbar .nav-toggle {
+    grid-column: 2;
+    grid-row: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .nav-toggle-bars,
+  .nav-toggle-bars::before,
+  .nav-toggle-bars::after {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .nav-toggle-bars { position: relative; }
+  .nav-toggle-bars::before, .nav-toggle-bars::after { content: ''; position: absolute; left: 0; }
+  .nav-toggle-bars::before { top: -6px; }
+  .nav-toggle-bars::after { top: 6px; }
+  .navbar.nav-open .nav-toggle-bars { background: transparent; }
+  .navbar.nav-open .nav-toggle-bars::before { top: 0; transform: rotate(45deg); }
+  .navbar.nav-open .nav-toggle-bars::after { top: 0; transform: rotate(-45deg); }
+
+  /* both link groups (left + right, also in RTL) become one stacked panel under the header row */
+  .navbar .container > .nav-links { display: none; grid-column: 1 / -1; flex-direction: column; align-items: stretch; gap: 0.25rem; }
+  .navbar .container > .nav-left { grid-row: 2; }
+  .navbar .container > .nav-right { grid-row: 3; }
+  .navbar.nav-open .container > .nav-links { display: flex; }
+  .navbar .nav-links a { display: flex; align-items: center; min-height: 44px; padding: 0 0.5rem; }
+  .navbar .nav-links .btn { justify-content: center; margin: 0.25rem 0 !important; }
+  .navbar .nav-brand-logo,
+  [data-brand="buscatrans"] .navbar .nav-brand-logo,
+  [data-brand="shemalewiki"] .navbar .nav-brand-logo-sw { height: 56px; }
+}

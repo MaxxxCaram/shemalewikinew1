@@ -1,9 +1,20 @@
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 /**
  * SEO component for per-page meta tags.
  * All pages get proper title, description, canonical, hreflang, and optional structured data.
  */
+// The static HTML shell (and api/og.js for profiles) ships description/og/twitter/canonical tags
+// marked data-static-seo so crawlers that do not run JS still get a sensible head. Helmet adds
+// its own per-page copies but never removes those, which left two canonicals / descriptions /
+// og:site_name on every page. Once this component renders, drop the static copies.
+function useDropStaticSeo() {
+  useEffect(() => {
+    document.head.querySelectorAll('[data-static-seo]').forEach((el) => el.remove());
+  }, []);
+}
+
 export default function SEO({ 
   title, 
   description, 
@@ -14,6 +25,7 @@ export default function SEO({
   jsonLd = null,
   ogImage = null,
 }) {
+  useDropStaticSeo();
   const isBuscaTrans = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
   const baseUrl = isBuscaTrans() ? 'https://buscatrans.com' : 'https://shemalewiki.online';
   const otherUrl = isBuscaTrans() ? 'https://shemalewiki.online' : 'https://buscatrans.com';
@@ -34,7 +46,7 @@ export default function SEO({
   const fullTitle = title 
     ? `${title} | ${brandName}` 
     : (isBuscaTrans() 
-      ? 'BuscaTrans — Comunidad de Mujeres Trans Verificadas'
+      ? 'BuscaTrans — Comunidad de Acompañantes Trans'
       : 'ShemaleWiki Online — Trans Community Directory');
   const fullCanonical = canonicalPath ? `${baseUrl}${canonicalPath}` : baseUrl;
 
@@ -68,7 +80,7 @@ export default function SEO({
       <meta property="og:description" content={description} />
       <meta property="og:url" content={fullCanonical} />
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="ShemaleWiki Online" />
+      <meta property="og:site_name" content={brandName} />
       {ogImage && <meta property="og:image" content={ogImage} />}
       
       {/* Twitter Card */}

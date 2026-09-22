@@ -29,7 +29,7 @@ const t = {
   },
   buscatrans: {
     eyebrow: 'El directorio que te ve como sos', heading: 'Encontrá tu', highlight: 'conexión perfecta.',
-    subtitle: 'Perfiles verificados · Discreto · Seguro',
+    subtitle: 'Miles de perfiles · Discreto · Seguro',
     searchPlaceholder: 'Ciudad o país...',
     pills: ['Todas', 'Buenos Aires', 'Ciudad de México', 'Madrid', 'Lima', 'Bogotá'],
     featuredTitle: 'Perfiles destacados', featuredLink: 'Ver todos',
@@ -38,7 +38,6 @@ const t = {
     stats: [
       { icon: 'globe', value: '75+', label: 'Países' },
       { icon: 'users', value: '5K+', label: 'Perfiles' },
-      { icon: 'shield', value: '100%', label: 'Verificado' },
     ],
   },
 };
@@ -130,7 +129,7 @@ export default function Home() {
   return (
     <>
       <SEO
-        title={siteName === 'BuscaTrans' ? 'BuscaTrans — Comunidad Global de Mujeres Trans Verificadas' : 'Trans Community Directory'}
+        title={siteName === 'BuscaTrans' ? 'BuscaTrans — Comunidad de Acompañantes Trans' : 'Trans Community Directory'}
         description={content.subtitle}
         canonicalPath={canonPath}
         lang={lang}

@@ -326,6 +326,14 @@ export default function Register() {
 
               <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '1rem' }}>
                 {actualT.legal}
+                {' — '}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }}>
+                  {actualLang === 'es' ? 'Términos' : 'Terms'}
+                </a>
+                {' · '}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }}>
+                  {actualLang === 'es' ? 'Privacidad' : 'Privacy'}
+                </a>
               </p>
             </div>
           )}

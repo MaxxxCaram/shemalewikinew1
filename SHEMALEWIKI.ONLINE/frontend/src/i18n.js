@@ -26,19 +26,19 @@ const S = {
     communityIn: (place) => `Community in ${place}`,
     citiesIn: (place) => `Cities in ${place}`,
     transCommunityIn: (place) => `Trans Community in ${place}`,
-    findCompanion: () => 'Find the perfect companion · Verified profiles only',
+    findCompanion: () => 'Find the perfect companion',
     updatedDaily: () => 'Updated daily',
     profilesAvailable: (n) => `${n} Profile${n === 1 ? '' : 's'} available`,
     citiesCount: (n) => `${n} cit${n === 1 ? 'y' : 'ies'}`,
     profilesCount: (n) => `${n} profile${n === 1 ? '' : 's'}`,
     searchPlaceholder: () => 'Search by name, location, or keywords...',
     search: () => 'Search',
-    seoProfilesTitle: (country) => `Verified Trans Companions in ${country}`,
+    seoProfilesTitle: (country) => `Trans Companions in ${country}`,
     seoProfilesDesc: (country, cityNames) =>
-      `Find verified trans companions and TS escorts in ${country}. Browse ${cityNames}. Profiles updated daily.`,
+      `Find trans companions and TS escorts in ${country}. Browse ${cityNames}. Profiles updated daily.`,
     seoCommunityTitle: (continent) => `Trans Community in ${continent}`,
     seoCountriesDesc: (continent, countries) =>
-      `Find trans companions and verified profiles in ${continent}. Browse by country — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' and more' : ''}.`,
+      `Find trans companions and profiles in ${continent}. Browse by country — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' and more' : ''}.`,
   },
   es: {
     backTo: (name) => `Volver a ${name}`,
@@ -47,7 +47,7 @@ const S = {
     citiesIn: (place) => `Ciudades en ${place}`,
     transCommunityIn: (place) => `Comunidad Trans en ${place}`,
     findCompanion: () =>
-      'Encontrá la compañía perfecta · Solo perfiles verificados',
+      'Encontrá la compañía perfecta',
     updatedDaily: () => 'Actualizado a diario',
     profilesAvailable: (n) => `${n} perfiles disponibles`,
     citiesCount: (n) => `${n} ciudades`,
@@ -56,12 +56,12 @@ const S = {
       'Buscar por nombre, ubicación o palabras clave...',
     search: () => 'Buscar',
     seoProfilesTitle: (country) =>
-      `Acompañantes Trans Verificadas en ${country}`,
+      `Acompañantes Trans en ${country}`,
     seoProfilesDesc: (country, cityNames) =>
-      `Encontrá acompañantes trans verificadas en ${country}. Explorá ${cityNames}. Perfiles actualizados a diario.`,
+      `Encontrá acompañantes trans en ${country}. Explorá ${cityNames}. Perfiles actualizados a diario.`,
     seoCommunityTitle: (continent) => `Comunidad Trans en ${continent}`,
     seoCountriesDesc: (continent, countries) =>
-      `Encontrá acompañantes trans y perfiles verificados en ${continent}. Explorá por país — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' y más' : ''}.`,
+      `Encontrá acompañantes trans y perfiles en ${continent}. Explorá por país — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' y más' : ''}.`,
   },
   pt: {
     backTo: (name) => `Voltar para ${name}`,
@@ -70,7 +70,7 @@ const S = {
     citiesIn: (place) => `Cidades em ${place}`,
     transCommunityIn: (place) => `Comunidade Trans em ${place}`,
     findCompanion: () =>
-      'Encontre a companhia perfeita · Apenas perfis verificados',
+      'Encontre a companhia perfeita',
     updatedDaily: () => 'Atualizado diariamente',
     profilesAvailable: (n) => `${n} perfis disponíveis`,
     citiesCount: (n) => `${n} cidades`,
@@ -78,12 +78,12 @@ const S = {
     searchPlaceholder: () =>
       'Pesquisar por nome, localização ou palavras-chave...',
     search: () => 'Buscar',
-    seoProfilesTitle: (country) => `Acompanhantes Trans Verificadas em ${country}`,
+    seoProfilesTitle: (country) => `Acompanhantes Trans em ${country}`,
     seoProfilesDesc: (country, cityNames) =>
-      `Encontre acompanhantes trans verificadas em ${country}. Explore ${cityNames}. Perfis atualizados diariamente.`,
+      `Encontre acompanhantes trans em ${country}. Explore ${cityNames}. Perfis atualizados diariamente.`,
     seoCommunityTitle: (continent) => `Comunidade Trans em ${continent}`,
     seoCountriesDesc: (continent, countries) =>
-      `Encontre acompanhantes trans e perfis verificados em ${continent}. Explore por país — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' e mais' : ''}.`,
+      `Encontre acompanhantes trans e perfis em ${continent}. Explore por país — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' e mais' : ''}.`,
   },
   fr: {
     backTo: (name) => `Retour à ${name}`,
@@ -92,7 +92,7 @@ const S = {
     citiesIn: (place) => `Villes à ${place}`,
     transCommunityIn: (place) => `Communauté trans à ${place}`,
     findCompanion: () =>
-      'Trouvez la compagnie parfaite · Profils vérifiés uniquement',
+      'Trouvez la compagnie parfaite',
     updatedDaily: () => 'Mis à jour chaque jour',
     profilesAvailable: (n) =>
       `${n} profil${n > 1 ? 's' : ''} disponible${n > 1 ? 's' : ''}`,
@@ -101,12 +101,12 @@ const S = {
     searchPlaceholder: () =>
       'Rechercher par nom, lieu ou mots-clés...',
     search: () => 'Rechercher',
-    seoProfilesTitle: (country) => `Accompagnantes trans vérifiées à ${country}`,
+    seoProfilesTitle: (country) => `Accompagnantes trans à ${country}`,
     seoProfilesDesc: (country, cityNames) =>
-      `Trouvez des accompagnantes trans vérifiées à ${country}. Parcourez ${cityNames}. Profils mis à jour chaque jour.`,
+      `Trouvez des accompagnantes trans à ${country}. Parcourez ${cityNames}. Profils mis à jour chaque jour.`,
     seoCommunityTitle: (continent) => `Communauté trans à ${continent}`,
     seoCountriesDesc: (continent, countries) =>
-      `Trouvez des accompagnantes trans et des profils vérifiés à ${continent}. Parcourez par pays — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' et plus' : ''}.`,
+      `Trouvez des accompagnantes trans et des profils à ${continent}. Parcourez par pays — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' et plus' : ''}.`,
   },
   he: {
     backTo: (name) => `חזרה ל${name}`,
@@ -114,19 +114,19 @@ const S = {
     communityIn: (place) => `הקהילה ב${place}`,
     citiesIn: (place) => `ערים ב${place}`,
     transCommunityIn: (place) => `הקהילה הטרנסית ב${place}`,
-    findCompanion: () => 'מצאו את החברה המושלמת · רק פרופילים מאומתים',
+    findCompanion: () => 'מצאו את החברה המושלמת',
     updatedDaily: () => 'מתעדכן מדי יום',
     profilesAvailable: (n) => `${n} פרופילים זמינים`,
     citiesCount: (n) => `${n} ערים`,
     profilesCount: (n) => `${n} פרופילים`,
     searchPlaceholder: () => 'חיפוש לפי שם, מיקום או מילות מפתח...',
     search: () => 'חיפוש',
-    seoProfilesTitle: (country) => `מלוות טרנסיות מאומתות ב${country}`,
+    seoProfilesTitle: (country) => `מלוות טרנסיות ב${country}`,
     seoProfilesDesc: (country, cityNames) =>
-      `מצאו מלוות טרנסיות מאומתות ב${country}. עיינו ב${cityNames}. פרופילים מתעדכנים מדי יום.`,
+      `מצאו מלוות טרנסיות ב${country}. עיינו ב${cityNames}. פרופילים מתעדכנים מדי יום.`,
     seoCommunityTitle: (continent) => `הקהילה הטרנסית ב${continent}`,
     seoCountriesDesc: (continent, countries) =>
-      `מצאו מלוות טרנסיות ופרופילים מאומתים ב${continent}. עיינו לפי מדינה — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' ועוד' : ''}.`,
+      `מצאו מלוות טרנסיות ופרופילים ב${continent}. עיינו לפי מדינה — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' ועוד' : ''}.`,
   },
   nl: {
     backTo: (name) => `Terug naar ${name}`,
@@ -134,19 +134,19 @@ const S = {
     communityIn: (place) => `Gemeenschap in ${place}`,
     citiesIn: (place) => `Steden in ${place}`,
     transCommunityIn: (place) => `Transgemeenschap in ${place}`,
-    findCompanion: () => 'Vind de perfecte metgezel · Alleen geverifieerde profielen',
+    findCompanion: () => 'Vind de perfecte metgezel',
     updatedDaily: () => 'Dagelijks bijgewerkt',
     profilesAvailable: (n) => `${n} ${n === 1 ? 'profiel beschikbaar' : 'profielen beschikbaar'}`,
     citiesCount: (n) => `${n} ${n === 1 ? 'stad' : 'steden'}`,
     profilesCount: (n) => `${n} ${n === 1 ? 'profiel' : 'profielen'}`,
     searchPlaceholder: () => 'Zoek op naam, locatie of trefwoorden...',
     search: () => 'Zoeken',
-    seoProfilesTitle: (country) => `Geverifieerde Trans Metgezellen in ${country}`,
+    seoProfilesTitle: (country) => `Trans Metgezellen in ${country}`,
     seoProfilesDesc: (country, cityNames) =>
-      `Vind geverifieerde trans metgezellen en TS escorts in ${country}. Blader door ${cityNames}. Profielen dagelijks bijgewerkt.`,
+      `Vind trans metgezellen en TS escorts in ${country}. Blader door ${cityNames}. Profielen dagelijks bijgewerkt.`,
     seoCommunityTitle: (continent) => `Transgemeenschap in ${continent}`,
     seoCountriesDesc: (continent, countries) =>
-      `Vind trans metgezellen en geverifieerde profielen in ${continent}. Blader per land — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' en meer' : ''}.`,
+      `Vind trans metgezellen en profielen in ${continent}. Blader per land — ${countries.slice(0, 10).join(', ')}${countries.length > 10 ? ' en meer' : ''}.`,
   },
 };
 

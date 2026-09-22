@@ -165,8 +165,8 @@ export default function Guide() {
           <h2>{bt ? 'Listo para buscar con confianza' : 'Ready to search with confidence'}</h2>
           <p>
             {bt
-              ? 'Explorá perfiles verificados en todo el mundo — cada uno revisado manualmente antes de publicarse.'
-              : 'Browse verified profiles worldwide — each one manually reviewed before publication.'}
+              ? 'Explorá perfiles en todo el mundo. Los perfiles nuevos se revisan antes de publicarse.'
+              : 'Browse profiles worldwide. New profiles are reviewed before publication.'}
           </p>
           <Link to={bt ? '/es/europe' : '/europe'} className="btn btn-primary btn-lg">
             {bt ? 'Buscar perfiles →' : 'Browse profiles →'}

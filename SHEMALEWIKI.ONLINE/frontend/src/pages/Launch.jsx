@@ -64,12 +64,12 @@ export default function Launch() {
       eyebrow: 'ShemaleWiki · BuscaTrans',
       title1: 'The future of trans',
       title2: 'companionship launches soon.',
-      sub: '5,000+ verified profiles, rescued from closed sites. One platform built around safety and respect.',
+      sub: '5,000+ profiles, rescued from closed sites. One platform built around safety and respect.',
       countLabel: 'Launching in',
       days: 'days', hours: 'hours', mins: 'mins', secs: 'secs',
       who: 'I am a…',
       client: 'Client / looking to book',
-      clientDesc: 'Browse verified trans companions worldwide.',
+      clientDesc: 'Browse trans companions worldwide.',
       worker: 'Companion / sex worker',
       workerDesc: 'Claim your profile + get the Vivas safety app.',
       formTitle: 'Get launch access',
@@ -87,12 +87,12 @@ export default function Launch() {
       eyebrow: 'ShemaleWiki · BuscaTrans',
       title1: 'El futuro del acompañamiento',
       title2: 'trans está por llegar.',
-      sub: 'Más de 5,000 perfiles verificados, rescatados de sitios que cerraron. Una sola plataforma construida alrededor de la seguridad y el respeto.',
+      sub: 'Más de 5,000 perfiles, rescatados de sitios que cerraron. Una sola plataforma construida alrededor de la seguridad y el respeto.',
       countLabel: 'Lanzamiento en',
       days: 'días', hours: 'horas', mins: 'min', secs: 'seg',
       who: 'Yo soy…',
       client: 'Cliente / busco reservar',
-      clientDesc: 'Explorá acompañantes trans verificadas en todo el mundo.',
+      clientDesc: 'Explorá acompañantes trans en todo el mundo.',
       worker: 'Acompañante / trabajadora sexual',
       workerDesc: 'Reclamá tu perfil + llevá la app de seguridad Vivas.',
       formTitle: 'Acceso al lanzamiento',
@@ -113,8 +113,8 @@ export default function Launch() {
       <SEO
         title={bt ? 'Lanzamiento próximo — BuscaTrans' : 'Launching Soon — ShemaleWiki'}
         description={bt
-          ? 'La primera plataforma de acompañamiento trans construida alrededor de la seguridad. 5,000+ perfiles verificados + app Vivas para trabajadoras.'
-          : 'The first trans companionship platform built around safety. 5,000+ verified profiles + the Vivas app for workers.'}
+          ? 'La primera plataforma de acompañamiento trans construida alrededor de la seguridad. 5,000+ perfiles + app Vivas para trabajadoras.'
+          : 'The first trans companionship platform built around safety. 5,000+ profiles + the Vivas app for workers.'}
         canonicalPath="/lanzamiento"
         lang={bt ? 'es' : 'en'}
       />
