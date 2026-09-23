@@ -205,6 +205,7 @@ export default function ProfilesList() {
                 <LazyImage
                   src={pickCover(profile)}
                   alt={profile.name}
+                  eager={i < 4}
                   className="profile-card-img"
                 />
                 <div className="profile-card-gradient" />
