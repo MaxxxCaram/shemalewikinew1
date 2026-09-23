@@ -18,6 +18,23 @@ const DEFAULT_OG = {
   imageW: '512',
   imageH: '512',
 };
+const BRANDS = {
+  shemalewiki: {
+    title: 'ShemaleWiki Online — Trans Companion Directory',
+    desc: "The world's premier multilingual directory of trans companions. Browse verified profiles by country and city.",
+    image: 'https://shemalewiki.online/logosw.png',
+    siteName: 'ShemaleWiki',
+    suffix: 'ShemaleWiki',
+  },
+  buscatrans: {
+    title: 'BuscaTrans — Trans Companion Directory',
+    desc: 'El directorio en español de chicas trans con fotos y contacto. Encontrá acompañantes verificadas por país y ciudad.',
+    image: 'https://buscatrans.com/logos/buscatrans-new-logo.jpg',
+    siteName: 'BuscaTrans',
+    suffix: 'BuscaTrans',
+  },
+};
+const brandFor = (host) => (String(host || '').includes('buscatrans') ? BRANDS.buscatrans : BRANDS.shemalewiki);
 
 // Photos collection id (stable). Used as fallback for the file URL.
 const PHOTOS_COLLECTION = 'u4i29ndk3g7bsv5';
@@ -97,7 +114,8 @@ export default async function handler(req, res) {
   const protocolHost = `${proto}://${host}`;
   const profileId = parseProfileId(pathname);
 
-  let og = { ...DEFAULT_OG };
+  const brand = brandFor(host);
+  let og = { title: brand.title, desc: brand.desc, image: brand.image, imageW: '512', imageH: '512' };
   if (profileId) {
     try {
       const data = await getProfileData(profileId);
@@ -105,7 +123,7 @@ export default async function handler(req, res) {
         const city = (data.location.split(' | ').pop() || '').trim();
         og = {
           title: data.name,
-          desc: city ? `${data.name} — ${data.location}` : `Profile of ${data.name} on ShemaleWiki`,
+          desc: city ? `${data.name} — ${data.location}` : `Profile of ${data.name} on ${brand.suffix}`,
           image: data.image,
           imageW: data.image === DEFAULT_OG.image ? '512' : '1200',
           imageH: data.image === DEFAULT_OG.image ? '512' : '630',
@@ -123,12 +141,12 @@ export default async function handler(req, res) {
     `<meta property="og:image:width" content="${og.imageW}" />`,
     `<meta property="og:image:height" content="${og.imageH}" />`,
     `<meta property="og:url" content="${esc(canonical)}" />`,
-    '<meta property="og:site_name" content="ShemaleWiki" />',
+    `<meta property="og:site_name" content="${brand.siteName}" />`,
     `<meta name="twitter:card" content="${profileId ? 'summary_large_image' : 'summary_large_image'}" />`,
     `<meta name="twitter:title" content="${esc(og.title)}" />`,
     `<meta name="twitter:description" content="${esc(og.desc)}" />`,
     `<meta name="twitter:image" content="${esc(og.image)}" />`,
-    `<title>${esc(profileId && og.title !== DEFAULT_OG.title ? `${og.title} — ShemaleWiki` : og.title)}</title>`,
+    `<title>${esc(profileId && og.title !== brand.title ? `${og.title} — ${brand.suffix}` : og.title)}</title>`,
     `<meta name="description" content="${esc(og.desc)}" />`,
   ].join('\n    ');
 
