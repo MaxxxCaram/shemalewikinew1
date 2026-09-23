@@ -209,6 +209,55 @@ export default async function handler(req, res) {
       // multipart: se maneja fuera de este branch JSON — ver handler multipart abajo
     }
 
+    // ── Aprobar / rechazar perfil (cam_chat) ──
+    if (action === 'approve' || action === 'reject') {
+      const pid = req.body.profile_id;
+      if (!pid) return res.status(400).json({ error: 'profile_id required.' });
+      const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, {
+        method: 'PATCH', headers: authHeaders,
+        body: JSON.stringify({ cam_chat: action === 'approve' ? 'approved' : 'rejected' }),
+      });
+      if (!r.ok) return res.status(500).json({ error: 'Failed to update profile.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Eliminar perfil + fotos + contactos ──
+    if (action === 'delete') {
+      const pid = req.body.profile_id;
+      if (!pid) return res.status(400).json({ error: 'profile_id required.' });
+      const rF = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500`, { headers: authHeaders });
+      if (rF.ok) {
+        for (const ph of ((await rF.json()).items || [])) {
+          await fetch(`${PB_URL}/api/collections/photos/records/${ph.id}`, { method: 'DELETE', headers: authHeaders });
+        }
+      }
+      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?filter=(profile_id='${pid}')&perPage=500`, { headers: authHeaders });
+      if (rC.ok) {
+        for (const c of ((await rC.json()).items || [])) {
+          await fetch(`${PB_URL}/api/collections/profile_contacts/records/${c.id}`, { method: 'DELETE', headers: authHeaders });
+        }
+      }
+      const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, { method: 'DELETE', headers: authHeaders });
+      if (!r.ok && r.status !== 404) return res.status(500).json({ error: 'Failed to delete profile.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Buscar perfiles: editar CUALQUIER perfil (por id o nombre) ──
+    if (action === 'search-profiles') {
+      const q = String(req.body.q || '').trim();
+      if (!q) return res.status(400).json({ error: 'q required.' });
+      let items = [];
+      if (/^[a-z0-9]{15}$/.test(q)) {
+        const rP = await fetch(`${PB_URL}/api/collections/profiles/records/${q}`, { headers: authHeaders });
+        if (rP.ok) items = [await rP.json()];
+      }
+      if (items.length === 0) {
+        const r = await fetch(`${PB_URL}/api/collections/profiles/records?filter=name~'${q.replace(/'/g, '')}'&perPage=50&sort=-created`, { headers: authHeaders });
+        if (r.ok) items = (await r.json()).items || [];
+      }
+      return res.status(200).json({ profiles: items });
+    }
+
     // ── Approve claim: set profiles.owner = claimant_user, mark approved ──
     if (action === 'approve-claim') {
       if (!claim_id) return res.status(400).json({ error: 'claim_id required.' });

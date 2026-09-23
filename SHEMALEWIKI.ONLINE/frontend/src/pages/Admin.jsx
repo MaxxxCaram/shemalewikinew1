@@ -3,7 +3,7 @@
 // Subsequent requests use: Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) }
 
 import { useState, useEffect, useCallback } from 'react';
-import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil } from 'lucide-react';
+import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil, Search } from 'lucide-react';
 import PhotoCropModal from '../components/PhotoCropModal';
 
 const API_BASE = typeof window !== 'undefined' ? window.location.origin : 'https://shemalewiki.online';
@@ -15,6 +15,8 @@ function getToken() {
 export default function Admin() {
   const [profiles, setProfiles] = useState([]);
   const [claims, setClaims] = useState([]);
+  const [searchQ, setSearchQ] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
@@ -92,6 +94,23 @@ export default function Admin() {
     } catch (err) {
       setMsg('❌ ' + err.message);
     }
+  };
+
+  const doSearch = async () => {
+    const q = searchQ.trim();
+    if (!q) return;
+    setMsg('');
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
+        body: JSON.stringify({ action: 'search-profiles', q }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Error');
+      setSearchResults(data.profiles || []);
+      setMsg(data.profiles && data.profiles.length ? `🔍 ${data.profiles.length} resultado(s)` : '🔍 Sin resultados');
+    } catch (e) { setMsg('❌ ' + e.message); setSearchResults([]); }
   };
 
   // On mount: if already have token, fetch profiles + claims
@@ -341,7 +360,40 @@ export default function Admin() {
       )}
 
       {/* Approved */}
-      {approved.length > 0 && (
+            {/* Buscar y editar CUALQUIER perfil (por nombre o ID) */}
+      <div style={{ marginBottom: '2rem', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '0.75rem', padding: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <Search size={16} style={{ color: 'var(--text-secondary)' }} />
+          <input
+            value={searchQ}
+            onChange={e => setSearchQ(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } }}
+            placeholder="Buscar perfil por nombre o ID — editá CUALQUIER perfil, no solo los de la lista"
+            style={{ flex: 1, minWidth: 220, background: 'rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', padding: '0.6rem 0.9rem', color: 'var(--text-primary)', fontSize: '0.95rem' }}
+          />
+          <button onClick={doSearch} className="btn" style={{ background: 'rgba(231,192,132,0.12)', border: '1px solid rgba(231,192,132,0.35)', color: '#e7c084' }}>
+            <Search size={14} style={{ marginRight: '0.25rem' }} /> Buscar
+          </button>
+        </div>
+        {searchResults !== null && (
+          <div style={{ marginTop: '0.75rem', display: 'grid', gap: '0.5rem' }}>
+            {searchResults.length === 0 && <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Sin resultados.</p>}
+            {searchResults.map(p => (
+              <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(0,0,0,0.25)', borderRadius: '0.5rem', padding: '0.6rem 0.9rem' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600 }}>{p.name} <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: '0.8rem' }}>{p.location || ''}</span></div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{p.id}</div>
+                </div>
+                <button onClick={() => openEditor(p.id)} className="btn" style={{ background: 'rgba(231,192,132,0.12)', border: '1px solid rgba(231,192,132,0.35)', color: '#e7c084', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
+                  <Pencil size={14} style={{ marginRight: '0.25rem' }} /> Editar
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+{approved.length > 0 && (
         <div style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#22c55e' }}>✅ Aprobados ({approved.length})</h2>
           <div style={{ display: 'grid', gap: '0.75rem' }}>
