@@ -11,29 +11,12 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'logosw.png', 'robots.txt'],
-      manifest: {
-        name: 'ShemaleWiki Online — Trans Companion Directory',
-        short_name: 'ShemaleWiki',
-        description: "The world's premier multilingual directory of trans companions. Browse verified profiles by country and city.",
-        start_url: '/',
-        scope: '/',
-        display: 'standalone',
-        orientation: 'portrait',
-        background_color: '#0a0a0f',
-        theme_color: '#e83e8c',
-        lang: 'en',
-        categories: ['social', 'lifestyle'],
-        icons: [
-          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-          { src: '/icons/maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-          { src: '/icons/maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
-        ],
-        shortcuts: [
-          { name: 'Buscar perfiles', short_name: 'Buscar', url: '/europe' },
-          { name: 'Publicar mi perfil', short_name: 'Publicar', url: '/register' },
-        ],
-      },
+      // El manifest NO se genera como archivo estático (manifest: false):
+      // Vercel sirve los archivos estáticos ANTES que las rewrites, y el
+      // /manifest.webmanifest debe llegarnos por api/manifest.js (brand-aware
+      // por Host: BuscaTrans en buscatrans.com). Sin el estático, la rewrite
+      // gana. Mismo patron que sitemap.xml.
+      manifest: false,
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
         // Las portadas del libro (2-3 MB) NO van al precache: no son críticas
