@@ -28,18 +28,40 @@ async function loadCovers() {
   if (coverCache.map && (now - coverCache.at) < COVER_TTL_MS) return coverCache.map;
 
   const map = {};
-  const { data } = await supabase
-    .from('photos')
-    .select('id,profile_id,file,local_path')
-    .eq('local_path', 'cover')
-    .not('file', 'eq', '')
-    .order('created_at', { ascending: false })
-    .limit(5000); // wrapper paginates internally (>500) until exhausted
-
-  for (const ph of (Array.isArray(data) ? data : [])) {
-    if (!map[ph.profile_id] && (ph.file || ph.photo_url)) {
-      map[ph.profile_id] = photoUrl(ph);
+  // ⚠️ Sin tope de .limit(): hoy hay ~6.9k covers y antes fetchAll se cortaba
+  // en 5.000 -> los covers mas viejos faltaban y sus perfiles desaparecian de
+  // los listados (sintoma: 'no cargan las ultimas N'). Paginar con range()
+  // hasta que una pagina venga vacia. Si una pagina falla, conservar lo ya
+  // traido (un error puntual no debe vaciar el directorio completo).
+  const PER = 500;
+  let offset = 0;
+  let pagesOk = 0;
+  for (;;) {
+    const { data, error } = await supabase
+      .from('photos')
+      .select('id,profile_id,file,local_path')
+      .eq('local_path', 'cover')
+      .not('file', 'eq', '')
+      .order('created_at', { ascending: false })
+      .range(offset, offset + PER - 1);
+    if (error) {
+      console.error('[covers] pagina fallo:', error && error.message, '| retenidas:', Object.keys(map).length);
+      break;
     }
+    const items = Array.isArray(data) ? data : [];
+    pagesOk += 1;
+    for (const ph of items) {
+      if (!map[ph.profile_id] && (ph.file || ph.photo_url)) {
+        map[ph.profile_id] = photoUrl(ph);
+      }
+    }
+    if (items.length < PER) break;
+    offset += PER;
+  }
+  if (pagesOk === 0) {
+    // Nada se pudo traer: cachear vacio igual (5 min) para no martillar el API
+    coverCache = { at: now, map };
+    return map;
   }
   coverCache = { at: now, map };
   return map;
