@@ -1,0 +1,23 @@
+{
+  "name": "BuscaTrans — Trans Companion Directory",
+  "short_name": "BuscaTrans",
+  "description": "El directorio en español de chicas trans con fotos y contacto. Encontrá acompañantes verificadas por país y ciudad.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#e83e8c",
+  "lang": "es",
+  "orientation": "portrait",
+  "categories": ["social", "lifestyle"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Buscar perfiles", "short_name": "Buscar", "url": "/es/europe" },
+    { "name": "Publicar mi perfil", "short_name": "Publicar", "url": "/register" }
+  ]
+}
