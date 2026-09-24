@@ -81,15 +81,11 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
-          {
-            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts',
-              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
+          // ⚠️ NO agregar regla para fonts.googleapis.com/gstatic: el SW intercepta
+          // el preload del CSS de fuentes y su fetch viola connect-src de la CSP
+          // (StrategyHandler.js:160 -> fonts.googleapis.com no esta en connect-src).
+          // El navegador cachea las fuentes solo; la regla google-fonts se elimino
+          // deliberadamente (2026-09-23).
         ],
       },
     }),
