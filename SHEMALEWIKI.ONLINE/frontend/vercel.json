@@ -23,8 +23,7 @@
     { "source": "/api/og", "destination": "/api/og.js" },
     { "source": "/api/img(.*)", "destination": "/api/img.js" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap.js" },
-    { "source": "/manifest.webmanifest", "has": [{ "type": "host", "value": "buscatrans.com" }], "destination": "/buscatrans.webmanifest" },
-    { "source": "/manifest.webmanifest", "has": [{ "type": "host", "value": "www.buscatrans.com" }], "destination": "/buscatrans.webmanifest" },
+    { "source": "/manifest.webmanifest", "destination": "/api/manifest.js" },
     { "source": "/((?:[a-z]{2}/)?profile/[A-Za-z0-9]+/?)", "destination": "/api/og?path=$1" },
     { "source": "/((?!assets/|api/|vivas/|_expo/|favicon|robots|sitemap|llms|logosw|icons|city-guides|downloads|mision|manifest|index).*)", "destination": "/index.html" }
   ],
