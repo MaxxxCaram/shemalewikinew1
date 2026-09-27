@@ -677,7 +677,7 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
           const url = fileUrl(ph);
           return (
             <div key={ph.id} onClick={() => toggleSel(ph.id)} style={{
-              cursor: 'pointer',
+              cursor: 'pointer', position: 'relative',
               border: isCover ? '2px solid #f59e0b' : (isSel ? '2px solid #22c55e' : '1px solid var(--glass-border)'),
               borderRadius: '0.6rem', overflow: 'hidden', background: 'rgba(255,255,255,0.03)',
             }}>
