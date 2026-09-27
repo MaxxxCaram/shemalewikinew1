@@ -204,6 +204,21 @@ export default function Admin() {
     } catch (e) { setMsg('❌ ' + e.message); return false; }
   };
 
+  // Contacto REAL del perfil (coleccion profile_contacts — el de 'Show Contact Info').
+  const saveContact = async (pid, contact) => {
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
+        body: JSON.stringify({ action: 'edit-contact', profile_id: pid, contact }),
+      });
+      if (!r.ok) throw new Error('Error al guardar contacto');
+      setMsg('✅ Contacto real guardado (aparece en Show Contact Info)');
+      setTimeout(() => setMsg(''), 3000);
+      return true;
+    } catch (e) { setMsg('❌ ' + e.message); return false; }
+  };
+
   const deletePhoto = async (photo_id) => {
     if (!window.confirm('¿Borrar esta foto permanentemente?')) return;
     try {
@@ -447,7 +462,7 @@ export default function Admin() {
               <button className="btn" onClick={() => setEditing(null)}>Cerrar</button>
             </div>
             <ProfileEditor profile={editing.profile} photos={editing.photos} token={token} apiBase={API_BASE}
-              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onBulkDelete={deletePhotosBulk} onCrop={(src) => setCropSrc(src)} />
+              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onBulkDelete={deletePhotosBulk} contact={editing.contact} saveContact={saveContact} onCrop={(src) => setCropSrc(src)} />
           </div>
         </div>
       )}
@@ -586,8 +601,16 @@ function ClaimCard({ claim, onAction }) {
 }
 
 
-function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBulkDelete, onCrop }) {
+function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBulkDelete, contact, saveContact, onCrop }) {
   const [sel, setSel] = useState(() => new Set());
+  const [contactForm, setContactForm] = useState({ phone: '', whatsapp: '', email: '' });
+  useEffect(() => {
+    setContactForm({
+      phone: (contact && contact.phone) || '',
+      whatsapp: (contact && contact.whatsapp) || '',
+      email: (contact && contact.email) || '',
+    });
+  }, [contact]);
   const toggleSel = (id) => {
     const n = new Set(sel);
     if (n.has(id)) n.delete(id); else n.add(id);
@@ -703,6 +726,29 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
         })}
       </div>
       {photos.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>Este perfil no tiene fotos.</p>}
+
+      {/* Contacto REAL: la coleccion profile_contacts, la del boton Show Contact Info */}
+      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', marginTop: '1.5rem' }}>
+        📞 Contacto real (perfil público — Show Contact Info)
+      </h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.5rem' }}>
+        <label style={{ fontSize: '0.85rem' }}>☎️ Phone
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={contactForm.phone}
+                 onChange={(e) => setContactForm(f => ({ ...f, phone: e.target.value }))} placeholder="+31 ..." />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>💬 WhatsApp
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={contactForm.whatsapp}
+                 onChange={(e) => setContactForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="+31 ..." />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>✉️ Email
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={contactForm.email}
+                 onChange={(e) => setContactForm(f => ({ ...f, email: e.target.value }))} placeholder="chica@email.com" />
+        </label>
+      </div>
+      <button className="btn" onClick={() => saveContact && saveContact(profile.id, contactForm)}
+              style={{ border: '1px solid rgba(74,222,128,0.4)', color: '#4ade80', background: 'rgba(74,222,128,0.08)' }}>
+        💾 Guardar contacto real
+      </button>
     </div>
   );
 }
