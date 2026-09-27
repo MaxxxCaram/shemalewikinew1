@@ -152,7 +152,14 @@ export default async function handler(req, res) {
       const profile = await rP.json();
       const rF = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500&sort=-created`, { headers: authHeaders });
       const photos = rF.ok ? (await rF.json()).items || [] : [];
-      return res.status(200).json({ profile, photos });
+      // contacto REAL (el del boton 'Show Contact Info'): profile_contacts
+      let contact = null;
+      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`(profile_id='${q(pid)}')`)}`, { headers: authHeaders });
+      if (rC.ok) {
+        const ci = (await rC.json()).items || [];
+        if (ci.length) contact = { id: ci[0].id, phone: ci[0].phone || '', whatsapp: ci[0].whatsapp || '', email: ci[0].email || '' };
+      }
+      return res.status(200).json({ profile, photos, contact });
     }
 
     // ── Edit profile fields (admin edit) ──
@@ -239,6 +246,27 @@ export default async function handler(req, res) {
       }
       const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, { method: 'DELETE', headers: authHeaders });
       if (!r.ok && r.status !== 404) return res.status(500).json({ error: 'Failed to delete profile.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Editar el contacto REAL (profile_contacts, el de 'Show Contact Info') ──
+    if (action === 'edit-contact') {
+      const pid = req.body.profile_id;
+      const c = (req.body.contact || {});
+      if (!pid) return res.status(400).json({ error: 'profile_id required.' });
+      const upd = {};
+      for (const k of ['phone', 'whatsapp', 'email']) if (k in c) upd[k] = String(c[k] == null ? '' : c[k]);
+      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`(profile_id='${q(pid)}')`)}`, { headers: authHeaders });
+      const items = rC.ok ? ((await rC.json()).items || []) : [];
+      let r;
+      if (items.length) {
+        r = await fetch(`${PB_URL}/api/collections/profile_contacts/records/${items[0].id}`, {
+          method: 'PATCH', headers: authHeaders, body: JSON.stringify(upd) });
+      } else {
+        r = await fetch(`${PB_URL}/api/collections/profile_contacts/records`, {
+          method: 'POST', headers: authHeaders, body: JSON.stringify({ profile_id: pid, ...upd }) });
+      }
+      if (!r.ok) return res.status(500).json({ error: 'Failed to save contact.' });
       return res.status(200).json({ ok: true });
     }
 
