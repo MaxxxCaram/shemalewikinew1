@@ -219,6 +219,27 @@ export default function Admin() {
     } catch (e) { setMsg('❌ ' + e.message); }
   };
 
+  // Borrado multiple: seleccionar varias fotos en el editor y eliminarlas juntas.
+  const deletePhotosBulk = async (ids) => {
+    if (!ids || !ids.length) return;
+    if (!window.confirm(`¿Borrar ${ids.length} foto(s) permanentemente?`)) return;
+    setMsg('');
+    let okN = 0;
+    for (const photoid of ids) {
+      try {
+        const r = await fetch(`${API_BASE}/api/admin`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
+          body: JSON.stringify({ action: 'delete-photo', photo_id: photoid }),
+        });
+        if (r.ok) okN++;
+      } catch (e) { /* sigue con el resto */ }
+    }
+    setEditing(e => ({ ...e, photos: (e.photos || []).filter(p => !ids.includes(p.id)) }));
+    setMsg(`✅ ${okN}/${ids.length} foto(s) borrada(s)`);
+    setTimeout(() => setMsg(''), 3000);
+  };
+
   const setCover = async (photo_id, profile_id) => {
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
@@ -426,7 +447,7 @@ export default function Admin() {
               <button className="btn" onClick={() => setEditing(null)}>Cerrar</button>
             </div>
             <ProfileEditor profile={editing.profile} photos={editing.photos} token={token} apiBase={API_BASE}
-              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onCrop={(src) => setCropSrc(src)} />
+              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onBulkDelete={deletePhotosBulk} onCrop={(src) => setCropSrc(src)} />
           </div>
         </div>
       )}
@@ -565,7 +586,13 @@ function ClaimCard({ claim, onAction }) {
 }
 
 
-function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onCrop }) {
+function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBulkDelete, onCrop }) {
+  const [sel, setSel] = useState(() => new Set());
+  const toggleSel = (id) => {
+    const n = new Set(sel);
+    if (n.has(id)) n.delete(id); else n.add(id);
+    setSel(n);
+  };
   const [form, setForm] = useState({
     name: profile.name || '',
     bio: profile.bio || '',
@@ -632,15 +659,33 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onCr
       <h3 style={{ fontSize: '1.1rem', marginBottom: '0.75rem' }}>
         📷 Fotos ({photos.length}) — la que tiene ⭐ es la miniatura del listado
       </h3>
+      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+        <button className="btn" onClick={() => setSel(sel.size === photos.length ? new Set() : new Set(photos.map(p => p.id)))}
+                style={{ padding: '0.35rem 0.7rem', fontSize: '0.85rem' }}>
+          {sel.size === photos.length && photos.length > 0 ? 'Quitar selección' : 'Seleccionar todo'}
+        </button>
+        <button className="btn" disabled={!sel.size} onClick={() => { const ids = [...sel]; setSel(new Set()); onBulkDelete && onBulkDelete(ids); }}
+                style={{ padding: '0.35rem 0.7rem', fontSize: '0.85rem', color: sel.size ? '#ef4444' : 'var(--text-secondary)' }}>
+          🗑️ Borrar {sel.size ? `${sel.size} seleccionada${sel.size === 1 ? '' : 's'}` : 'seleccionadas'}
+        </button>
+        {sel.size > 0 && <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{sel.size} seleccionada{sel.size === 1 ? '' : 's'}</span>}
+      </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.75rem' }}>
         {photos.map(ph => {
           const isCover = ph.local_path === 'cover';
+          const isSel = sel.has(ph.id);
           const url = fileUrl(ph);
           return (
-            <div key={ph.id} style={{
-              border: isCover ? '2px solid #f59e0b' : '1px solid var(--glass-border)',
+            <div key={ph.id} onClick={() => toggleSel(ph.id)} style={{
+              cursor: 'pointer',
+              border: isCover ? '2px solid #f59e0b' : (isSel ? '2px solid #22c55e' : '1px solid var(--glass-border)'),
               borderRadius: '0.6rem', overflow: 'hidden', background: 'rgba(255,255,255,0.03)',
             }}>
+              <div style={{ position: 'absolute', zIndex: 2, top: '0.3rem', left: '0.3rem' }}>
+                <input type="checkbox" checked={isSel} onClick={(e) => e.stopPropagation()}
+                       onChange={() => toggleSel(ph.id)} style={{ width: 16, height: 16, accentColor: '#22c55e' }} />
+              </div>
+              {isSel && <div style={{ position: 'absolute', inset: 0, background: 'rgba(34,197,94,0.18)', zIndex: 1 }} />}
               <img src={url} alt="" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block' }} />
               <div style={{ padding: '0.4rem', display: 'flex', gap: '0.3rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                 {isCover && <span style={{ fontSize: '0.7rem', color: '#f59e0b', width: '100%', textAlign: 'center' }}>⭐ PORTADA</span>}
