@@ -130,7 +130,9 @@ export default async function handler(req, res) {
 
     // ── All other actions require a valid PB token ──
     if (!token) return res.status(401).json({ error: 'Token required.' });
-    const authHeaders = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+    const authHeaders = { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token };
+    // Escape para filtros de PocketBase (comillas simples dentro de literales).
+    const q = (s) => String(s == null ? '' : s).replace(/'/g, "''");
 
     // ── List claims (expand profile + claimant_user so the panel has names/contact without extra calls) ──
     if (action === 'list-claims') {
