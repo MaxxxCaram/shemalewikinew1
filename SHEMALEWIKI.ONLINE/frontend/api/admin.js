@@ -36,12 +36,18 @@ export default async function handler(req, res) {
     } catch (e) {
       return res.status(401).json({ error: 'Invalid token.' });
     }
-    const list = await fetch(`${PB_URL}/api/collections/profiles/records?perPage=200&sort=-created`, {
+    const page = Math.max(1, parseInt((req.query && req.query.page) || '1', 10));
+    const list = await fetch(`${PB_URL}/api/collections/profiles/records?perPage=200&page=${page}&sort=-created&fields=id,name,location,status,is_verified,cam_chat,phone,email,bio,created`, {
       headers: { Authorization: `Bearer ${authHeader2.substring(7)}` },
     });
     if (!list.ok) return res.status(401).json({ error: 'Invalid token.' });
     const data = await list.json();
-    return res.status(200).json({ profiles: data.items || [] });
+    return res.status(200).json({
+      profiles: data.items || [],
+      page,
+      hasMore: page < (data.totalPages || 1),
+      totalItems: data.totalItems || (data.items || []).length,
+    });
   }
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
@@ -124,7 +130,9 @@ export default async function handler(req, res) {
 
     // ── All other actions require a valid PB token ──
     if (!token) return res.status(401).json({ error: 'Token required.' });
-    const authHeaders = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+    const authHeaders = { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token };
+    // Escape para filtros de PocketBase (comillas simples dentro de literales).
+    const q = (s) => String(s == null ? '' : s).replace(/'/g, "''");
 
     // ── List claims (expand profile + claimant_user so the panel has names/contact without extra calls) ──
     if (action === 'list-claims') {
@@ -146,7 +154,14 @@ export default async function handler(req, res) {
       const profile = await rP.json();
       const rF = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500&sort=-created`, { headers: authHeaders });
       const photos = rF.ok ? (await rF.json()).items || [] : [];
-      return res.status(200).json({ profile, photos });
+      // contacto REAL (el del boton 'Show Contact Info'): profile_contacts
+      let contact = null;
+      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`(profile_id='${q(pid)}')`)}`, { headers: authHeaders });
+      if (rC.ok) {
+        const ci = (await rC.json()).items || [];
+        if (ci.length) contact = { id: ci[0].id, phone: ci[0].phone || '', whatsapp: ci[0].whatsapp || '', email: ci[0].email || '' };
+      }
+      return res.status(200).json({ profile, photos, contact });
     }
 
     // ── Edit profile fields (admin edit) ──
@@ -201,6 +216,76 @@ export default async function handler(req, res) {
     // ── Upload cropped photo (reemplaza o crea) ──
     if (action === 'upload-photo') {
       // multipart: se maneja fuera de este branch JSON — ver handler multipart abajo
+    }
+
+    // ── Aprobar / rechazar perfil (cam_chat) ──
+    if (action === 'approve' || action === 'reject') {
+      const pid = req.body.profile_id;
+      if (!pid) return res.status(400).json({ error: 'profile_id required.' });
+      const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, {
+        method: 'PATCH', headers: authHeaders,
+        body: JSON.stringify({ cam_chat: action === 'approve' ? 'approved' : 'rejected' }),
+      });
+      if (!r.ok) return res.status(500).json({ error: 'Failed to update profile.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Eliminar perfil + fotos + contactos ──
+    if (action === 'delete') {
+      const pid = req.body.profile_id;
+      if (!pid) return res.status(400).json({ error: 'profile_id required.' });
+      const rF = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500`, { headers: authHeaders });
+      if (rF.ok) {
+        for (const ph of ((await rF.json()).items || [])) {
+          await fetch(`${PB_URL}/api/collections/photos/records/${ph.id}`, { method: 'DELETE', headers: authHeaders });
+        }
+      }
+      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?filter=(profile_id='${pid}')&perPage=500`, { headers: authHeaders });
+      if (rC.ok) {
+        for (const c of ((await rC.json()).items || [])) {
+          await fetch(`${PB_URL}/api/collections/profile_contacts/records/${c.id}`, { method: 'DELETE', headers: authHeaders });
+        }
+      }
+      const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, { method: 'DELETE', headers: authHeaders });
+      if (!r.ok && r.status !== 404) return res.status(500).json({ error: 'Failed to delete profile.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Editar el contacto REAL (profile_contacts, el de 'Show Contact Info') ──
+    if (action === 'edit-contact') {
+      const pid = req.body.profile_id;
+      const c = (req.body.contact || {});
+      if (!pid) return res.status(400).json({ error: 'profile_id required.' });
+      const upd = {};
+      for (const k of ['phone', 'whatsapp', 'email']) if (k in c) upd[k] = String(c[k] == null ? '' : c[k]);
+      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`(profile_id='${q(pid)}')`)}`, { headers: authHeaders });
+      const items = rC.ok ? ((await rC.json()).items || []) : [];
+      let r;
+      if (items.length) {
+        r = await fetch(`${PB_URL}/api/collections/profile_contacts/records/${items[0].id}`, {
+          method: 'PATCH', headers: authHeaders, body: JSON.stringify(upd) });
+      } else {
+        r = await fetch(`${PB_URL}/api/collections/profile_contacts/records`, {
+          method: 'POST', headers: authHeaders, body: JSON.stringify({ profile_id: pid, ...upd }) });
+      }
+      if (!r.ok) return res.status(500).json({ error: 'Failed to save contact.' });
+      return res.status(200).json({ ok: true });
+    }
+
+    // ── Buscar perfiles: editar CUALQUIER perfil (por id o nombre) ──
+    if (action === 'search-profiles') {
+      const q = String(req.body.q || '').trim();
+      if (!q) return res.status(400).json({ error: 'q required.' });
+      let items = [];
+      if (/^[a-z0-9]{15}$/.test(q)) {
+        const rP = await fetch(`${PB_URL}/api/collections/profiles/records/${q}`, { headers: authHeaders });
+        if (rP.ok) items = [await rP.json()];
+      }
+      if (items.length === 0) {
+        const r = await fetch(`${PB_URL}/api/collections/profiles/records?filter=name~'${q.replace(/'/g, '')}'&perPage=50&sort=-created`, { headers: authHeaders });
+        if (r.ok) items = (await r.json()).items || [];
+      }
+      return res.status(200).json({ profiles: items });
     }
 
     // ── Approve claim: set profiles.owner = claimant_user, mark approved ──

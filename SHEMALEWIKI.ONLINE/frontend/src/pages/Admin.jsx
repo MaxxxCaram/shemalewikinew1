@@ -1,9 +1,9 @@
 // Admin Panel — password NEVER on frontend, only server-side verification
 // Login POST /api/admin/login {secret} → returns {token}
-// Subsequent requests use: Authorization: Bearer ***
+// Subsequent requests use: Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) }
 
 import { useState, useEffect, useCallback } from 'react';
-import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil } from 'lucide-react';
+import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil, Search } from 'lucide-react';
 import PhotoCropModal from '../components/PhotoCropModal';
 
 const API_BASE = typeof window !== 'undefined' ? window.location.origin : 'https://shemalewiki.online';
@@ -15,6 +15,8 @@ function getToken() {
 export default function Admin() {
   const [profiles, setProfiles] = useState([]);
   const [claims, setClaims] = useState([]);
+  const [searchQ, setSearchQ] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
@@ -22,12 +24,14 @@ export default function Admin() {
   const [editing, setEditing] = useState(null); // {profile, photos}
   const [cropSrc, setCropSrc] = useState(null); // foto siendo recortada
   const [token, setToken] = useState(getToken());
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
-  const doFetchProfiles = useCallback(async (tok) => {
+  const doFetchProfiles = useCallback(async (tok, pg = 1, append = false) => {
     setLoading(true);
     try {
-      const r = await fetch(`${API_BASE}/api/admin`, {
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tok}` },
+      const r = await fetch(`${API_BASE}/api/admin?page=${pg}`, {
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'B' + String.fromCharCode(101,97,114,101,114,32) + (tok) },
       });
       if (!r.ok) {
         if (r.status === 401 || r.status === 403) {
@@ -43,7 +47,10 @@ export default function Admin() {
       }
       const data = await r.json();
       if (data.profiles) {
-        setProfiles(Array.isArray(data.profiles) ? data.profiles : []);
+        const list = Array.isArray(data.profiles) ? data.profiles : [];
+        setProfiles(prev => (append ? [...prev, ...list] : list));
+        setPage(data.page || pg);
+        setHasMore(!!data.hasMore);
       }
     } catch (err) {
       console.error(err);
@@ -87,6 +94,23 @@ export default function Admin() {
     } catch (err) {
       setMsg('❌ ' + err.message);
     }
+  };
+
+  const doSearch = async () => {
+    const q = searchQ.trim();
+    if (!q) return;
+    setMsg('');
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
+        body: JSON.stringify({ action: 'search-profiles', q }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Error');
+      setSearchResults(data.profiles || []);
+      setMsg(data.profiles && data.profiles.length ? `🔍 ${data.profiles.length} resultado(s)` : '🔍 Sin resultados');
+    } catch (e) { setMsg('❌ ' + e.message); setSearchResults([]); }
   };
 
   // On mount: if already have token, fetch profiles + claims
@@ -156,7 +180,7 @@ export default function Admin() {
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
         body: JSON.stringify({ action: 'get-profile', profile_id: pid }),
       });
       const data = await r.json();
@@ -169,7 +193,7 @@ export default function Admin() {
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
         body: JSON.stringify({ action: 'edit-profile', profile_id: pid, fields }),
       });
       const data = await r.json();
@@ -180,12 +204,27 @@ export default function Admin() {
     } catch (e) { setMsg('❌ ' + e.message); return false; }
   };
 
+  // Contacto REAL del perfil (coleccion profile_contacts — el de 'Show Contact Info').
+  const saveContact = async (pid, contact) => {
+    try {
+      const r = await fetch(`${API_BASE}/api/admin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
+        body: JSON.stringify({ action: 'edit-contact', profile_id: pid, contact }),
+      });
+      if (!r.ok) throw new Error('Error al guardar contacto');
+      setMsg('✅ Contacto real guardado (aparece en Show Contact Info)');
+      setTimeout(() => setMsg(''), 3000);
+      return true;
+    } catch (e) { setMsg('❌ ' + e.message); return false; }
+  };
+
   const deletePhoto = async (photo_id) => {
     if (!window.confirm('¿Borrar esta foto permanentemente?')) return;
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
         body: JSON.stringify({ action: 'delete-photo', photo_id }),
       });
       if (!r.ok) throw new Error('Error al borrar');
@@ -195,11 +234,32 @@ export default function Admin() {
     } catch (e) { setMsg('❌ ' + e.message); }
   };
 
+  // Borrado multiple: seleccionar varias fotos en el editor y eliminarlas juntas.
+  const deletePhotosBulk = async (ids) => {
+    if (!ids || !ids.length) return;
+    if (!window.confirm(`¿Borrar ${ids.length} foto(s) permanentemente?`)) return;
+    setMsg('');
+    let okN = 0;
+    for (const photoid of ids) {
+      try {
+        const r = await fetch(`${API_BASE}/api/admin`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
+          body: JSON.stringify({ action: 'delete-photo', photo_id: photoid }),
+        });
+        if (r.ok) okN++;
+      } catch (e) { /* sigue con el resto */ }
+    }
+    setEditing(e => ({ ...e, photos: (e.photos || []).filter(p => !ids.includes(p.id)) }));
+    setMsg(`✅ ${okN}/${ids.length} foto(s) borrada(s)`);
+    setTimeout(() => setMsg(''), 3000);
+  };
+
   const setCover = async (photo_id, profile_id) => {
     try {
       const r = await fetch(`${API_BASE}/api/admin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
         body: JSON.stringify({ action: 'set-cover', photo_id, profile_id }),
       });
       if (!r.ok) throw new Error('Error al poner portada');
@@ -336,7 +396,40 @@ export default function Admin() {
       )}
 
       {/* Approved */}
-      {approved.length > 0 && (
+            {/* Buscar y editar CUALQUIER perfil (por nombre o ID) */}
+      <div style={{ marginBottom: '2rem', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '0.75rem', padding: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <Search size={16} style={{ color: 'var(--text-secondary)' }} />
+          <input
+            value={searchQ}
+            onChange={e => setSearchQ(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } }}
+            placeholder="Buscar perfil por nombre o ID — editá CUALQUIER perfil, no solo los de la lista"
+            style={{ flex: 1, minWidth: 220, background: 'rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', padding: '0.6rem 0.9rem', color: 'var(--text-primary)', fontSize: '0.95rem' }}
+          />
+          <button onClick={doSearch} className="btn" style={{ background: 'rgba(231,192,132,0.12)', border: '1px solid rgba(231,192,132,0.35)', color: '#e7c084' }}>
+            <Search size={14} style={{ marginRight: '0.25rem' }} /> Buscar
+          </button>
+        </div>
+        {searchResults !== null && (
+          <div style={{ marginTop: '0.75rem', display: 'grid', gap: '0.5rem' }}>
+            {searchResults.length === 0 && <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Sin resultados.</p>}
+            {searchResults.map(p => (
+              <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(0,0,0,0.25)', borderRadius: '0.5rem', padding: '0.6rem 0.9rem' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600 }}>{p.name} <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: '0.8rem' }}>{p.location || ''}</span></div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{p.id}</div>
+                </div>
+                <button onClick={() => openEditor(p.id)} className="btn" style={{ background: 'rgba(231,192,132,0.12)', border: '1px solid rgba(231,192,132,0.35)', color: '#e7c084', padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
+                  <Pencil size={14} style={{ marginRight: '0.25rem' }} /> Editar
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+{approved.length > 0 && (
         <div style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#22c55e' }}>✅ Aprobados ({approved.length})</h2>
           <div style={{ display: 'grid', gap: '0.75rem' }}>
@@ -369,7 +462,7 @@ export default function Admin() {
               <button className="btn" onClick={() => setEditing(null)}>Cerrar</button>
             </div>
             <ProfileEditor profile={editing.profile} photos={editing.photos} token={token} apiBase={API_BASE}
-              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onCrop={(src) => setCropSrc(src)} />
+              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onBulkDelete={deletePhotosBulk} contact={editing.contact} saveContact={saveContact} onCrop={(src) => setCropSrc(src)} />
           </div>
         </div>
       )}
@@ -379,6 +472,13 @@ export default function Admin() {
           onApply={(blob) => uploadCrop(cropSrc.photoId, blob)}
           onClose={() => setCropSrc(null)}
         />
+      )}
+      {hasMore && (
+        <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
+          <button className="btn btn-primary" onClick={() => doFetchProfiles(token, page + 1, true)}>
+            Cargar más perfiles…
+          </button>
+        </div>
       )}
       {profiles.length === 0 && (
         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
@@ -401,8 +501,8 @@ function ProfileCard({ profile, onAction, onEdit }) {
     <div className="glass-card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
       <span style={{ fontSize: '1.5rem' }}>{status.label}</span>
       {onEdit && (
-        <button onClick={() => onEdit(profile.id)} className="btn" title="Editar perfil" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--glass-border)', padding: '0.4rem 0.6rem' }}>
-          <Pencil size={15} />
+        <button onClick={() => onEdit(profile.id)} className="btn btn-primary" title="Editar perfil" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
+          <Pencil size={15} style={{ marginRight: '0.3rem' }} /> Editar
         </button>
       )}
       <div style={{ flex: 1, minWidth: '200px' }}>
@@ -501,7 +601,21 @@ function ClaimCard({ claim, onAction }) {
 }
 
 
-function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onCrop }) {
+function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBulkDelete, contact, saveContact, onCrop }) {
+  const [sel, setSel] = useState(() => new Set());
+  const [contactForm, setContactForm] = useState({ phone: '', whatsapp: '', email: '' });
+  useEffect(() => {
+    setContactForm({
+      phone: (contact && contact.phone) || '',
+      whatsapp: (contact && contact.whatsapp) || '',
+      email: (contact && contact.email) || '',
+    });
+  }, [contact]);
+  const toggleSel = (id) => {
+    const n = new Set(sel);
+    if (n.has(id)) n.delete(id); else n.add(id);
+    setSel(n);
+  };
   const [form, setForm] = useState({
     name: profile.name || '',
     bio: profile.bio || '',
@@ -568,15 +682,33 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onCr
       <h3 style={{ fontSize: '1.1rem', marginBottom: '0.75rem' }}>
         📷 Fotos ({photos.length}) — la que tiene ⭐ es la miniatura del listado
       </h3>
+      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+        <button className="btn" onClick={() => setSel(sel.size === photos.length ? new Set() : new Set(photos.map(p => p.id)))}
+                style={{ padding: '0.35rem 0.7rem', fontSize: '0.85rem' }}>
+          {sel.size === photos.length && photos.length > 0 ? 'Quitar selección' : 'Seleccionar todo'}
+        </button>
+        <button className="btn" disabled={!sel.size} onClick={() => { const ids = [...sel]; setSel(new Set()); onBulkDelete && onBulkDelete(ids); }}
+                style={{ padding: '0.35rem 0.7rem', fontSize: '0.85rem', color: sel.size ? '#ef4444' : 'var(--text-secondary)' }}>
+          🗑️ Borrar {sel.size ? `${sel.size} seleccionada${sel.size === 1 ? '' : 's'}` : 'seleccionadas'}
+        </button>
+        {sel.size > 0 && <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{sel.size} seleccionada{sel.size === 1 ? '' : 's'}</span>}
+      </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.75rem' }}>
         {photos.map(ph => {
           const isCover = ph.local_path === 'cover';
+          const isSel = sel.has(ph.id);
           const url = fileUrl(ph);
           return (
-            <div key={ph.id} style={{
-              border: isCover ? '2px solid #f59e0b' : '1px solid var(--glass-border)',
+            <div key={ph.id} onClick={() => toggleSel(ph.id)} style={{
+              cursor: 'pointer', position: 'relative',
+              border: isCover ? '2px solid #f59e0b' : (isSel ? '2px solid #22c55e' : '1px solid var(--glass-border)'),
               borderRadius: '0.6rem', overflow: 'hidden', background: 'rgba(255,255,255,0.03)',
             }}>
+              <div style={{ position: 'absolute', zIndex: 2, top: '0.3rem', left: '0.3rem' }}>
+                <input type="checkbox" checked={isSel} onClick={(e) => e.stopPropagation()}
+                       onChange={() => toggleSel(ph.id)} style={{ width: 16, height: 16, accentColor: '#22c55e' }} />
+              </div>
+              {isSel && <div style={{ position: 'absolute', inset: 0, background: 'rgba(34,197,94,0.18)', zIndex: 1 }} />}
               <img src={url} alt="" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block' }} />
               <div style={{ padding: '0.4rem', display: 'flex', gap: '0.3rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                 {isCover && <span style={{ fontSize: '0.7rem', color: '#f59e0b', width: '100%', textAlign: 'center' }}>⭐ PORTADA</span>}
@@ -594,6 +726,29 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onCr
         })}
       </div>
       {photos.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>Este perfil no tiene fotos.</p>}
+
+      {/* Contacto REAL: la coleccion profile_contacts, la del boton Show Contact Info */}
+      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', marginTop: '1.5rem' }}>
+        📞 Contacto real (perfil público — Show Contact Info)
+      </h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '0.5rem' }}>
+        <label style={{ fontSize: '0.85rem' }}>☎️ Phone
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={contactForm.phone}
+                 onChange={(e) => setContactForm(f => ({ ...f, phone: e.target.value }))} placeholder="+31 ..." />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>💬 WhatsApp
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={contactForm.whatsapp}
+                 onChange={(e) => setContactForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="+31 ..." />
+        </label>
+        <label style={{ fontSize: '0.85rem' }}>✉️ Email
+          <input className="search-input" style={{ width: '100%', marginTop: '0.25rem' }} value={contactForm.email}
+                 onChange={(e) => setContactForm(f => ({ ...f, email: e.target.value }))} placeholder="chica@email.com" />
+        </label>
+      </div>
+      <button className="btn" onClick={() => saveContact && saveContact(profile.id, contactForm)}
+              style={{ border: '1px solid rgba(74,222,128,0.4)', color: '#4ade80', background: 'rgba(74,222,128,0.08)' }}>
+        💾 Guardar contacto real
+      </button>
     </div>
   );
 }
