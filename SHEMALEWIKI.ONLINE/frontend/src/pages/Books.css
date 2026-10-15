@@ -320,3 +320,31 @@
     margin: 0 auto;
   }
 }
+
+.book-lang-switch {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+.book-lang-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--text-secondary, #aaa);
+  border-radius: 999px;
+  padding: 6px 22px;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.book-lang-btn:hover {
+  border-color: rgba(212, 175, 55, 0.6);
+  color: #d4af37;
+}
+.book-lang-btn.active {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: #d4af37;
+  color: #d4af37;
+  font-weight: 600;
+}

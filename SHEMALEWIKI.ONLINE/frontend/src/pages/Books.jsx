@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import './Books.css';
@@ -7,7 +8,7 @@ const isBT = () => typeof window !== 'undefined' && window.location.hostname.inc
 export default function Books() {
   const bt = isBT();
 
-  const book = {
+  const books = {
     en: {
       title: 'The Sex Worker\'s Sacred Covenant',
       subtitle: 'Wisdom Traditions for Chemsex Safety, Mutual Care & Survival',
@@ -74,11 +75,49 @@ export default function Books() {
       featured: 'Reseña destacada',
       reviewSource: 'Reseña verificada de lector/a',
     },
-  }[bt ? 'es' : 'en'];
+    pt: {
+      title: 'O Pacto Sagrado',
+      subtitle: 'Sabedoria das Trabalhadoras do Sexo para Chemsex Seguro, Cuidado Mútuo e Sobrevivência',
+      author: 'Maxima Victoria Caram',
+      description: 'Durante décadas, as trabalhadoras do sexo foram criminalizadas, estigmatizadas e deixadas sem acesso a recursos de redução de danos. O Pacto Sagrado rompe esse silêncio. Este guia combina tradições de sabedoria com práticas de redução de danos baseadas em evidências para criar um manual de sobrevivência para trabalhadoras do sexo que circulam em ambientes de chemsex. Escrito por uma ativista com mais de duas décadas de experiência na defesa das trabalhadoras do sexo, este livro coloca no centro as vozes e experiências vividas das mais afetadas.',
+      whatInside: [
+        { t: 'Marcos de Redução de Danos', d: 'Protocolos práticos para segurança no uso de substâncias, monitoramento da saúde e mitigação de riscos em ambientes de alto risco.' },
+        { t: 'Práticas de Cuidado Comunitário', d: 'Estratégias para construir redes de ajuda mútua, sistemas de apoio e proteção coletiva dentro das comunidades de trabalhadoras do sexo.' },
+        { t: 'Resiliência Espiritual e Emocional', d: 'Tradições de sabedoria que recuperam poder, dignidade e intencionalidade num trabalho muitas vezes marcado pela exploração.' },
+        { t: 'Autonomia na Saúde', d: 'Autodefesa médica, reconhecimento da exploração e navegação no sistema de saúde como trabalhadora criminalizada.' },
+        { t: 'Protocolos de Segurança', d: 'Ferramentas práticas para triagem de clientes, definição de limites, proteção financeira e construção de sistemas de resposta a emergências.' },
+        { t: 'Defesa da Despenalização', d: 'Como a criminalização afeta os resultados de saúde e como é a mudança de políticas.' },
+      ],
+      note: 'Este não é um livro sobre "como usar drogas". É um livro sobre permanecer viva, construir poder e criar cuidado comunitário em sistemas projetados para nos prejudicar.',
+      aboutAuthor: 'Maxima Victoria Caram é ativista de direitos humanos, presidenta da PROUD Nederland, diretora executiva da Miss Star International e especialista em direitos humanos das trabalhadoras do sexo no Parlamento Europeu.',
+      specs: { lang: 'Português (Brasil)', year: '2026', pages: '122', format: 'Brochura' },
+      buy: 'Comprar na Amazon',
+      eldor: 'Também na El Dorar',
+      reviewsTitle: 'O que dizem as leitoras',
+      receptionTitle: 'Recepção comunitária e profissional',
+      receptionIntro: 'Embora as grandes plataformas comerciais costumem restringir comentários abertos para conteúdo classificado como sensível, os setores que analisaram a obra destacam o seguinte:',
+      receptionItems: [
+        { t: 'Ativistas de redução de danos', d: 'Elogiado por romper o silêncio institucional. É muito valorizado que não seja um livro escrito por acadêmicos distantes da realidade, mas por alguém com mais de duas décadas de experiência real no ativismo de base.' },
+        { t: 'Profissionais da saúde e do serviço social', d: 'A crítica especializada destaca o manual como ferramenta indispensável de apoio. Agradecem que traduza frameworks complexos (como os da OMS e da UNODC) para uma linguagem direta e sem julgamentos, preenchendo um vazio histórico de recursos para comunidades criminalizadas ou estigmatizadas.' },
+        { t: 'Livrarias alternativas e independentes', d: 'A obra está disponível em portais de distribuidoras independentes europeias que driblam os filtros automatizados tradicionais, como a ficha do produto na plataforma suíça Eldar Store.' },
+        { t: 'Sinopses editoriais e notas da autora', d: 'As advertências sobre autonomia na saúde e os cinco pilares de proteção aparecem integralmente na descrição oficial fornecida pela autora, disponível na loja digital da Amazon India.' },
+      ],
+      receptionKeyLabel: 'A mensagem-chave das leitoras',
+      receptionKey: 'Este não é um livro sobre como usar drogas; é um livro sobre como permanecer viva, construir poder e criar redes de cuidado em sistemas projetados para nos prejudicar.',
+      cta: 'Explorar a plataforma',
+      featured: 'Resenha em destaque',
+      reviewSource: 'Resenha verificada de leitor(a)',
+    },
+  };
 
-  const amazon = bt
-    ? 'https://www.amazon.nl/-/en/dp/B0H5JS6QXM'
-    : 'https://www.amazon.nl/-/en/dp/B0H5K5SDYX';
+  const [lang, setLang] = useState(bt ? 'es' : 'en');
+  const book = books[lang];
+
+  const amazon = {
+    en: 'https://www.amazon.nl/-/en/dp/B0H5K5SDYX',
+    es: 'https://www.amazon.nl/-/en/dp/B0H5JS6QXM',
+    pt: 'https://www.amazon.com.br/s?k=o%20pacto%20sagrado%20maxima%20caram',
+  }[lang];
 
   const eldor = 'https://eldar.ch/buch-produkt/the-sex-workers-sacred-covenant-9798181382190-P36479966';
 
@@ -95,28 +134,41 @@ export default function Books() {
       title: 'A true covenant!',
       text: 'It is much appreciated that this book was not written by academics detached from reality, but by someone with over twenty years of hands-on experience in grassroots activism. We are grateful that it translates complex concepts (such as those of the WHO and UNODC) into a clear, non-judgmental language, closing a historic gap in resources for criminalized or stigmatized communities. The work can be summed up in one sentence that aptly describes its general reception: "This is not a book about drug use; it is a book about surviving, gaining power, and building support networks in systems designed to harm us."',
     },
-  }[bt ? 'es' : 'en'];
+    pt: {
+      author: 'Hans',
+      date: '13 de agosto de 2026',
+      title: 'Um verdadeiro pacto!',
+      text: 'É de agradecer que este livro não tenha sido escrito por acadêmicos distantes da realidade, mas por alguém com mais de vinte anos de experiência prática no ativismo de base. Agradecemos que traduza conceitos complexos (como os da OMS e da UNODC) para uma linguagem clara e sem julgamentos, fechando uma lacuna histórica de recursos para comunidades criminalizadas ou estigmatizadas. A obra se resume numa frase que descreve com precisão sua recepção geral: «Este não é um livro sobre consumo de drogas; é um livro sobre sobreviver, ganhar poder e construir redes de apoio em sistemas projetados para nos prejudicar».',
+    },
+  }[lang];
 
   return (
     <div className="books-page">
       <SEO
-        title={bt ? 'Libros de Victoria Caram | BuscaTrans' : 'Books by Victoria Caram | ShemaleWiki'}
-        description={bt
-          ? 'El Pacto Sagrado de la Trabajadora Sexual — tradiciones de sabiduría para la seguridad en chemsex, el cuidado mutuo y la supervivencia. Por Maxima Victoria Caram.'
-          : 'The Sex Workers\' Sacred Covenant — wisdom traditions for chemsex safety, mutual care and survival. By Maxima Victoria Caram.'}
+        title={{ es: 'Libros de Victoria Caram | BuscaTrans', en: 'Books by Victoria Caram | ShemaleWiki', pt: 'Livros de Victoria Caram | ShemaleWiki' }[lang]}
+        description={{
+          es: 'El Pacto Sagrado de la Trabajadora Sexual — tradiciones de sabiduría para la seguridad en chemsex, el cuidado mutuo y la supervivencia. Por Maxima Victoria Caram.',
+          en: 'The Sex Workers\' Sacred Covenant — wisdom traditions for chemsex safety, mutual care and survival. By Maxima Victoria Caram.',
+          pt: 'O Pacto Sagrado — sabedoria das trabalhadoras do sexo para chemsex seguro, cuidado mútuo e sobrevivência. Por Maxima Victoria Caram.',
+        }[lang]}
         canonicalPath="/libros"
-        lang={bt ? 'es' : 'en'}
+        lang={lang}
       />
 
       <div className="books-header">
-        <p className="books-eyebrow">📚 {bt ? 'LIBRERÍA' : 'LIBRARY'}</p>
+        <p className="books-eyebrow">📚 {{ en: 'LIBRARY', es: 'LIBRERÍA', pt: 'BIBLIOTECA' }[lang]}</p>
         <h1>{book.author}</h1>
+        <div className="book-lang-switch">
+          {['en', 'es', 'pt'].map(l => (
+            <button key={l} className={'book-lang-btn' + (lang === l ? ' active' : '')} onClick={() => setLang(l)}>{l.toUpperCase()}</button>
+          ))}
+        </div>
       </div>
 
       <div className="books-featured">
         <div className="book-cover-image">
           <img
-            src={bt ? '/covers/covenant-cover-ES.png' : '/covers/covenant-cover-EN.png'}
+            src={{ en: '/covers/covenant-cover-EN.png', es: '/covers/covenant-cover-ES.png', pt: '/covers/covenant-cover-PT.jpg' }[lang]}
             alt={book.title}
             className="book-cover-img"
           />
@@ -149,7 +201,7 @@ export default function Books() {
       </div>
 
       <div className="book-inside">
-        <h3>{bt ? 'Qué hay dentro' : 'What\'s inside'}</h3>
+        <h3>{{ en: 'What\'s inside', es: 'Qué hay dentro', pt: 'O que tem lá dentro' }[lang]}</h3>
         <div className="book-inside-grid">
           {book.whatInside.map((item, i) => (
             <div className="book-inside-item" key={i}>
@@ -161,7 +213,7 @@ export default function Books() {
       </div>
 
       <div className="book-about-author">
-        <h3>{bt ? 'Sobre la autora' : 'About the author'}</h3>
+        <h3>{{ en: 'About the author', es: 'Sobre la autora', pt: 'Sobre a autora' }[lang]}</h3>
         <p>{book.aboutAuthor}</p>
       </div>
 
