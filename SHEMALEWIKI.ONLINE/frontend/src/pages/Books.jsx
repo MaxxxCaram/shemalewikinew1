@@ -116,7 +116,7 @@ export default function Books() {
   const amazon = {
     en: 'https://www.amazon.nl/-/en/dp/B0H5K5SDYX',
     es: 'https://www.amazon.nl/-/en/dp/B0H5JS6QXM',
-    pt: 'https://www.amazon.com.br/s?k=o%20pacto%20sagrado%20maxima%20caram',
+    pt: 'https://www.amazon.it/-/en/dp/B0HMZTNR35',
   }[lang];
 
   const eldor = 'https://eldar.ch/buch-produkt/the-sex-workers-sacred-covenant-9798181382190-P36479966';
