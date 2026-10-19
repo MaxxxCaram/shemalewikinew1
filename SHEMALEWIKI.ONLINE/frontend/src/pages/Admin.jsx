@@ -154,7 +154,7 @@ export default function Admin() {
   const handleAction = async (profileId, action) => {
     setMsg('');
     try {
-      const body = { profileId, action };
+      const body = { profile_id: profileId, action };
       if (action === 'delete') {
         body.secret = document.getElementById('admin-delete-secret')?.value || '';
       }
