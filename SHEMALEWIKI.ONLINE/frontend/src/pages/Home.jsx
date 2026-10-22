@@ -209,49 +209,47 @@ export default function Home() {
 
       <AdSlot slot="home-top" audience="clients" width={728} height={90} className="ad-top" />
 
-            {/* ── QUÉ OFRECEMOS / A QUIÉN AYUDAMOS / CÓMO FUNCIONA EL PRECIO ── */}
-      <section className="section" id="planes">
+            {/* ── QUÉ OFRECEMOS / A QUIÉN AYUDAMOS ── */}
+      <section className="section" id="ofrecemos">
         <div className="section-header">
-          <h2>{brand === 'buscatrans' ? 'Nuestros planes' : 'Our plans'}</h2>
+          <h2>{brand === 'buscatrans' ? 'Qué ofrecemos' : 'What we offer'}</h2>
           <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
-            {brand === 'buscatrans' ? 'Sin comisión por cliente ni por encuentro. Sin porcentaje de lo que ganás.' : 'No commission per client or encounter. No percentage of what you earn.'}
+            {brand === 'buscatrans' ? 'El directorio trans hecho por nosotras, para nosotras.' : 'The trans directory made by us, for us.'}
           </span>
         </div>
         <div className="plans-grid">
-          {/* GRATIS */}
           <div className="plan-card">
-            <h3 className="plan-name">{brand === 'buscatrans' ? 'Gratis' : 'Free'}</h3>
-            <p className="plan-price">{brand === 'buscatrans' ? '€0 — para siempre' : '€0 — forever'}</p>
+            <h3 className="plan-name">{brand === 'buscatrans' ? 'Publicación gratis' : 'Free listing'}</h3>
             <ul className="plan-features">
-              <li>{brand === 'buscatrans' ? 'Toda mujer trans tiene derecho a estar publicada gratis' : 'Every trans woman has the right to be listed for free'}</li>
-              <li>{brand === 'buscatrans' ? '3 fotos, revisadas por una persona del equipo' : '3 photos, reviewed by a real person'}</li>
-              <li>{brand === 'buscatrans' ? 'Perfil visible en el directorio, sin vencimiento' : 'Profile visible in the directory, no expiry'}</li>
+              <li>{brand === 'buscatrans' ? 'Toda mujer trans tiene derecho a estar publicada gratis, con 3 fotos' : 'Every trans woman has the right to be listed for free, with 3 photos'}</li>
+              <li>{brand === 'buscatrans' ? 'Perfil revisado por una persona real' : 'Profile reviewed by a real person'}</li>
+              <li>{brand === 'buscatrans' ? 'Un perfil, dos mercados: BuscaTrans y ShemaleWiki' : 'One profile, two markets: BuscaTrans and ShemaleWiki'}</li>
             </ul>
           </div>
-          {/* PERPETUO */}
           <div className="plan-card plan-featured">
-            <h3 className="plan-name">{brand === 'buscatrans' ? 'Perpetuo' : 'Perpetual'}</h3>
-            <p className="plan-price">
-              {brand === 'buscatrans' ? 'Europa €29/mes · Latinoamérica US$15/mes' : 'Europe €29/month · Latin America US$15/month'}
-            </p>
-            <p className="plan-note">{brand === 'buscatrans' ? 'Precio fijo para siempre' : 'Price locked forever'}</p>
+            <h3 className="plan-name">{brand === 'buscatrans' ? 'Control total' : 'Full control'}</h3>
             <ul className="plan-features">
-              <li>{brand === 'buscatrans' ? 'Anuncio destacado' : 'Featured listing'}</li>
-              <li>{brand === 'buscatrans' ? 'Tilde “Es ella · fotos actuales”' : 'Checkmark “It is her · current photos”'}</li>
-              <li>{brand === 'buscatrans' ? '23 fotos (3 + 20 más) y 3 enlaces de video' : '23 photos (3 + 20 more) and 3 video links'}</li>
-              <li>{brand === 'buscatrans' ? '6 meses gratis, sin dejar la tarjeta' : '6 free months, no card required'}</li>
+              <li>{brand === 'buscatrans' ? 'Reclamá, editá, pausá o borrá tu perfil cuando quieras' : 'Claim, edit, pause or delete your profile whenever you want'}</li>
+              <li>{brand === 'buscatrans' ? 'Tus datos, tu decisión' : 'Your data, your decision'}</li>
+              <li>{brand === 'buscatrans' ? 'Sin intermediarios entre vos y tus clientes' : 'No intermediaries between you and your clients'}</li>
             </ul>
           </div>
-          {/* ARRASANDO */}
           <div className="plan-card">
-            <h3 className="plan-name">{brand === 'buscatrans' ? 'Arrasando' : 'Arrasando'}</h3>
-            <p className="plan-price">{brand === 'buscatrans' ? 'Todo lo de Perpetuo + más' : 'Everything in Perpetual + more'}</p>
+            <h3 className="plan-name">{brand === 'buscatrans' ? 'Seguridad y cuidado' : 'Safety and care'}</h3>
             <ul className="plan-features">
-              <li>{brand === 'buscatrans' ? 'Todo lo incluido en Perpetuo' : 'Everything included in Perpetual'}</li>
-              <li>{brand === 'buscatrans' ? 'Publicación en nuestro canal de Telegram' : 'Publication on our Telegram channel'}</li>
-              <li>{brand === 'buscatrans' ? 'Canal VIP de Telegram para vender tu contenido directo a tus clientes' : 'VIP Telegram channel to sell your content directly to your clients'}</li>
+              <li>{brand === 'buscatrans' ? 'Conexión con Vivas: botón de pánico con GPS, check-in/check-out con alertas' : 'Connected to Vivas: panic button with GPS, check-in/check-out with alerts'}</li>
+              <li>{brand === 'buscatrans' ? 'Visibilidad por ciudad y aviso de viajes' : 'City visibility and travel notices'}</li>
+              <li>{brand === 'buscatrans' ? 'Cuidado colectivo, no vigilancia' : 'Collective care, not surveillance'}</li>
             </ul>
           </div>
+        </div>
+        <div style={{ marginTop: '1.5rem', padding: '1.25rem', background: 'var(--bg-primary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)' }}>
+          <h3 style={{ marginBottom: '0.75rem', fontSize: '1rem' }}>{brand === 'buscatrans' ? 'A quién ayudamos' : 'Who we help'}</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.7 }}>
+            {brand === 'buscatrans'
+              ? 'Mujeres trans que se anuncian de forma independiente — muchas veces migrantes, que ya probaron otras plataformas y detectan la mentira enseguida. Por eso les hablamos con verdad, con cariño y con datos concretos, nunca con promesas infladas. También a clientes y visitantes que buscan perfiles verificados, y a organizaciones e instituciones que buscan una contraparte seria con trayectoria.'
+              : 'Trans women who advertise independently — often migrants, who have already tried other platforms and detect lies instantly. That is why we speak to them with truth, with care and with concrete facts, never with inflated promises. Also clients and visitors looking for verified profiles, and organizations and institutions looking for a serious counterpart with a track record.'}
+          </p>
         </div>
       </section>
 

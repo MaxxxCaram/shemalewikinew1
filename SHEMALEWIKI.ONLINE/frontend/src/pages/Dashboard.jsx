@@ -296,6 +296,7 @@ export default function Dashboard() {
             <TabBtn icon={<Settings size={18} />} label="Edit Ad" active={activeTab === 'ad'} onClick={() => setActiveTab('ad')} />
             <TabBtn icon={<ImageIcon size={18} />} label="Photos & Videos" active={activeTab === 'media'} onClick={() => setActiveTab('media')} />
             <TabBtn icon={<BarChart3 size={18} />} label="Stats" active={activeTab === 'stats'} onClick={() => setActiveTab('stats')} />
+            <TabBtn icon={<Crown size={18} />} label="Plans" active={activeTab === 'plans'} onClick={() => setActiveTab('plans')} />
           </div>
         </div>
 
@@ -515,6 +516,60 @@ export default function Dashboard() {
                 </ul>
               </div>
             </div>
+                      )}
+
+                      {/* PLANS TAB */}
+                      {activeTab === 'plans' && (
+                        <div>
+                          <h2 style={{ fontSize: '1.5rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>Plans</h2>
+                          <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                            {isBT ? 'Estar publicada es tu derecho, no un privilegio. Sin comisión por cliente ni por encuentro. Lo que ganás es tuyo.' : 'Being listed is your right, not a privilege. No commission per client or encounter. What you earn is yours.'}
+                          </p>
+                          <div className="plans-grid">
+                            {/* GRATIS */}
+                            <div className="plan-card">
+                              <h3 className="plan-name">{isBT ? 'Gratis' : 'Free'}</h3>
+                              <p className="plan-price">{isBT ? '€0 — para siempre' : '€0 — forever'}</p>
+                              <ul className="plan-features">
+                                <li>{isBT ? '3 fotos, revisadas por una persona' : '3 photos, reviewed by a real person'}</li>
+                                <li>{isBT ? 'Perfil visible en el directorio' : 'Profile visible in the directory'}</li>
+                                <li>{isBT ? 'Sin vencimiento' : 'No expiry'}</li>
+                              </ul>
+                            </div>
+                            {/* PERPETUO */}
+                            <div className="plan-card plan-featured">
+                              <h3 className="plan-name">{isBT ? 'Perpetuo' : 'Perpetual'}</h3>
+                              <p className="plan-price">
+                                {isBT ? 'Europa €29/mes · Latinoamérica US$15/mes' : 'Europe €29/month · Latin America US$15/month'}
+                              </p>
+                              <p className="plan-note">{isBT ? 'Precio fijo para siempre' : 'Price locked forever'}</p>
+                              <ul className="plan-features">
+                                <li>{isBT ? 'Anuncio destacado' : 'Featured listing'}</li>
+                                <li>{isBT ? 'Tilde “Es ella · fotos actuales”' : 'Checkmark “It is her · current photos”'}</li>
+                                <li>{isBT ? '23 fotos (3 + 20 más) y 3 enlaces de video' : '23 photos (3 + 20 more) and 3 video links'}</li>
+                                <li>{isBT ? '6 meses gratis, sin dejar la tarjeta' : '6 free months, no card required'}</li>
+                              </ul>
+                            </div>
+                            {/* ARRASANDO */}
+                            <div className="plan-card">
+                              <h3 className="plan-name">Arrasando</h3>
+                              <p className="plan-price">{isBT ? 'Todo lo de Perpetuo + más' : 'Everything in Perpetual + more'}</p>
+                              <ul className="plan-features">
+                                <li>{isBT ? 'Todo lo incluido en Perpetuo' : 'Everything included in Perpetual'}</li>
+                                <li>{isBT ? 'Publicación en nuestro canal de Telegram' : 'Publication on our Telegram channel'}</li>
+                                <li>{isBT ? 'Canal VIP de Telegram para vender tu contenido directo a tus clientes' : 'VIP Telegram channel to sell your content directly to your clients'}</li>
+                                <li>{isBT ? '6 meses gratis, sin dejar la tarjeta' : '6 free months, no card required'}</li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div style={{ marginTop: '1.5rem', padding: '1.25rem', background: 'var(--bg-primary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)' }}>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.7 }}>
+                              {isBT
+                                ? 'Los planes pagos arrancan con seis meses gratis, sin tarjeta. Cuando se terminan, nos ponemos en contacto con vos y decidís si seguís. Nada se cobra solo. Si no seguís, tu perfil no desaparece: vuelve al plan Gratis con 3 fotos.'
+                                : 'Paid plans start with six free months, no card required. When they end, we get in touch and you decide whether to continue. Nothing is charged automatically. If you don\'t continue, your profile doesn\'t disappear: it returns to the Free plan with 3 photos.'}
+                            </p>
+                          </div>
+                        </div>
           )}
         </div>
       </div>
