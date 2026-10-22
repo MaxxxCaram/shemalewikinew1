@@ -209,7 +209,53 @@ export default function Home() {
 
       <AdSlot slot="home-top" audience="clients" width={728} height={90} className="ad-top" />
 
-      {/* ── PERFILES DEL PAÍS (geo) — todos, con foto ── */}
+            {/* ── QUÉ OFRECEMOS / A QUIÉN AYUDAMOS / CÓMO FUNCIONA EL PRECIO ── */}
+      <section className="section" id="planes">
+        <div className="section-header">
+          <h2>{brand === 'buscatrans' ? 'Nuestros planes' : 'Our plans'}</h2>
+          <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+            {brand === 'buscatrans' ? 'Sin comisión por cliente ni por encuentro. Sin porcentaje de lo que ganás.' : 'No commission per client or encounter. No percentage of what you earn.'}
+          </span>
+        </div>
+        <div className="plans-grid">
+          {/* GRATIS */}
+          <div className="plan-card">
+            <h3 className="plan-name">{brand === 'buscatrans' ? 'Gratis' : 'Free'}</h3>
+            <p className="plan-price">{brand === 'buscatrans' ? '€0 — para siempre' : '€0 — forever'}</p>
+            <ul className="plan-features">
+              <li>{brand === 'buscatrans' ? 'Toda mujer trans tiene derecho a estar publicada gratis' : 'Every trans woman has the right to be listed for free'}</li>
+              <li>{brand === 'buscatrans' ? '3 fotos, revisadas por una persona del equipo' : '3 photos, reviewed by a real person'}</li>
+              <li>{brand === 'buscatrans' ? 'Perfil visible en el directorio, sin vencimiento' : 'Profile visible in the directory, no expiry'}</li>
+            </ul>
+          </div>
+          {/* PERPETUO */}
+          <div className="plan-card plan-featured">
+            <h3 className="plan-name">{brand === 'buscatrans' ? 'Perpetuo' : 'Perpetual'}</h3>
+            <p className="plan-price">
+              {brand === 'buscatrans' ? 'Europa €29/mes · Latinoamérica US$15/mes' : 'Europe €29/month · Latin America US$15/month'}
+            </p>
+            <p className="plan-note">{brand === 'buscatrans' ? 'Precio fijo para siempre' : 'Price locked forever'}</p>
+            <ul className="plan-features">
+              <li>{brand === 'buscatrans' ? 'Anuncio destacado' : 'Featured listing'}</li>
+              <li>{brand === 'buscatrans' ? 'Tilde “Es ella · fotos actuales”' : 'Checkmark “It is her · current photos”'}</li>
+              <li>{brand === 'buscatrans' ? '23 fotos (3 + 20 más) y 3 enlaces de video' : '23 photos (3 + 20 more) and 3 video links'}</li>
+              <li>{brand === 'buscatrans' ? '6 meses gratis, sin dejar la tarjeta' : '6 free months, no card required'}</li>
+            </ul>
+          </div>
+          {/* ARRASANDO */}
+          <div className="plan-card">
+            <h3 className="plan-name">{brand === 'buscatrans' ? 'Arrasando' : 'Arrasando'}</h3>
+            <p className="plan-price">{brand === 'buscatrans' ? 'Todo lo de Perpetuo + más' : 'Everything in Perpetual + more'}</p>
+            <ul className="plan-features">
+              <li>{brand === 'buscatrans' ? 'Todo lo incluido en Perpetuo' : 'Everything included in Perpetual'}</li>
+              <li>{brand === 'buscatrans' ? 'Publicación en nuestro canal de Telegram' : 'Publication on our Telegram channel'}</li>
+              <li>{brand === 'buscatrans' ? 'Canal VIP de Telegram para vender tu contenido directo a tus clientes' : 'VIP Telegram channel to sell your content directly to your clients'}</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ── PERFILES DEL PAÍS (geo) — todos todos, con foto ── */}
       <section className="section">
         <div className="section-header">
           <h2>{geoCountry ? `Perfiles en ${geoCountry}` : 'Perfiles'}</h2>
