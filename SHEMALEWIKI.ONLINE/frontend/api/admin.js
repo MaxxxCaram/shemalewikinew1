@@ -68,10 +68,12 @@ export default async function handler(req, res) {
       const boundary = m ? m[1] : req.headers['content-type'].split('boundary=')[1];
       // extraer campos y archivo del multipart
       const parts = buf.toString('binary').split('--' + boundary);
-      let photo_id = null, token = null, fileBuf = null, filename = 'crop.jpg';
+      let photo_id = null, profile_id = null, token = null, fileBuf = null, filename = 'crop.jpg';
       for (const part of parts) {
         if (part.includes('name="photo_id"')) {
           photo_id = part.split('\r\n\r\n')[1]?.split('\r\n')[0];
+        } else if (part.includes('name="profile_id"')) {
+          profile_id = part.split('\r\n\r\n')[1]?.split('\r\n')[0];
         } else if (part.includes('name="token"')) {
           token = part.split('\r\n\r\n')[1]?.split('\r\n')[0];
         } else if (part.includes('filename="')) {
@@ -80,7 +82,7 @@ export default async function handler(req, res) {
           fileBuf = Buffer.from(part.slice(hEnd + 4).replace(/\r\n--$/, ''), 'binary');
         }
       }
-      if (!photo_id || !token || !fileBuf) {
+      if ((!photo_id && !profile_id) || !token || !fileBuf) {
         return res.status(400).json({ error: 'photo_id, token y file requeridos.' });
       }
       // auth: validar token como superuser
@@ -88,18 +90,31 @@ export default async function handler(req, res) {
         method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
       if (!auth.ok) return res.status(401).json({ error: 'Token invalido.' });
-      // subir archivo reemplazando el file del record existente
+      // subir archivo: si viene profile_id -> CREAR foto nueva; si no -> reemplazar file existente
       const b2 = '----X' + Math.random().toString(16).slice(2);
       const fd = `--${b2}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: image/jpeg\r\n\r\n`;
       const body2 = Buffer.concat([Buffer.from(fd, 'binary'), fileBuf, Buffer.from(`\r\n--${b2}--\r\n`)]);
-      const up = await fetch(`${PB_URL}/api/collections/photos/records/${photo_id}`, {
+      let up;
+      if (profile_id) {
+        // multipart con profile_id + file -> create en photos
+        const fd3 = `--${b2}\r\nContent-Disposition: form-data; name="profile_id"\r\n\r\n${profile_id}\r\n` +
+          `--${b2}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: image/jpeg\r\n\r\n`;
+        const body3 = Buffer.concat([Buffer.from(fd3, 'binary'), fileBuf, Buffer.from(`\r\n--${b2}--\r\n`)]);
+        up = await fetch(`${PB_URL}/api/collections/photos/records`, {
+          method: 'POST',
+          headers: { 'Content-Type': `multipart/form-data; boundary=${b2}`, Authorization: 'Bearer ' + token },
+          body: body3,
+        });
+      } else {
+        up = await fetch(`${PB_URL}/api/collections/photos/records/${photo_id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': `multipart/form-data; boundary=${b2}`, Authorization: `Bearer ${token}` },
         body: body2,
       });
+      }
       if (!up.ok) {
         const t = await up.text();
-        return res.status(500).json({ error: 'Failed to replace photo: ' + t.slice(0, 120) });
+        return res.status(500).json({ error: 'Failed to upload photo: ' + t.slice(0, 120) });
       }
       return res.status(200).json({ ok: true });
     } catch (e) {

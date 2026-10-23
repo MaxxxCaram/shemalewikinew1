@@ -462,7 +462,7 @@ export default function Admin() {
               <button className="btn" onClick={() => setEditing(null)}>Cerrar</button>
             </div>
             <ProfileEditor profile={editing.profile} photos={editing.photos} token={token} apiBase={API_BASE}
-              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onBulkDelete={deletePhotosBulk} contact={editing.contact} saveContact={saveContact} onCrop={(src) => setCropSrc(src)} />
+              saveField={saveField} deletePhoto={deletePhoto} setCover={setCover} onBulkDelete={deletePhotosBulk} contact={editing.contact} saveContact={saveContact} onCrop={(src) => setCropSrc(src)} onUpload={(pid) => openEditor(pid)} />
           </div>
         </div>
       )}
@@ -601,7 +601,7 @@ function ClaimCard({ claim, onAction }) {
 }
 
 
-function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBulkDelete, contact, saveContact, onCrop }) {
+function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBulkDelete, contact, saveContact, onCrop, onUpload }) {
   const [sel, setSel] = useState(() => new Set());
   const [contactForm, setContactForm] = useState({ phone: '', whatsapp: '', email: '' });
   useEffect(() => {
@@ -628,7 +628,41 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
     nationality: profile.nationality || '',
   });
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState('');
+  const fileInputRef = React.useRef(null);
   const upd = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const handleUpload = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setUploading(true);
+    setUploadMsg('');
+    try {
+      let okN = 0;
+      for (const file of files) {
+        const b = '----H' + Math.random().toString(16).slice(2);
+        const fd = (n, v) => `--${b}\r\nContent-Disposition: form-data; name="${n}"\r\n\r\n${v}\r\n`;
+        const head = fd('profile_id', profile.id) + fd('token', getToken());
+        const body = new Blob([head, file, `\r\n--${b}--\r\n`]);
+        const r = await fetch(`${API_BASE}/api/admin?action=upload-photo`, {
+          method: 'POST',
+          headers: { 'Content-Type': `multipart/form-data; boundary=${b}` },
+          body,
+        });
+        if (!r.ok) throw new Error('Error al subir foto');
+        okN += 1;
+      }
+      setUploadMsg(`✅ ${okN} foto(s) subida(s)`);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (onUpload) onUpload(profile.id);
+    } catch (err) {
+      setUploadMsg('❌ ' + err.message);
+    } finally {
+      setUploading(false);
+      setTimeout(() => setUploadMsg(''), 3500);
+    }
+  };
 
   const guardar = async () => {
     setSaving(true);
@@ -682,7 +716,12 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
       <h3 style={{ fontSize: '1.1rem', marginBottom: '0.75rem' }}>
         📷 Fotos ({photos.length}) — la que tiene ⭐ es la miniatura del listado
       </h3>
-      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+        <label className="btn" style={{ cursor: 'pointer', padding: '0.45rem 0.9rem', fontSize: '0.85rem', background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.4)', color: '#4ade80', borderRadius: '0.5rem' }}>
+          📤 {uploading ? 'Subiendo...' : 'Subir fotos'}
+          <input ref={fileInputRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleUpload} disabled={uploading} />
+        </label>
+        {uploadMsg && <span style={{ fontSize: '0.8rem', color: uploadMsg.startsWith('✅') ? '#4ade80' : '#ef4444' }}>{uploadMsg}</span>}
         <button className="btn" onClick={() => setSel(sel.size === photos.length ? new Set() : new Set(photos.map(p => p.id)))}
                 style={{ padding: '0.35rem 0.7rem', fontSize: '0.85rem' }}>
           {sel.size === photos.length && photos.length > 0 ? 'Quitar selección' : 'Seleccionar todo'}
