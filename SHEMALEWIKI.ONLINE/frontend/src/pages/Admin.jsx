@@ -2,7 +2,7 @@
 // Login POST /api/admin/login {secret} → returns {token}
 // Subsequent requests use: Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) }
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil, Search } from 'lucide-react';
 import PhotoCropModal from '../components/PhotoCropModal';
 
@@ -630,7 +630,7 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState('');
-  const fileInputRef = React.useRef(null);
+  const fileInputRef = useRef(null);
   const upd = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
   const handleUpload = async (e) => {
