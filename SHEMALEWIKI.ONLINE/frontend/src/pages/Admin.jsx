@@ -7,6 +7,8 @@ import { CheckCircle2, XCircle, Trash2, ExternalLink, RefreshCw, LogOut, Pencil,
 import PhotoCropModal from '../components/PhotoCropModal';
 
 const API_BASE = typeof window !== 'undefined' ? window.location.origin : 'https://shemalewiki.online';
+// Subida directa a PocketBase (el body de Vercel Hobby corta en 4.5MB -> 413 en fotos de celular)
+const PB_API = 'https://api.shemalewiki.online';
 
 function getToken() {
   return typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;
@@ -642,17 +644,20 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
     try {
       let okN = 0;
       for (const file of files) {
-        const b = '----H' + Math.random().toString(16).slice(2);
-        const fd = (n, v) => `--${b}\r\nContent-Disposition: form-data; name="${n}"\r\n\r\n${v}\r\n`;
-        const head = fd('profile_id', profile.id) + fd('token', getToken()) +
-          `--${b}\r\nContent-Disposition: form-data; name="file"; filename="${file.name || 'foto.jpg'}"\r\nContent-Type: ${file.type || 'image/jpeg'}\r\n\r\n`;
-        const body = new Blob([head, file, `\r\n--${b}--\r\n`]);
-        const r = await fetch(`${API_BASE}/api/admin?action=upload-photo`, {
+        // Directo a PocketBase: FormData real, sin pasar por la funcion de Vercel
+        // (limite de 4.5MB en el body -> 413 en fotos de celular)
+        const fd = new FormData();
+        fd.append('profile_id', profile.id);
+        fd.append('file', file);
+        const r = await fetch(`${PB_API}/api/collections/photos/records`, {
           method: 'POST',
-          headers: { 'Content-Type': `multipart/form-data; boundary=${b}` },
-          body,
+          headers: { 'Authorization': 'Bearer ' + getToken() },
+          body: fd,
         });
-        if (!r.ok) throw new Error('Error al subir foto');
+        if (!r.ok) {
+          const t = await r.text().catch(() => '');
+          throw new Error('Error al subir foto: ' + (t.slice(0, 120) || r.status));
+        }
         okN += 1;
       }
       setUploadMsg(`✅ ${okN} foto(s) subida(s)`);
