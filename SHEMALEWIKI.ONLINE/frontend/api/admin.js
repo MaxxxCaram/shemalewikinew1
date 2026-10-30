@@ -10,6 +10,44 @@ const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
 const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS;
 if (!PB_ADMIN_PASS) throw new Error('PB_ADMIN_PASS env var required.');
 
+
+// ── Acceso directo al VPS (salta Cloudflare: el 403 de Bot Fight Mode rompia el admin) ──
+import https from 'https';
+import { URL } from 'url';
+
+const PB_DIRECT_HOST = '187.77.68.200';
+const PB_SNI = 'api.shemalewiki.online';
+
+function pbFetch(pathname, options = {}) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(pathname, `https://${PB_SNI}`);
+    const req = https.request({
+      host: PB_DIRECT_HOST,
+      port: 443,
+      servername: PB_SNI,
+      path: u.pathname + u.search,
+      method: options.method || 'GET',
+      headers: { Host: PB_SNI, ...(options.headers || {}) },
+    }, (res) => {
+      let body = '';
+      res.on('data', (c) => { body += c; });
+      res.on('end', () => {
+        resolve({
+          ok: res.statusCode >= 200 && res.statusCode < 300,
+          status: res.statusCode,
+          json: async () => JSON.parse(body),
+          text: async () => body,
+        });
+      });
+    });
+    req.on('error', reject);
+    if (options.body) req.write(options.body);
+    req.end();
+  });
+}
+
+const HBOX_NEVER_USED = true;
+
 const ALLOWED_ORIGINS = ['https://www.shemalewiki.online', 'https://shemalewiki.online', 'https://buscatrans.com'];
 
 export default async function handler(req, res) {
@@ -25,7 +63,7 @@ export default async function handler(req, res) {
     // Listar perfiles (token requerido) — compat con Admin.jsx que hace GET tras login
     const authHeader2 = req.headers.authorization || '';
     if (!authHeader2.startsWith('Bearer ')) return res.status(401).json({ error: 'Token required.' });
-    const vres = await fetch(`${PB_URL}/api/admins/auth-with-password`, { method: 'POST' });
+    const vres = await pbFetch(`/api/admins/auth-with-password`, { method: 'POST' });
     // validar token contra PB: usar endpoint de PB /api/admins/auth-refresh no existe para tokens JWT genericos;
     // en su lugar, decodificar payload y verificar expiracion (mismo esquema que PB: JWT HS256)
     try {
@@ -37,7 +75,7 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Invalid token.' });
     }
     const page = Math.max(1, parseInt((req.query && req.query.page) || '1', 10));
-    const list = await fetch(`${PB_URL}/api/collections/profiles/records?perPage=200&page=${page}&sort=-created&fields=id,name,location,status,is_verified,cam_chat,phone,email,bio,created`, {
+    const list = await pbFetch(`/api/collections/profiles/records?perPage=200&page=${page}&sort=-created&fields=id,name,location,status,is_verified,cam_chat,phone,email,bio,created`, {
       headers: { Authorization: `Bearer ${authHeader2.substring(7)}` },
     });
     if (!list.ok) return res.status(401).json({ error: 'Invalid token.' });
@@ -86,7 +124,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'photo_id, token y file requeridos.' });
       }
       // auth: validar token como superuser
-      const auth = await fetch(`${PB_URL}/api/admins/auth-refresh`, {
+      const auth = await pbFetch(`/api/admins/auth-refresh`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
       if (!auth.ok) return res.status(401).json({ error: 'Token invalido.' });
@@ -100,13 +138,13 @@ export default async function handler(req, res) {
         const fd3 = `--${b2}\r\nContent-Disposition: form-data; name="profile_id"\r\n\r\n${profile_id}\r\n` +
           `--${b2}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: image/jpeg\r\n\r\n`;
         const body3 = Buffer.concat([Buffer.from(fd3, 'binary'), fileBuf, Buffer.from(`\r\n--${b2}--\r\n`)]);
-        up = await fetch(`${PB_URL}/api/collections/photos/records`, {
+        up = await pbFetch(`/api/collections/photos/records`, {
           method: 'POST',
           headers: { 'Content-Type': `multipart/form-data; boundary=${b2}`, Authorization: 'Bearer ' + token },
           body: body3,
         });
       } else {
-        up = await fetch(`${PB_URL}/api/collections/photos/records/${photo_id}`, {
+        up = await pbFetch(`/api/collections/photos/records/${photo_id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': `multipart/form-data; boundary=${b2}`, Authorization: `Bearer ${token}` },
         body: body2,
@@ -136,7 +174,7 @@ export default async function handler(req, res) {
       // Diagnóstico: qué valor real está usando la función (sin exponer secretos)
       console.error('[admin] login: url=' + PB_URL + ' email_len=' + (PB_ADMIN_EMAIL || '').length +
                     ' pass_len=' + ((_password || PB_ADMIN_PASS) || '').length + ' body_pass_len=' + (_password || '').length);
-      const res2 = await fetch(`${PB_URL}/api/admins/auth-with-password`, {
+      const res2 = await pbFetch(`/api/admins/auth-with-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identity: PB_ADMIN_EMAIL, password: _password || PB_ADMIN_PASS }),
@@ -155,7 +193,7 @@ export default async function handler(req, res) {
 
     // ── List claims (expand profile + claimant_user so the panel has names/contact without extra calls) ──
     if (action === 'list-claims') {
-      const r = await fetch(`${PB_URL}/api/collections/claims/records?perPage=100&sort=-created&expand=profile,claimant_user`, {
+      const r = await pbFetch(`/api/collections/claims/records?perPage=100&sort=-created&expand=profile,claimant_user`, {
         headers: authHeaders,
       });
       if (!r.ok) throw new Error('Failed to list claims.');
@@ -168,14 +206,14 @@ export default async function handler(req, res) {
     if (action === 'get-profile') {
       const pid = req.body.profile_id;
       if (!pid) return res.status(400).json({ error: 'profile_id required.' });
-      const rP = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, { headers: authHeaders });
+      const rP = await pbFetch(`/api/collections/profiles/records/${pid}`, { headers: authHeaders });
       if (!rP.ok) return res.status(404).json({ error: 'Profile not found.' });
       const profile = await rP.json();
-      const rF = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500&sort=-created`, { headers: authHeaders });
+      const rF = await pbFetch(`/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500&sort=-created`, { headers: authHeaders });
       const photos = rF.ok ? (await rF.json()).items || [] : [];
       // contacto REAL (el del boton 'Show Contact Info'): profile_contacts
       let contact = null;
-      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`(profile_id='${q(pid)}')`)}`, { headers: authHeaders });
+      const rC = await pbFetch(`/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`(profile_id='${q(pid)}')`)}`, { headers: authHeaders });
       if (rC.ok) {
         const ci = (await rC.json()).items || [];
         if (ci.length) contact = { id: ci[0].id, phone: ci[0].phone || '', whatsapp: ci[0].whatsapp || '', email: ci[0].email || '' };
@@ -192,7 +230,7 @@ export default async function handler(req, res) {
       const allowed = ['name','bio','description','location','phone','whatsapp','email','age','height','weight','nationality','languages','endowment','onlyfans','status','cam_chat'];
       const body = {};
       for (const k of allowed) if (k in fields) body[k] = fields[k];
-      const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, {
+      const r = await pbFetch(`/api/collections/profiles/records/${pid}`, {
         method: 'PATCH', headers: authHeaders, body: JSON.stringify(body),
       });
       if (!r.ok) return res.status(500).json({ error: 'Failed to update profile.' });
@@ -203,7 +241,7 @@ export default async function handler(req, res) {
     if (action === 'delete-photo') {
       const photo_id = req.body.photo_id;
       if (!photo_id) return res.status(400).json({ error: 'photo_id required.' });
-      const r = await fetch(`${PB_URL}/api/collections/photos/records/${photo_id}`, {
+      const r = await pbFetch(`/api/collections/photos/records/${photo_id}`, {
         method: 'DELETE', headers: authHeaders,
       });
       if (!r.ok && r.status !== 404) return res.status(500).json({ error: 'Failed to delete photo.' });
@@ -215,17 +253,17 @@ export default async function handler(req, res) {
       const { photo_id, profile_id } = req.body;
       if (!photo_id || !profile_id) return res.status(400).json({ error: 'photo_id + profile_id required.' });
       // limpiar covers viejas
-      const rList = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${profile_id}'&&local_path='cover')&perPage=500`, { headers: authHeaders });
+      const rList = await pbFetch(`/api/collections/photos/records?filter=(profile_id='${profile_id}'&&local_path='cover')&perPage=500`, { headers: authHeaders });
       if (rList.ok) {
         for (const ph of ((await rList.json()).items || [])) {
           if (ph.id !== photo_id) {
-            await fetch(`${PB_URL}/api/collections/photos/records/${ph.id}`, {
+            await pbFetch(`/api/collections/photos/records/${ph.id}`, {
               method: 'PATCH', headers: authHeaders, body: JSON.stringify({ local_path: '' }),
             });
           }
         }
       }
-      const r = await fetch(`${PB_URL}/api/collections/photos/records/${photo_id}`, {
+      const r = await pbFetch(`/api/collections/photos/records/${photo_id}`, {
         method: 'PATCH', headers: authHeaders, body: JSON.stringify({ local_path: 'cover' }),
       });
       if (!r.ok) return res.status(500).json({ error: 'Failed to set cover.' });
@@ -241,7 +279,7 @@ export default async function handler(req, res) {
     if (action === 'approve' || action === 'reject') {
       const pid = req.body.profile_id;
       if (!pid) return res.status(400).json({ error: 'profile_id required.' });
-      const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, {
+      const r = await pbFetch(`/api/collections/profiles/records/${pid}`, {
         method: 'PATCH', headers: authHeaders,
         body: JSON.stringify({ cam_chat: action === 'approve' ? 'approved' : 'rejected' }),
       });
@@ -253,19 +291,19 @@ export default async function handler(req, res) {
     if (action === 'delete') {
       const pid = req.body.profile_id;
       if (!pid) return res.status(400).json({ error: 'profile_id required.' });
-      const rF = await fetch(`${PB_URL}/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500`, { headers: authHeaders });
+      const rF = await pbFetch(`/api/collections/photos/records?filter=(profile_id='${pid}')&perPage=500`, { headers: authHeaders });
       if (rF.ok) {
         for (const ph of ((await rF.json()).items || [])) {
-          await fetch(`${PB_URL}/api/collections/photos/records/${ph.id}`, { method: 'DELETE', headers: authHeaders });
+          await pbFetch(`/api/collections/photos/records/${ph.id}`, { method: 'DELETE', headers: authHeaders });
         }
       }
-      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?filter=(profile_id='${pid}')&perPage=500`, { headers: authHeaders });
+      const rC = await pbFetch(`/api/collections/profile_contacts/records?filter=(profile_id='${pid}')&perPage=500`, { headers: authHeaders });
       if (rC.ok) {
         for (const c of ((await rC.json()).items || [])) {
-          await fetch(`${PB_URL}/api/collections/profile_contacts/records/${c.id}`, { method: 'DELETE', headers: authHeaders });
+          await pbFetch(`/api/collections/profile_contacts/records/${c.id}`, { method: 'DELETE', headers: authHeaders });
         }
       }
-      const r = await fetch(`${PB_URL}/api/collections/profiles/records/${pid}`, { method: 'DELETE', headers: authHeaders });
+      const r = await pbFetch(`/api/collections/profiles/records/${pid}`, { method: 'DELETE', headers: authHeaders });
       if (!r.ok && r.status !== 404) return res.status(500).json({ error: 'Failed to delete profile.' });
       return res.status(200).json({ ok: true });
     }
@@ -277,14 +315,14 @@ export default async function handler(req, res) {
       if (!pid) return res.status(400).json({ error: 'profile_id required.' });
       const upd = {};
       for (const k of ['phone', 'whatsapp', 'email']) if (k in c) upd[k] = String(c[k] == null ? '' : c[k]);
-      const rC = await fetch(`${PB_URL}/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`(profile_id='${q(pid)}')`)}`, { headers: authHeaders });
+      const rC = await pbFetch(`/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`(profile_id='${q(pid)}')`)}`, { headers: authHeaders });
       const items = rC.ok ? ((await rC.json()).items || []) : [];
       let r;
       if (items.length) {
-        r = await fetch(`${PB_URL}/api/collections/profile_contacts/records/${items[0].id}`, {
+        r = await pbFetch(`/api/collections/profile_contacts/records/${items[0].id}`, {
           method: 'PATCH', headers: authHeaders, body: JSON.stringify(upd) });
       } else {
-        r = await fetch(`${PB_URL}/api/collections/profile_contacts/records`, {
+        r = await pbFetch(`/api/collections/profile_contacts/records`, {
           method: 'POST', headers: authHeaders, body: JSON.stringify({ profile_id: pid, ...upd }) });
       }
       if (!r.ok) return res.status(500).json({ error: 'Failed to save contact.' });
@@ -297,11 +335,11 @@ export default async function handler(req, res) {
       if (!q) return res.status(400).json({ error: 'q required.' });
       let items = [];
       if (/^[a-z0-9]{15}$/.test(q)) {
-        const rP = await fetch(`${PB_URL}/api/collections/profiles/records/${q}`, { headers: authHeaders });
+        const rP = await pbFetch(`/api/collections/profiles/records/${q}`, { headers: authHeaders });
         if (rP.ok) items = [await rP.json()];
       }
       if (items.length === 0) {
-        const r = await fetch(`${PB_URL}/api/collections/profiles/records?filter=name~'${q.replace(/'/g, '')}'&perPage=50&sort=-created`, { headers: authHeaders });
+        const r = await pbFetch(`/api/collections/profiles/records?filter=name~'${q.replace(/'/g, '')}'&perPage=50&sort=-created`, { headers: authHeaders });
         if (r.ok) items = (await r.json()).items || [];
       }
       return res.status(200).json({ profiles: items });
@@ -311,12 +349,12 @@ export default async function handler(req, res) {
     if (action === 'approve-claim') {
       if (!claim_id) return res.status(400).json({ error: 'claim_id required.' });
       // get claim
-      const rClaim = await fetch(`${PB_URL}/api/collections/claims/records/${claim_id}`, { headers: authHeaders });
+      const rClaim = await pbFetch(`/api/collections/claims/records/${claim_id}`, { headers: authHeaders });
       const claim = await rClaim.json();
       if (!rClaim.ok) throw new Error('Claim not found.');
 
       // update profile: set owner and approve
-      const rUpdate = await fetch(`${PB_URL}/api/collections/profiles/records/${claim.profile}`, {
+      const rUpdate = await pbFetch(`/api/collections/profiles/records/${claim.profile}`, {
         method: 'PATCH',
         headers: authHeaders,
         body: JSON.stringify({ owner: claim.claimant_user, status: 'approved' }),
@@ -342,14 +380,14 @@ export default async function handler(req, res) {
       if (email) contactBody.email = email;
       if (phone || whatsapp || email) {
         try {
-          await fetch(`${PB_URL}/api/collections/profile_contacts/records`, {
+          await pbFetch(`/api/collections/profile_contacts/records`, {
             method: 'POST', headers: authHeaders, body: JSON.stringify(contactBody),
           });
         } catch (e) { console.error('approve-claim: profile_contacts upsert failed', e.message); }
       }
 
       // mark claim approved (need superuser to bypass the lock — we ARE superuser)
-      const rClaimUpdate = await fetch(`${PB_URL}/api/collections/claims/records/${claim_id}`, {
+      const rClaimUpdate = await pbFetch(`/api/collections/claims/records/${claim_id}`, {
         method: 'PATCH',
         headers: authHeaders,
         body: JSON.stringify({ status: 'approved' }),
@@ -362,7 +400,7 @@ export default async function handler(req, res) {
     // ── Reject claim ──
     if (action === 'reject-claim') {
       if (!claim_id) return res.status(400).json({ error: 'claim_id required.' });
-      const r = await fetch(`${PB_URL}/api/collections/claims/records/${claim_id}`, {
+      const r = await pbFetch(`/api/collections/claims/records/${claim_id}`, {
         method: 'PATCH',
         headers: authHeaders,
         body: JSON.stringify({ status: 'rejected' }),
