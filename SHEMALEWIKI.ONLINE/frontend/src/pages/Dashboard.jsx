@@ -54,6 +54,12 @@ export default function Dashboard() {
   const fileInputRef = useRef(null);
   const [newVideoLink, setNewVideoLink] = useState('');
   const [uploadingMedia, setUploadingMedia] = useState(false);
+  const [lbIndex, setLbIndex] = useState(-1); // -1 = lightbox cerrado
+  const openLightbox = (photo_url) => {
+    // abrir el lightbox con la foto clickeada; usa las media con foto cargada
+    const idx = userMedia.findIndex(m => m.photo_url === photo_url || m.id === photo_url);
+    setLbIndex(idx >= 0 ? idx : 0);
+  };
   const [uploadMessage, setUploadMessage] = useState('');
 
   const fetchProfile = async (id) => {
@@ -576,6 +582,16 @@ export default function Dashboard() {
 
       {/* Ad banner — bottom (panel trans) */}
       <AdSlot slot="dashboard-bottom" audience="panel_trans" width={728} height={90} className="ad-bottom" />
+
+      {/* Lightbox: click en foto abre en grande */}
+      {lbIndex >= 0 && userMedia.length > 0 && (
+        <Lightbox
+          images={userMedia.filter(m => m.photo_url).map(m => m.photo_url)}
+          currentIndex={lbIndex}
+          onClose={() => setLbIndex(-1)}
+          onNavigate={setLbIndex}
+        />
+      )}
     </div>
   );
 }

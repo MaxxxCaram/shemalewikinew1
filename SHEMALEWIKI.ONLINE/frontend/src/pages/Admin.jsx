@@ -606,6 +606,7 @@ function ClaimCard({ claim, onAction }) {
 
 function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBulkDelete, contact, saveContact, onCrop, onUpload }) {
   const [sel, setSel] = useState(() => new Set());
+  const [prevPhoto, setPrevPhoto] = useState(null); // preview en grande al click en foto
   const [contactForm, setContactForm] = useState({ phone: '', whatsapp: '', email: '' });
   useEffect(() => {
     setContactForm({
@@ -755,7 +756,8 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
                        onChange={() => toggleSel(ph.id)} style={{ width: 16, height: 16, accentColor: '#22c55e' }} />
               </div>
               {isSel && <div style={{ position: 'absolute', inset: 0, background: 'rgba(34,197,94,0.18)', zIndex: 1 }} />}
-              <img src={url} alt="" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block' }} />
+              <img src={url} alt="" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block', cursor: 'zoom-in' }}
+                   onClick={(e) => { e.stopPropagation(); setPrevPhoto(url); }} />
               <div style={{ padding: '0.4rem', display: 'flex', gap: '0.3rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                 {isCover && <span style={{ fontSize: '0.7rem', color: '#f59e0b', width: '100%', textAlign: 'center' }}>⭐ PORTADA</span>}
                 <button className="btn" title="Recortar miniatura" onClick={() => onCrop({ src: url, photoId: ph.id })}
@@ -795,6 +797,15 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
               style={{ border: '1px solid rgba(74,222,128,0.4)', color: '#4ade80', background: 'rgba(74,222,128,0.08)' }}>
         💾 Guardar contacto real
       </button>
+
+      {/* Preview en grande de la foto clickeada */}
+      {prevPhoto && (
+        <div onClick={() => setPrevPhoto(null)}
+             style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(0,0,0,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'zoom-out', padding: '1.5rem' }}>
+          <img src={prevPhoto} alt="Foto" style={{ maxWidth: '100%', maxHeight: '92vh', objectFit: 'contain', borderRadius: '0.5rem' }} />
+          <span style={{ position: 'absolute', top: '1rem', right: '1.5rem', color: '#fff', fontSize: '1.6rem', cursor: 'pointer' }}>✕</span>
+        </div>
+      )}
     </div>
   );
 }
