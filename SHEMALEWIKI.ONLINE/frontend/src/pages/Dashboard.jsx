@@ -64,8 +64,9 @@ export default function Dashboard() {
 
   const fetchProfile = async (id) => {
     try {
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', id).single();
-      if (error) throw error;
+      // getOne con la sesion del usuario logueado: viewRule permite owner+auth.id
+      // (supabase anonimo queda ciego a perfiles pending -> "no puedo subir")
+      const data = await pb.collection('profiles').getOne(id);
       setProfile(data || {});
 
       // Fetch photos via PocketBase SDK (handles relation filter)

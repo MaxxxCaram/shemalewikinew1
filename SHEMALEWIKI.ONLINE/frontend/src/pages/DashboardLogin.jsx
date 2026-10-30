@@ -106,12 +106,13 @@ export default function DashboardLogin() {
       // Auth real via PocketBase users collection
       const user = await pbLogin(loginIdentifier, loginPassword);
 
-      // Find the linked profile (owner = user id) — include pending so new users can access dashboard
-      const profiles = await pb.collection('profiles').getFullList({
-        filter: `owner = "${user.id}"`,
-        perPage: 1,
-      });
-      const profileId = profiles.length > 0 ? profiles[0].id : user.id;
+      // Find the linked profile (owner = user id). getFirstListItem usa viewRule,
+      // que permite al owner ver su perfil aunque status=approved=false -> pending.
+      let profileId = user.id;
+      try {
+        const own = await pb.collection('profiles').getFirstListItem(`owner = "${user.id}"`);
+        profileId = own ? own.id : user.id;
+      } catch (e) { /* sin perfil vinculado aun -> queda como esta */ }
       localStorage.setItem('dashboard_user_id', profileId);
       localStorage.setItem('dashboard_user_name', user.name || user.email);
       navigate('/dashboard');
