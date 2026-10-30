@@ -133,11 +133,15 @@ export default async function handler(req, res) {
     // ── Login: authenticate as PB superuser, return token ──
     if (_action === 'login') {
       if (!_password) return res.status(400).json({ error: 'Password required.' });
+      // Diagnóstico: qué valor real está usando la función (sin exponer secretos)
+      console.error('[admin] login: url=' + PB_URL + ' email_len=' + (PB_ADMIN_EMAIL || '').length +
+                    ' pass_len=' + ((_password || PB_ADMIN_PASS) || '').length + ' body_pass_len=' + (_password || '').length);
       const res2 = await fetch(`${PB_URL}/api/admins/auth-with-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identity: PB_ADMIN_EMAIL, password: _password || PB_ADMIN_PASS }),
       });
+      console.error('[admin] pb status=' + res2.status + ' ok=' + res2.ok);
       if (!res2.ok) return res.status(401).json({ error: 'Invalid admin password.' });
       const d = await res2.json();
       return res.status(200).json({ token: d.token });
