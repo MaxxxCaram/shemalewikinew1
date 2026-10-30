@@ -274,7 +274,8 @@ export default function Admin() {
     try {
       const b = '----H' + Math.random().toString(16).slice(2);
       const fd = (n, v) => `--${b}\r\nContent-Disposition: form-data; name="${n}"\r\n\r\n${v}\r\n`;
-      const head = fd('photo_id', photo_id) + fd('token', token);
+      const head = fd('photo_id', photo_id) + fd('token', token) +
+        `--${b}\r\nContent-Disposition: form-data; name="file"; filename="crop.jpg"\r\nContent-Type: image/jpeg\r\n\r\n`;
       const body = new Blob([head, blob, `\r\n--${b}--\r\n`]);
       const r = await fetch(`${API_BASE}/api/admin?action=upload-photo`, {
         method: 'POST',
@@ -643,7 +644,8 @@ function ProfileEditor({ profile, photos, saveField, deletePhoto, setCover, onBu
       for (const file of files) {
         const b = '----H' + Math.random().toString(16).slice(2);
         const fd = (n, v) => `--${b}\r\nContent-Disposition: form-data; name="${n}"\r\n\r\n${v}\r\n`;
-        const head = fd('profile_id', profile.id) + fd('token', getToken());
+        const head = fd('profile_id', profile.id) + fd('token', getToken()) +
+          `--${b}\r\nContent-Disposition: form-data; name="file"; filename="${file.name || 'foto.jpg'}"\r\nContent-Type: ${file.type || 'image/jpeg'}\r\n\r\n`;
         const body = new Blob([head, file, `\r\n--${b}--\r\n`]);
         const r = await fetch(`${API_BASE}/api/admin?action=upload-photo`, {
           method: 'POST',
