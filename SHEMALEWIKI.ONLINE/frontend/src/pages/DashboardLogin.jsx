@@ -199,7 +199,17 @@ export default function DashboardLogin() {
         throw new Error(data.error || 'Failed to create profile');
       }
 
-      // Upload photos using the PB token from the register response
+      // Upload photos using the PB token from the register response.
+      // FIX: el pb client NO esta autenticado al llegar aca (la pass la genera el
+      // server) -> photos.create fallaba con createRule ("@request.auth.id != \"\"")
+      // y la chica nueva perdia sus fotos en silencio. Guardamos el token primero.
+      if (data.pbToken) {
+        try {
+          pb.authStore.save(data.pbToken, { id: data.userId, email: createEmail });
+          localStorage.setItem('dashboard_user_id', data.profileId);
+          localStorage.setItem('dashboard_user_name', createName || createEmail);
+        } catch (e) { console.error('authStore save failed:', e); }
+      }
       if (createPhotoFiles.length > 0) {
         (async () => {
           for (const file of createPhotoFiles) {

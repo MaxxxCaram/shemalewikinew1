@@ -20,7 +20,7 @@ function rateLimited(ip) {
 }
 
 async function getPBToken() {
-  const res = await fetch(`${PB_URL}/api/admins/auth-with-password`, {
+  const res = await pbFetch(`/api/admins/auth-with-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ identity: PB_ADMIN_EMAIL, password: PB_ADMIN_PASS }),
@@ -47,8 +47,7 @@ export default async function handler(req, res) {
 
   try {
     const token = await getPBToken();
-    const r = await fetch(
-      `${PB_URL}/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`profile_id='${profile_id}'`)}`,
+    const r = await pbFetch(`/api/collections/profile_contacts/records?perPage=1&filter=${encodeURIComponent(`profile_id='${profile_id}'`)}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     if (!r.ok) throw new Error(`PB fetch: ${r.status}`);

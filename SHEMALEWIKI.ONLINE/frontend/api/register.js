@@ -4,6 +4,7 @@
 // Notification email sent to ads@shemalewiki.online via SMTP.
 
 import nodemailer from 'nodemailer';
+import { pbFetch } from './pb-helper.js';
 
 const PB_URL = process.env.PB_URL || 'https://api.shemalewiki.online';
 const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
@@ -42,7 +43,7 @@ function isValidName(name) {
 }
 
 async function getPBToken() {
-  const res = await fetch(`${PB_URL}/api/admins/auth-with-password`, {
+  const res = await pbFetch(`/api/admins/auth-with-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ identity: PB_ADMIN_EMAIL, password: PB_ADMIN_PASS }),
@@ -60,7 +61,7 @@ async function upsertContact(profileId, phone, whatsapp, email, token) {
   if (phone) body.phone = String(phone);
   if (whatsapp) body.whatsapp = String(whatsapp);
   if (email) body.email = String(email);
-  const resp = await fetch(`${PB_URL}/api/collections/profile_contacts/records`, {
+  const resp = await pbFetch(`/api/collections/profile_contacts/records`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: auth },
     body: JSON.stringify(body),
@@ -122,7 +123,7 @@ export default async function handler(req, res) {
   try {
     // ── Create user (auth collection) ──
     const token = await getPBToken();
-    const userRes = await fetch(`${PB_URL}/api/collections/users/records`, {
+    const userRes = await pbFetch(`/api/collections/users/records`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
       body: JSON.stringify({
@@ -153,7 +154,7 @@ export default async function handler(req, res) {
 
       // Confirmar que el perfil existe antes de crear el reclamo (con el
       // token admin, así funciona sin importar el status del perfil).
-      const profCheck = await fetch(`${PB_URL}/api/collections/profiles/records/${profile_id}`, {
+      const profCheck = await pbFetch(`/api/collections/profiles/records/${profile_id}`, {
         headers: { Authorization: auth },
       });
       if (!profCheck.ok) {
@@ -161,7 +162,7 @@ export default async function handler(req, res) {
       }
 
       const evidence = `Nombre: ${name}\nEmail: ${email}\nTel: ${phone || '-'}\nWhatsApp: ${whatsapp || '-'}`;
-      const claimRes = await fetch(`${PB_URL}/api/collections/claims/records`, {
+      const claimRes = await pbFetch(`/api/collections/claims/records`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: auth },
         body: JSON.stringify({
@@ -193,7 +194,7 @@ export default async function handler(req, res) {
 
     // ── Create profile with owner = user.id ──
     const parts = (country || 'Other') + ' | ' + (city || 'Unknown');
-    const profileRes = await fetch(`${PB_URL}/api/collections/profiles/records`, {
+    const profileRes = await pbFetch(`/api/collections/profiles/records`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
       body: JSON.stringify({
@@ -227,7 +228,7 @@ export default async function handler(req, res) {
     if (services) {
       const serviceList = String(services).split(',').map(s => s.trim()).filter(Boolean);
       for (const svc of serviceList) {
-        await fetch(`${PB_URL}/api/collections/services/records`, {
+        await pbFetch(`/api/collections/services/records`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: 'B' + String.fromCharCode(101,97,114,101,114,32) + (token) },
           body: JSON.stringify({ profile_id: profileData.id, service_name: svc, available: 'yes' }),
@@ -255,7 +256,7 @@ export default async function handler(req, res) {
     }
 
     // ── Authenticate new user to get their token ──
-    const userAuthRes = await fetch(`${PB_URL}/api/collections/users/auth-with-password`, {
+    const userAuthRes = await pbFetch(`/api/collections/users/auth-with-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ identity: email, password }),
