@@ -281,7 +281,10 @@ export default async function handler(req, res) {
       if (!pid) return res.status(400).json({ error: 'profile_id required.' });
       const r = await pbFetch(`/api/collections/profiles/records/${pid}`, {
         method: 'PATCH', headers: authHeaders,
-        body: JSON.stringify({ cam_chat: action === 'approve' ? 'approved' : 'rejected' }),
+        // cam_chat + status: el listRule publico es status='approved' — sin status el perfil
+        // queda invisible ("This profile may have been removed") aunque el panel diga aprobado
+        body: JSON.stringify({ cam_chat: action === 'approve' ? 'approved' : 'rejected',
+                               status: action === 'approve' ? 'approved' : 'rejected' }),
       });
       if (!r.ok) return res.status(500).json({ error: 'Failed to update profile.' });
       return res.status(200).json({ ok: true });
