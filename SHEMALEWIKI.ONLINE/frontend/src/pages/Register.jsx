@@ -586,12 +586,15 @@ export default function Register() {
           )}
 
           {/* Honeypot — hidden from real users, bots fill it */}
-          <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }}>
-            <label htmlFor="hp-field">{bt ? 'No completá este campo' : 'Do not fill this field'}</label>
+          <div style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', clipPath: 'inset(50%)', opacity: 0, pointerEvents: 'none' }} aria-hidden="true" tabIndex={-1}>
+            <label htmlFor="hp-field">{bt ? '' : ''}</label>
             <input
               id="hp-field"
               type="text"
               name="hp"
+              autoComplete="off"
+              aria-hidden="true"
+              tabIndex={-1}
               value={honeypot}
               onChange={e => setHoneypot(e.target.value)}
               tabIndex="-1"
