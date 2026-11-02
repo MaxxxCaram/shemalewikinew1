@@ -65,9 +65,9 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests. Try again in a minute.' });
   }
 
-  // Modo batch: POST /api/contact-info con { ids: [...] } → qué profile_ids
-  // tienen contacto (true/false). GET con 391 ids desborda el query string.
-  // NO expone el valor del contacto: solo marca quién lo tiene.
+  // Modo batch: POST /api/contact-info con { ids: [...] } → teléfono/whatsapp de
+  // cada perfil. DECISIÓN DE NEGOCIO (Maxima): es un site de escorts, el teléfono
+  // se expone — las chicas trabajan con su número, sin número no trabajan.
   const { profile_id } = req.query;
   let ids = req.query.ids;
   if (req.method === 'POST' && req.body) ids = (req.body.ids || []).join(',');
@@ -77,9 +77,31 @@ export default async function handler(req, res) {
       if (idList.some(id => !/^[a-z0-9]{15}$/.test(id))) {
         return res.status(400).json({ error: 'invalid id' });
       }
-      const withContact = await getAllContactIds();
+      const token = await getPBToken();
+      // por cada id: buscar su contacto (phone/whatsapp/email) en profile_contacts
       const result = {};
-      for (const id of idList) result[id] = withContact.has(id);
+      const PER = 500;
+      let page = 1;
+      const all = new Map(); // profile_id -> contacto
+      for (;;) {
+        const rr = await pbFetch(
+          `/api/collections/profile_contacts/records?perPage=${PER}&page=${page}&fields=profile_id,phone,whatsapp,email`,
+          { headers: { Authorization: 'Bearer ' + token } }
+        );
+        if (!rr.ok) throw new Error(`PB list: ${rr.status}`);
+        const dd = await rr.json();
+        for (const it of dd.items || []) all.set(it.profile_id, it);
+        if (page >= (dd.totalPages || 1)) break;
+        page += 1;
+      }
+      for (const id of idList) {
+        const c = all.get(id);
+        result[id] = c ? {
+          phone: c.phone || '',
+          whatsapp: c.whatsapp || '',
+          email: c.email || '',
+        } : null;
+      }
       return res.status(200).json(result);
     } catch (e) {
       return res.status(500).json({ error: e.message || 'Internal error.' });

@@ -95,7 +95,7 @@ async function fetchAllProfiles({ country, city, continent, search, max = 3000 }
  */
 /** Perfil con foto o con contacto: lo que el directorio debe mostrar. */
 export function isListable(p) {
-  return !!(p._cover || p._hasContact);
+  return !!(p._cover || p._contact);
 }
 
 export async function fetchProfilesWithCovers({ country, city, continent, search, limit = 3000 } = {}) {
@@ -108,10 +108,11 @@ export async function fetchProfilesWithCovers({ country, city, continent, search
   // Marcar si cada perfil tiene contacto real (vive en profile_contacts,
   // colección privada; el endpoint /api/contact-ids solo dice true/false,
   // nunca expone el valor del contacto).
-  let hasContact = {};
+  let contacts = {}; // profile_id -> {phone, whatsapp, email}
   try {
     const ids = profiles.map(p => p.id);
-    // POST con body: un query string con cientos de ids desborda el límite
+    // POST con body: un query string con cientos de ids desborda el límite.
+    // DECISIÓN DE NEGOCIO: el teléfono se expone en las cards (site de escorts).
     const PER = 800;
     for (let i = 0; i < ids.length; i += PER) {
       const chunk = ids.slice(i, i + PER);
@@ -123,17 +124,17 @@ export async function fetchProfilesWithCovers({ country, city, continent, search
       });
       if (r.ok) {
         const d = await r.json();
-        for (const k of Object.keys(d)) if (d[k]) hasContact[k] = true;
+        for (const k of Object.keys(d)) if (d[k]) contacts[k] = d[k];
       }
     }
-  } catch (e) { /* sin contacto marcado es aceptable (sigue foto-only) */ }
+  } catch (e) { /* sin contacto es aceptable (sigue foto-only) */ }
 
   return profiles
-    .filter(p => covers[p.id] || hasContact[p.id])
+    .filter(p => covers[p.id] || contacts[p.id])
     .map(p => ({
       ...p,
       ...(covers[p.id] ? { _cover: covers[p.id] } : {}),
-      ...(hasContact[p.id] ? { _hasContact: true } : {}),
+      ...(contacts[p.id] ? { _contact: contacts[p.id] } : {}),
     }));
 }
 

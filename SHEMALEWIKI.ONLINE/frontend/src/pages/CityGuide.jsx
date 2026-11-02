@@ -851,6 +851,22 @@ export default function CityGuide() {
                       <span>📍 {profile.location || 'Unknown'}</span>
                       {profile.age && <span>🎂 {lang === 'es' ? `Edad: ${profile.age}` : lang === 'nl' ? `Leeftijd: ${profile.age}` : lang === 'fr' ? `Âge : ${profile.age}` : `Age: ${profile.age}`}</span>}
                     </div>
+                    {profile._contact && (profile._contact.phone || profile._contact.whatsapp) && (
+                      <div className="profile-card-contact" style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {profile._contact.phone && (
+                          <a href={`tel:${profile._contact.phone.replace(/[^+\d]/g, '')}`}
+                             className="btn btn-sm" style={{ fontSize: '0.8rem', padding: '0.3rem 0.7rem', textDecoration: 'none' }}>
+                            📞 {profile._contact.phone}
+                          </a>
+                        )}
+                        {profile._contact.whatsapp && (
+                          <a href={`https://wa.me/${profile._contact.whatsapp.replace(/[^\d]/g, '')}`} target="_blank" rel="noopener noreferrer"
+                             className="btn btn-sm" style={{ fontSize: '0.8rem', padding: '0.3rem 0.7rem', textDecoration: 'none' }}>
+                            💬 WhatsApp
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </Link>
               ))}
