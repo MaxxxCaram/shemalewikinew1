@@ -282,6 +282,22 @@ export default function Home() {
                     <div className="profile-card-info">
                       <h3>{p.name}</h3>
                       <p><MapPin size={12} /> {(p.location || '').split(' | ').slice(-1)[0] || 'Unknown'}</p>
+                      {p._contact && (p._contact.phone || p._contact.whatsapp) && (
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                          {p._contact.phone && (
+                            <a href={`tel:${p._contact.phone.replace(/[^+\d]/g, '')}`} onClick={(e) => e.stopPropagation()}
+                               className="btn btn-sm" style={{ fontSize: '0.8rem', padding: '0.3rem 0.7rem', textDecoration: 'none' }}>
+                              📞 {p._contact.phone}
+                            </a>
+                          )}
+                          {p._contact.whatsapp && (
+                            <a href={`https://wa.me/${p._contact.whatsapp.replace(/[^\d]/g, '')}`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
+                               className="btn btn-sm" style={{ fontSize: '0.8rem', padding: '0.3rem 0.7rem', textDecoration: 'none' }}>
+                              💬
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </Link>
                 );

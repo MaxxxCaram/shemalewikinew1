@@ -50,6 +50,18 @@ export default function Profile() {
   const [similarProfiles, setSimilarProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [contactVisible, setContactVisible] = useState(false);
+  // El teléfono se muestra directo (site de escorts: sin su número no trabajan).
+  // Al montar el perfil, cargamos el contacto inmediatamente.
+  const loadContact = async (id) => {
+    try {
+      const r = await fetch(`/api/contact-info?profile_id=${id}`);
+      if (r.ok) {
+        const d = await r.json();
+        setContactData(d.phone || d.whatsapp || d.email ? d : { error: true });
+        setContactVisible(true);
+      }
+    } catch { /* sin contacto -> queda el botón de reclamar */ }
+  };
   const [contactData, setContactData] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -58,6 +70,7 @@ export default function Profile() {
 
   useEffect(() => {
     fetchProfile();
+    loadContact(id);
     window.scrollTo(0, 0);
   }, [id]);
 
