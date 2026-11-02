@@ -7,7 +7,31 @@ const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
 const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS;
 if (!PB_ADMIN_PASS) throw new Error('PB_ADMIN_PASS env var required');
 
-// simple in-memory rate limiter (per IP, 10 req/min)
+// cache del set de profile_ids con contacto (refrescar cada 60s, no repaginar en cada chunk)
+let contactCache = { at: 0, ids: null };
+async function getAllContactIds() {
+  const now = Date.now();
+  if (contactCache.ids && (now - contactCache.at) < 60000) return contactCache.ids;
+  const withContact = new Set();
+  const token = await getPBToken();
+  let page = 1;
+  const PER = 500;
+  for (;;) {
+    const rr = await pbFetch(
+      `/api/collections/profile_contacts/records?perPage=${PER}&page=${page}&fields=profile_id`,
+      { headers: { Authorization: 'Bearer ' + token } }
+    );
+    if (!rr.ok) throw new Error(`PB list: ${rr.status}`);
+    const dd = await rr.json();
+    for (const it of dd.items || []) withContact.add(it.profile_id);
+    if (page >= (dd.totalPages || 1)) break;
+    page += 1;
+  }
+  contactCache = { at: now, ids: withContact };
+  return withContact;
+}
+
+// simple in-memory rate limiter (per IP, 60 req/min — el batch puede disparar varios chunks)
 const rateMap = {};
 function rateLimited(ip) {
   const now = Date.now();
@@ -40,7 +64,25 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests. Try again in a minute.' });
   }
 
-  const { profile_id } = req.query;
+  // Modo batch: ?ids=a,b,c → qué profile_ids tienen contacto (true/false).
+  // NO expone el valor del contacto: solo marca quién lo tiene, para que el
+  // directorio liste perfiles con contacto aunque no tengan foto.
+  const { profile_id, ids } = req.query;
+  if (ids) {
+    try {
+      const idList = String(ids).split(',').map(s => s.trim()).filter(Boolean);
+      if (idList.some(id => !/^[a-z0-9]{15}$/.test(id))) {
+        return res.status(400).json({ error: 'invalid id' });
+      }
+      const withContact = await getAllContactIds();
+      const result = {};
+      for (const id of idList) result[id] = withContact.has(id);
+      return res.status(200).json(result);
+    } catch (e) {
+      return res.status(500).json({ error: e.message || 'Internal error.' });
+    }
+  }
+
   if (!profile_id || !/^[a-z0-9]{15}$/.test(profile_id)) {
     return res.status(400).json({ error: 'Missing or invalid profile_id.' });
   }
