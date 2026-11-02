@@ -2,6 +2,7 @@
 // Serves PII (phone/whatsapp/email) from the protected profile_contacts
 // collection, with basic rate-limiting per IP. The data itself is no longer
 // exposed in the public profiles API.
+import { pbFetch } from './pb-helper.js';
 const PB_URL = process.env.PB_URL || 'https://api.shemalewiki.online';
 const PB_ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || 'admin@shemalewiki.online';
 const PB_ADMIN_PASS = process.env.PB_ADMIN_PASS;
