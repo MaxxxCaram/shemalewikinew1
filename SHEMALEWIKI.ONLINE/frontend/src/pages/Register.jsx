@@ -243,7 +243,20 @@ export default function Register() {
         throw new Error(data.error || 'Registration failed');
       }
 
-      setCreatedProfile(data.profile);
+      setCreatedProfile(data.profile || { id: data.profileId });
+
+      // FIX (2026-11-02): el pb client NO esta autenticado al llegar aca (la pass
+      // la genera el server) -> photos.create fallaba con createRule
+      // ("@request.auth.id != \"\"") y la chica nueva perdia sus fotos en silencio
+      // (el perfil se creaba pero el admin no veia ninguna foto). Guardamos el
+      // pbToken que devuelve /api/register ANTES de subir.
+      if (data.pbToken) {
+        try {
+          pb.authStore.save(data.pbToken, { id: data.userId, email: form.email || '' });
+          localStorage.setItem('dashboard_user_id', data.profileId);
+          localStorage.setItem('dashboard_user_name', form.display_name || form.email || '');
+        } catch (e) { console.error('authStore save failed:', e); }
+      }
 
       // 2. Upload photos AFTER profile created (FK satisfied)
       if (photoFiles.length > 0) {
@@ -253,7 +266,10 @@ export default function Register() {
             try {
               const compressed = await compressImage(file);
               const formData = new FormData();
-              formData.append('profile_id', profileId);
+              // FIX: usar el profileId REAL del backend, no la variable del
+              // query string (que en el flujo normal es '') -> las fotos
+              // quedaban sin asociar al perfil.
+              formData.append('profile_id', data.profileId);
               formData.append('file', compressed);
               const created = await pb.collection('photos').create(formData);
               console.log('Photo uploaded:', created.id);
