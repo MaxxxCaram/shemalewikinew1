@@ -65,10 +65,12 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests. Try again in a minute.' });
   }
 
-  // Modo batch: ?ids=a,b,c → qué profile_ids tienen contacto (true/false).
-  // NO expone el valor del contacto: solo marca quién lo tiene, para que el
-  // directorio liste perfiles con contacto aunque no tengan foto.
-  const { profile_id, ids } = req.query;
+  // Modo batch: POST /api/contact-info con { ids: [...] } → qué profile_ids
+  // tienen contacto (true/false). GET con 391 ids desborda el query string.
+  // NO expone el valor del contacto: solo marca quién lo tiene.
+  const { profile_id } = req.query;
+  let ids = req.query.ids;
+  if (req.method === 'POST' && req.body) ids = (req.body.ids || []).join(',');
   if (ids) {
     try {
       const idList = String(ids).split(',').map(s => s.trim()).filter(Boolean);

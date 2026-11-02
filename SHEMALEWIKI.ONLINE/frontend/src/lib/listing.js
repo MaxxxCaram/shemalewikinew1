@@ -111,13 +111,15 @@ export async function fetchProfilesWithCovers({ country, city, continent, search
   let hasContact = {};
   try {
     const ids = profiles.map(p => p.id);
-    // trocear para no superar el límite de query string
-    const PER = 400;
+    // POST con body: un query string con cientos de ids desborda el límite
+    const PER = 800;
     for (let i = 0; i < ids.length; i += PER) {
       const chunk = ids.slice(i, i + PER);
-      const r = await fetch(`/api/contact-ids?ids=${chunk.join(',')}`, {
-        headers: { Accept: 'application/json' },
-        signal: AbortSignal.timeout(15000),
+      const r = await fetch('/api/contact-info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ ids: chunk }),
+        signal: AbortSignal.timeout(20000),
       });
       if (r.ok) {
         const d = await r.json();
