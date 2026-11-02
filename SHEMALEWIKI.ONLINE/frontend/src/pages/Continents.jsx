@@ -94,7 +94,7 @@ export default function Continents() {
   const [search, setSearch] = useState('');
   const bt = isBT();
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     const q = search.trim();
     if (!q) return;
@@ -107,6 +107,30 @@ export default function Continents() {
       navigate(`${langRoute}/${matchContinent.name.toLowerCase()}`);
       return;
     }
+    // City/country search: resolve real profile locations from PocketBase so a city
+    // goes to /{lang}/{continent}/{country}/{city} (fix: antes caia en /es/amsterdam
+    // y decia "Aun no hay perfiles" aunque la ciudad tenia cientos).
+    try {
+      const loc = q.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim();
+      if (loc && loc.length >= 2) {
+        const enc = encodeURIComponent(`(location~'${loc}')&&(status='approved')`);
+        const r = await fetch(`https://api.shemalewiki.online/api/collections/profiles/records?fields=location&perPage=3&filter=${enc}`,
+          { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(8000) });
+        if (r.ok) {
+          const d = await r.json();
+          const items = d.items || [];
+          // tomar la primera location con 3 partes -> continente | pais | ciudad
+          for (const it of items) {
+            const parts = (it.location || '').split('|').map(p => p.trim()).filter(Boolean);
+            if (parts.length >= 3) {
+              const slug = (p) => p.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+              navigate(`${langRoute}/${slug(parts[0])}/${slug(parts[1])}/${slug(parts.slice(2).join(' '))}`);
+              return;
+            }
+          }
+        }
+      }
+    } catch (err) { /* fallback abajo */ }
     // Navigate to the search results (Countries will handle)
     navigate(`${langRoute}/${q.toLowerCase()}`);
   };
