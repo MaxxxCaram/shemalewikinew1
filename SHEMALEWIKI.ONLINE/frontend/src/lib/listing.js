@@ -93,6 +93,11 @@ async function fetchAllProfiles({ country, city, continent, search, max = 3000 }
  * one exists. No filtering by photo: the listing must show ALL profiles of
  * the location — featured/photo-only placement is a paid slot later.
  */
+/** Perfil con foto o con contacto: lo que el directorio debe mostrar. */
+export function isListable(p) {
+  return !!(p._cover || p._hasContact);
+}
+
 export async function fetchProfilesWithCovers({ country, city, continent, search, limit = 3000 } = {}) {
   const [profiles, covers] = await Promise.all([
     fetchAllProfiles({ country, city, continent, search, max: limit }),
@@ -100,16 +105,34 @@ export async function fetchProfilesWithCovers({ country, city, continent, search
   ]);
   if (!profiles.length) return [];
 
+  // Marcar si cada perfil tiene contacto real (vive en profile_contacts,
+  // colección privada; el endpoint /api/contact-ids solo dice true/false,
+  // nunca expone el valor del contacto).
+  let hasContact = {};
+  try {
+    const ids = profiles.map(p => p.id);
+    // trocear para no superar el límite de query string
+    const PER = 400;
+    for (let i = 0; i < ids.length; i += PER) {
+      const chunk = ids.slice(i, i + PER);
+      const r = await fetch(`/api/contact-ids?ids=${chunk.join(',')}`, {
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(15000),
+      });
+      if (r.ok) {
+        const d = await r.json();
+        for (const k of Object.keys(d)) if (d[k]) hasContact[k] = true;
+      }
+    }
+  } catch (e) { /* sin contacto marcado es aceptable (sigue foto-only) */ }
+
   return profiles
-    // FASE 1 (decisión de Maxima 2026-09-18): solo perfiles con foto real.
-    // Los que no tienen foto NO aparecen en el directorio (ni placeholder).
-    // El cruce foto+contacto crece por el flujo de reclamo y el pipeline
-    // inverso (fotos de las chicas contactadas), no filtrando aquí.
-    .filter(p => covers[p.id])
+    .filter(p => covers[p.id] || hasContact[p.id])
     .map(p => ({
-    ...p,
-    ...(covers[p.id] ? { _cover: covers[p.id] } : {}),
-  }));
+      ...p,
+      ...(covers[p.id] ? { _cover: covers[p.id] } : {}),
+      ...(hasContact[p.id] ? { _hasContact: true } : {}),
+    }));
 }
 
 /** Drop the cached covers (call after a photo/cover change). */
