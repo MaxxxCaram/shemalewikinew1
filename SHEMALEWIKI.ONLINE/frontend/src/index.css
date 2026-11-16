@@ -1310,12 +1310,21 @@ h1, h2, h3, h4, h5, h6 {
 /* Staggered hero entrance */
 [data-brand="shemalewiki"] .hero-section > * {
   animation: swRise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --sw-step: 0.1s;
+  animation-delay: calc(sibling-index() * var(--sw-step));
 }
-[data-brand="shemalewiki"] .hero-section > *:nth-child(1) { animation-delay: 0.05s; }
-[data-brand="shemalewiki"] .hero-section > *:nth-child(2) { animation-delay: 0.15s; }
-[data-brand="shemalewiki"] .hero-section > *:nth-child(3) { animation-delay: 0.25s; }
-[data-brand="shemalewiki"] .hero-section > *:nth-child(4) { animation-delay: 0.35s; }
-[data-brand="shemalewiki"] .hero-section > *:nth-child(5) { animation-delay: 0.45s; }
+@supports not (animation-delay: calc(sibling-index() * 0.1s)) {
+  [data-brand="shemalewiki"] .hero-section > *:nth-child(1) { animation-delay: 0.05s; }
+  [data-brand="shemalewiki"] .hero-section > *:nth-child(2) { animation-delay: 0.15s; }
+  [data-brand="shemalewiki"] .hero-section > *:nth-child(3) { animation-delay: 0.25s; }
+  [data-brand="shemalewiki"] .hero-section > *:nth-child(4) { animation-delay: 0.35s; }
+  [data-brand="shemalewiki"] .hero-section > *:nth-child(5) { animation-delay: 0.45s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-brand="shemalewiki"] .hero-section > * {
+    animation: none;
+  }
+}
 @keyframes swRise {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: none; }
@@ -1417,6 +1426,11 @@ h1, h2, h3, h4, h5, h6 {
   [data-brand="shemalewiki"] .hero-section > * { animation: none !important; opacity: 1 !important; transform: none !important; }
   [data-brand="shemalewiki"] .profile-card-img { transition: none !important; }
   .sw-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  main { animation: none !important; }
+  .lightbox-overlay { animation: none !important; opacity: 1 !important; }
+  [data-brand="shemalewiki"] .accent-grad { animation: none !important; }
+  [data-brand="shemalewiki"] .hero-eyebrow::before { animation: none !important; opacity: 1 !important; }
+  .fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
 
 /* ============================================================
@@ -2255,4 +2269,274 @@ h1, h2, h3, h4, h5, h6 {
 }
 @media (max-width: 640px) {
   .worldmap-hint { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
+}
+
+/* ── Accesibilidad: skip link (primer foco del documento, visible solo al enfocar) ── */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+}
+.skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 3px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* ── Cards con contacto: stretch-link (el <a> anidado se rechaza en HTML:
+      el parser cierra el link de la card al abrir el anchor del telefono) ── */
+.profile-card-stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border-radius: inherit;
+}
+.profile-card-stretch:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+.profile-card-contact {
+  position: relative;
+  z-index: 8;
+}
+
+/* ── Galeria: <button> nativo (accesible por teclado) con reset de look ── */
+button.gallery-item {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+button.gallery-item:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ── Accesibilidad: skip link (primer foco del documento, visible solo al enfocar) ── */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+}
+.skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 3px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* ── Cards con contacto: stretch-link (el <a> anidado se rechaza en HTML:
+      el parser cierra el link de la card al abrir el anchor del telefono) ── */
+.profile-card-stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border-radius: inherit;
+}
+.profile-card-stretch:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+.profile-card-contact {
+  position: relative;
+  z-index: 8;
+}
+
+/* ── Galeria: <button> nativo (accesible por teclado) con reset de look ── */
+button.gallery-item {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+button.gallery-item:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ── Accesibilidad: skip link (primer foco del documento, visible solo al enfocar) ── */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+}
+.skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 3px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* ── Cards con contacto: stretch-link (el <a> anidado se rechaza en HTML:
+      el parser cierra el link de la card al abrir el anchor del telefono) ── */
+.profile-card-stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border-radius: inherit;
+}
+.profile-card-stretch:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+.profile-card-contact {
+  position: relative;
+  z-index: 8;
+}
+
+/* ── Galeria: <button> nativo (accesible por teclado) con reset de look ── */
+button.gallery-item {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+button.gallery-item:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ── Accesibilidad: skip link (primer foco del documento, visible solo al enfocar) ── */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+}
+.skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 3px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* ── Cards con contacto: stretch-link (el <a> anidado se rechaza en HTML:
+      el parser cierra el link de la card al abrir el anchor del telefono) ── */
+.profile-card-stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border-radius: inherit;
+}
+.profile-card-stretch:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+.profile-card-contact {
+  position: relative;
+  z-index: 8;
+}
+
+/* ── Galeria: <button> nativo (accesible por teclado) con reset de look ── */
+button.gallery-item {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+button.gallery-item:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ── Accesibilidad: skip link (primer foco del documento, visible solo al enfocar) ── */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+}
+.skip-link:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 3px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* ── Cards con contacto: stretch-link (el <a> anidado se rechaza en HTML:
+      el parser cierra el link de la card al abrir el anchor del telefono) ── */
+.profile-card-stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border-radius: inherit;
+}
+.profile-card-stretch:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+.profile-card-contact {
+  position: relative;
+  z-index: 8;
+}
+
+/* ── Galeria: <button> nativo (accesible por teclado) con reset de look ── */
+button.gallery-item {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+button.gallery-item:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }

@@ -169,7 +169,7 @@ export default function Home() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) {
                 const q = searchQuery ? `?search=${encodeURIComponent(searchQuery)}` : '';
                 window.location.href = brand === 'buscatrans' ? `/es/europe${q}` : `/europe${q}`;
               }
@@ -271,7 +271,7 @@ export default function Home() {
               {profiles.slice(0, visible).map((p) => {
                 const photo = getProfilePhoto(p);
                 return (
-                  <Link key={p.id} to={getProfileLink(p)} className="profile-card">
+                  <div key={p.id} className="profile-card" style={{ position: 'relative' }}>
                     <div className="profile-card-img">
                       {photo ? (
                         <img src={photo} alt={p.name} loading="lazy" />
@@ -283,7 +283,7 @@ export default function Home() {
                       <h3>{p.name}</h3>
                       <p><MapPin size={12} /> {(p.location || '').split(' | ').slice(-1)[0] || 'Unknown'}</p>
                       {p._contact && (p._contact.phone || p._contact.whatsapp) && (
-                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                        <div className="profile-card-contact" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
                           {p._contact.phone && (
                             <a href={`tel:${p._contact.phone.replace(/[^+\d]/g, '')}`} onClick={(e) => e.stopPropagation()}
                                className="btn btn-sm" style={{ fontSize: '0.8rem', padding: '0.3rem 0.7rem', textDecoration: 'none' }}>
@@ -299,7 +299,8 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-                  </Link>
+                    <Link to={getProfileLink(p)} className="profile-card-stretch" aria-label={p.name} />
+                  </div>
                 );
               })}
             </div>
@@ -312,9 +313,12 @@ export default function Home() {
             )}
           </>
         ) : (
-          <p style={{ color: 'var(--text-secondary)' }}>
-            {error ? 'No se pudieron cargar los perfiles.' : 'No hay perfiles con foto en este país todavía.'}
-          </p>
+          <div className="empty-state">
+            <p>{error ? 'No se pudieron cargar los perfiles. Reintentá en unos minutos.' : 'No hay perfiles en este país todavía.'}</p>
+            <Link to={brand === 'buscatrans' ? '/es/europe' : '/europe'} className="btn btn-primary" style={{ marginTop: '1rem' }}>
+              {brand === 'buscatrans' ? 'Explorar todos los perfiles' : 'Browse all profiles'}
+            </Link>
+          </div>
         )}
       </section>
 

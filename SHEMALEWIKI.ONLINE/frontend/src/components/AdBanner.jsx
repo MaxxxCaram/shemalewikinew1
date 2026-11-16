@@ -36,7 +36,7 @@ export default function AdBanner({ zoneId, width = 728, height = 90, provider = 
 
     return () => {
       if (containerRef.current) {
-        containerRef.current.innerHTML = '';
+        containerRef.current.replaceChildren();
       }
     };
   }, [zoneId, provider, width, height]);

@@ -406,7 +406,7 @@ export default function Admin() {
           <input
             value={searchQ}
             onChange={e => setSearchQ(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } }}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); doSearch(); } }}
             placeholder="Buscar perfil por nombre o ID — editá CUALQUIER perfil, no solo los de la lista"
             style={{ flex: 1, minWidth: 220, background: 'rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', padding: '0.6rem 0.9rem', color: 'var(--text-primary)', fontSize: '0.95rem' }}
           />
