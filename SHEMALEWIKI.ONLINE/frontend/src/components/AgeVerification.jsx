@@ -49,10 +49,21 @@ const t = {
 export default function AgeVerification({ onVerify }) {
   const [phase, setPhase] = useState('gate');
   const videoRef = useRef(null);
+  const [prefersReduced, setPrefersReduced] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const bt = isBT();
   // El intro es un mp4 de ~2.6MB: en tablet/móvil se muestra el póster estático
   // (no se descarga el video) — la home queda ~2.5MB más liviana y el LCP no se bloquea.
   const [isDesktop, setDesktop] = useState(() => typeof window === 'undefined' || window.innerWidth >= 1024);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updR = () => setPrefersReduced(mq.matches);
+    updR();
+    if (mq.addEventListener) { mq.addEventListener('change', updR); return () => mq.removeEventListener('change', updR); }
+    return () => {};
+  }, []);
+
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)');
     const upd = () => setDesktop(mq.matches);
@@ -70,6 +81,8 @@ export default function AgeVerification({ onVerify }) {
   const txt = t[lang] || t.en;
 
   const handleAccept = () => {
+    // prefers-reduced-motion: sin intro cinematográfica, entrar directo.
+    if (prefersReduced) { onVerify(); return; }
     setPhase('entering');
     // Short cinematic beat, then enter. Never hold the user 10s on a video
     // that may not load (hosting/format/autoplay-blocked) — that left users
@@ -104,7 +117,7 @@ export default function AgeVerification({ onVerify }) {
           ? 'radial-gradient(ellipse at center, #1a1505 0%, #0a0a0e 55%, #000000 100%)'
           : 'radial-gradient(ellipse at center, #140c20 0%, #0a0810 55%, #05030a 100%)',
       }}>
-        <div style={{
+        <div className="age-media" style={{
           position: 'absolute', width: '600px', height: '600px', borderRadius: '50%',
           background: bt
             ? 'radial-gradient(circle, rgba(212,175,55,0.25) 0%, transparent 60%)'
@@ -112,7 +125,7 @@ export default function AgeVerification({ onVerify }) {
           filter: 'blur(30px)', animation: 'sw-door-pulse 1.8s ease-in-out infinite',
         }} />
         {!isDesktop ? (
-          <img
+          <img className="age-media"
             src={bt ? '/logos/buscatrans-new-logo.jpg' : '/logos/shemalewiki-blurred-limits.jpg'}
             alt=""
             style={{ width: bt ? '440px' : '620px', maxWidth: '92vw', height: 'auto', borderRadius: '12px',
@@ -120,7 +133,7 @@ export default function AgeVerification({ onVerify }) {
               animation: (bt ? 'sw-phoenix-flight' : 'sw-blurred-rise') + ' 10s cubic-bezier(0.35, 0.1, 0.25, 1) forwards', zIndex: 2 }}
           />
         ) : bt ? (
-          <video
+          <video className="age-media"
             ref={videoRef}
             src="/logos/buscatrans-logo-intro-web.mp4"
             autoPlay loop playsInline preload="auto"
@@ -129,7 +142,7 @@ export default function AgeVerification({ onVerify }) {
               animation: 'sw-phoenix-flight 10s cubic-bezier(0.35, 0.1, 0.25, 1) forwards', zIndex: 2 }}
           />
         ) : (
-          <video
+          <video className="age-media"
             ref={videoRef}
             src="/logos/shemalewiki-intro.mp4"
             autoPlay loop playsInline preload="auto"
@@ -139,7 +152,7 @@ export default function AgeVerification({ onVerify }) {
           />
         )}
         <div style={{ textAlign: 'center', zIndex: 2, marginTop: '1.5rem' }}>
-          <h1 style={{
+          <h1 className="age-caption" style={{
             fontSize: '2.2rem', fontWeight: 800,
             color: bt ? '#d4af37' : '#f0d9a8',
             fontFamily: bt ? "'Playfair Display', serif" : "'Cormorant Garamond', serif",
@@ -148,7 +161,7 @@ export default function AgeVerification({ onVerify }) {
           }}>
             {txt.welcome}
           </h1>
-          <p style={{
+          <p className="age-caption" style={{
             color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '380px',
             lineHeight: 1.6, fontStyle: 'italic',
             animation: 'sw-phoenix-caption 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
@@ -157,6 +170,7 @@ export default function AgeVerification({ onVerify }) {
           </p>
         </div>
         <style>{`
+          @media (prefers-reduced-motion: no-preference) {
           @keyframes sw-door-pulse {
             0%, 100% { opacity: 0.5; transform: scale(0.9); }
             50% { opacity: 1; transform: scale(1.1); }
@@ -185,6 +199,10 @@ export default function AgeVerification({ onVerify }) {
           @keyframes sw-phoenix-caption {
             0%   { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
+          }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .age-media, .age-caption { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
           }
         `}</style>
       </div>
@@ -248,7 +266,7 @@ export default function AgeVerification({ onVerify }) {
         zIndex: 2,
       }}>
         <div style={{ marginBottom: '1rem' }}>
-          <img src={bt ? logoBT : logoSw} alt="logo" style={{ height: bt ? '360px' : '320px', width: 'auto' }} />
+          <img src={bt ? logoBT : logoSw} alt="logo" style={{ width: 'min(300px, 62vw)', height: 'auto' }} />
         </div>
         <h1 style={{
           fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.75rem',

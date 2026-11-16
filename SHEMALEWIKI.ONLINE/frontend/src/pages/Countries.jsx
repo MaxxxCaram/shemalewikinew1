@@ -155,7 +155,7 @@ export default function Countries() {
             ) : (
               <div className="profiles-grid">
                 {unknownProfiles.map((p, i) => (
-                  <Link to={`${langPrefix}/profile/${p.id}`} key={p.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${i * 0.05}s`, textDecoration: 'none', color: 'inherit' }}>
+                  <div key={p.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${i * 0.05}s`, textDecoration: 'none', color: 'inherit', position: 'relative' }}>
                     <img
                       src={(p.photos || []).find(ph => ph.local_path === 'cover')?.photo_url || p.photos?.[0]?.photo_url}
                       alt={p.name}
@@ -168,7 +168,7 @@ export default function Countries() {
                         {p.location || 'Unknown'}
                       </div>
                       {p._contact && (p._contact.phone || p._contact.whatsapp) && (
-                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                        <div className="profile-card-contact" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
                           {p._contact.phone && (
                             <a href={`tel:${p._contact.phone.replace(/[^+\d]/g, '')}`} onClick={(e) => e.stopPropagation()}
                                className="btn btn-sm" style={{ fontSize: '0.8rem', padding: '0.3rem 0.7rem', textDecoration: 'none' }}>
@@ -184,7 +184,8 @@ export default function Countries() {
                         </div>
                       )}
                     </div>
-                  </Link>
+                    <Link to={`${langPrefix}/profile/${p.id}`} className="profile-card-stretch" aria-label={p.name} />
+                  </div>
                 ))}
               </div>
             )}

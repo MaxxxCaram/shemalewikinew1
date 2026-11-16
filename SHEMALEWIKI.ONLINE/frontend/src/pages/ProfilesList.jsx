@@ -169,6 +169,7 @@ export default function ProfilesList() {
             type="text" 
             id="searchQuery"
             name="searchQuery"
+            aria-label={t.searchPlaceholder()}
             className="search-input" 
             placeholder={t.searchPlaceholder()}
             value={searchQuery}
@@ -201,7 +202,7 @@ export default function ProfilesList() {
           </div>
           <div className="profiles-grid">
             {profiles.slice(0, visible).map((profile, i) => (
-              <Link to={`${langPrefix}/profile/${profile.id}`} key={profile.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${(i % PAGE_SIZE) * 0.05}s` }}>
+              <div key={profile.id} className="glass-card profile-card sw-reveal" style={{ '--sw-delay': `${(i % PAGE_SIZE) * 0.05}s`, position: 'relative' }}>
                 <LazyImage
                   src={pickCover(profile)}
                   alt={profile.name}
@@ -218,7 +219,7 @@ export default function ProfilesList() {
                     {profile.age && <span>🎂 {profile.age} {lang === 'nl' ? 'jaar' : lang === 'fr' ? 'ans' : lang === 'es' ? 'años' : 'years'}</span>}
                   </div>
                   {profile._contact && (profile._contact.phone || profile._contact.whatsapp) && (
-                    <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div className="profile-card-contact" style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       {profile._contact.phone && (
                         <a href={`tel:${profile._contact.phone.replace(/[^+\d]/g, '')}`}
                            className="btn btn-sm" style={{ fontSize: '0.8rem', padding: '0.3rem 0.7rem', textDecoration: 'none' }}>
@@ -234,7 +235,8 @@ export default function ProfilesList() {
                     </div>
                   )}
                 </div>
-              </Link>
+                    <Link to={`${langPrefix}/profile/${profile.id}`} className="profile-card-stretch" aria-label={profile.name} />
+              </div>
             ))}
           </div>
           {visible < profiles.length && (

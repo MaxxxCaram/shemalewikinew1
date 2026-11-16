@@ -169,9 +169,11 @@ function AppContent() {
   }
 
   return (
-    <Router>
-      <Navbar />
-      <main style={{ animation: 'sw-site-reveal 1.2s ease forwards' }}>
+    <>
+      <a className="skip-link" href="#main-content" onClick={(e) => { e.preventDefault(); const m = document.getElementById('main-content'); if (m) m.focus(); }}>{isBuscaTrans() ? 'Saltar al contenido' : 'Skip to content'}</a>
+      <Router>
+        <Navbar />
+        <main id="main-content" tabIndex={-1} style={{ animation: 'sw-site-reveal 1.2s ease backwards' }}>
       <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}><div className="spinner" style={{ margin: '0 auto' }}></div></div>}>
         <Routes>
           {/* Root: redirects / → /es/ on BuscaTrans, shows Home on ShemaleWiki */}
@@ -250,6 +252,7 @@ function AppContent() {
       <Footer />
 
     </Router>
+    </>
   );
 }
 

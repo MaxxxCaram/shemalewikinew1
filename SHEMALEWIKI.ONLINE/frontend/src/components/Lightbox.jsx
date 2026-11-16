@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getProxiedImageUrl } from '../utils';
+
+const isBT = () => typeof window !== 'undefined' && window.location.hostname.includes('buscatrans');
 
 /**
  * Fullscreen lightbox for gallery images.
@@ -36,6 +38,15 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }) 
     };
   }, [onClose, goNext, goPrev]);
 
+  const closeRef = useRef(null);
+  useEffect(() => {
+    const prevFocus = document.activeElement;
+    closeRef.current?.focus({ preventScroll: true });
+    return () => {
+      if (prevFocus && typeof prevFocus.focus === 'function') prevFocus.focus({ preventScroll: true });
+    };
+  }, []);
+
   useEffect(() => {
     setLoaded(false);
     setError(false);
@@ -52,17 +63,17 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }) 
   const displaySrc = getProxiedImageUrl(src);
 
   return (
-    <div className="lightbox-overlay" onClick={onClose}>
-      <button className="lightbox-close" onClick={onClose} aria-label="Close">
+    <div className="lightbox-overlay" role="dialog" aria-modal="true" aria-label={isBT() ? 'Visor de fotos' : 'Photo viewer'} onClick={onClose}>
+      <button ref={closeRef} className="lightbox-close" onClick={onClose} aria-label={isBT() ? 'Cerrar' : 'Close'}>
         <X size={28} />
       </button>
 
       {images.length > 1 && (
         <>
-          <button className="lightbox-nav lightbox-prev" onClick={(e) => { e.stopPropagation(); goPrev(); }} aria-label="Previous">
+          <button className="lightbox-nav lightbox-prev" onClick={(e) => { e.stopPropagation(); goPrev(); }} aria-label={isBT() ? 'Anterior' : 'Previous'}>
             <ChevronLeft size={36} />
           </button>
-          <button className="lightbox-nav lightbox-next" onClick={(e) => { e.stopPropagation(); goNext(); }} aria-label="Next">
+          <button className="lightbox-nav lightbox-next" onClick={(e) => { e.stopPropagation(); goNext(); }} aria-label={isBT() ? 'Siguiente' : 'Next'}>
             <ChevronRight size={36} />
           </button>
         </>
@@ -75,7 +86,7 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }) 
         ) : (
           <img
             src={displaySrc}
-            alt={`Photo ${currentIndex + 1}`}
+            alt={`${isBT() ? 'Foto' : 'Photo'} ${currentIndex + 1}`}
             className={`lightbox-img ${loaded ? 'loaded' : ''}`}
             onLoad={() => setLoaded(true)}
             onError={() => { setError(true); setLoaded(true); }}

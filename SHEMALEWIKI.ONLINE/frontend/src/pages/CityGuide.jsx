@@ -838,7 +838,7 @@ export default function CityGuide() {
           <>
             <div className="profiles-grid">
               {profiles.map((profile, i) => (
-                <Link to={`${langPrefix}/profile/${profile.id}`} key={profile.id} className="glass-card">
+                <div key={profile.id} className="glass-card" style={{ position: 'relative' }}>
                   <LazyImage
                     src={profile._cover || (profile.photos || []).find(p => p.local_path === 'cover')?.photo_url || profile.photos?.[0]?.photo_url || profilePlaceholder(profile.name)}
                     alt={profile.name}
@@ -868,7 +868,8 @@ export default function CityGuide() {
                       </div>
                     )}
                   </div>
-                </Link>
+                    <Link to={`${langPrefix}/profile/${profile.id}`} className="profile-card-stretch" aria-label={profile.name} />
+                  </div>
               ))}
             </div>
 

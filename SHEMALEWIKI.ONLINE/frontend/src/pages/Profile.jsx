@@ -448,9 +448,11 @@ export default function Profile() {
             </div>
             <div className="gallery-grid">
               {galleryPhotos.map((photo, index) => (
-                <div 
+                <button
                   key={index}
+                  type="button"
                   className="gallery-item"
+                  aria-label={`${L.gallery()} ${index + 1}: ${profile.name}`}
                   onClick={() => openLightbox(index)}
                 >
                   <LazyImage 
@@ -461,7 +463,7 @@ export default function Profile() {
                   <div className="gallery-item-overlay">
                     <span>🔍</span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </section>
